@@ -1,45 +1,89 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
-      <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          icon="menu"
-          aria-label="Menu"
-          @click="toggleLeftDrawer"
-        />
-
-        <q-toolbar-title>
-          Quasar App
-        </q-toolbar-title>
-
-        <div>Quasar v{{ $q.version }}</div>
-      </q-toolbar>
-    </q-header>
-
+  <q-layout view="hHh lpR fFf">
     <q-drawer
-      v-model="leftDrawerOpen"
+      class="bg-primary q-pa-md"
       show-if-above
-      bordered
+      v-model="leftDrawerOpen"
+      side="left"
+      elevated
     >
-      <q-list>
-        <q-item-label
-          header
-        >
-          Essential Links
-        </q-item-label>
+      <q-icon
+        class="absolute-top-right q-pa-md cursor-pointer"
+        name="menu"
+        size="sm"
+        color="white"
+        @click="toggleLeftDrawer"
+      />
 
-        <EssentialLink
-          v-for="link in linksList"
-          :key="link.title"
-          v-bind="link"
+      <UserProfileCard username="Username" email="email@gmail.com" />
+      <MenuOptions :menu-options="menuOptions" class="q-mt-xl" />
+      <div class="absolute-bottom text-center q-mb-md">
+        <q-btn
+          outline
+          rounded
+          color="white"
+          label="LOGOUT"
+          class="q-px-xl"
+          :class="logoutBtnClicked ? 'bg-red' : ''"
+          v-on:click="logoutBtnClicked = !logoutBtnClicked"
         />
-      </q-list>
+      </div>
+
+      <q-dialog v-model="logoutBtnClicked" persistent>
+        <q-card style="min-width: 300px">
+          <q-card-section class="bg-primary text-white row items-center">
+            <q-avatar
+              icon="logout"
+              color="white"
+              text-color="primary"
+              size="md"
+            />
+            <span class="text-h6 q-ml-sm">Confirm Logout</span>
+          </q-card-section>
+
+          <q-card-section class="q-pt-md">
+            <div class="row items-center">
+              <q-icon
+                name="warning"
+                color="warning"
+                size="md"
+                class="q-mr-sm"
+              />
+              <span>Are you sure you want to logout from the system?</span>
+            </div>
+          </q-card-section>
+
+          <q-card-actions align="right" class="bg-grey-1">
+            <q-btn
+              flat
+              label="Cancel"
+              color="dark"
+              v-close-popup
+              icon="close"
+              class="q-px-md"
+            />
+            <q-btn
+              flat
+              label="Logout"
+              color="negative"
+              v-close-popup
+              icon="logout"
+              class="q-px-md"
+            />
+          </q-card-actions>
+        </q-card>
+      </q-dialog>
     </q-drawer>
 
     <q-page-container>
+      <q-icon
+        v-if="!leftDrawerOpen"
+        class="absolute-top-left q-pa-md cursor-pointer z-top"
+        name="menu"
+        size="sm"
+        color="primary"
+        @click="toggleLeftDrawer"
+      />
       <router-view />
     </q-page-container>
   </q-layout>
@@ -47,60 +91,21 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import EssentialLink, { EssentialLinkProps } from 'components/EssentialLink.vue';
+import MenuOptions from 'src/components/side-menu/MenuOptions.vue';
+import UserProfileCard from 'src/components/side-menu/UserProfileCard.vue';
+import { MenuOptionItem } from 'src/components/side-menu/types';
 
-defineOptions({
-  name: 'MainLayout'
-});
+const leftDrawerOpen = ref(true);
+const logoutBtnClicked = ref(false);
 
-const linksList: EssentialLinkProps[] = [
-  {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev'
-  },
-  {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework'
-  },
-  {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev'
-  },
-  {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev'
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev'
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev'
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev'
-  }
+const menuOptions: MenuOptionItem[] = [
+  { name: 'profile', label: 'PROFILE', icon: 'person' },
+  { name: 'appointment', label: 'APPOINTMENT', icon: 'event' },
+  { name: 'notification', label: 'NOTIFICATION', icon: 'notifications' },
+  { name: 'history', label: 'HISTORY', icon: 'history' },
 ];
 
-const leftDrawerOpen = ref(false);
-
-function toggleLeftDrawer () {
+function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value;
 }
 </script>
