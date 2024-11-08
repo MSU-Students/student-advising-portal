@@ -24,55 +24,9 @@
           color="white"
           label="LOGOUT"
           class="q-px-xl"
-          :class="logoutBtnClicked ? 'bg-red' : ''"
-          v-on:click="logoutBtnClicked = !logoutBtnClicked"
+          @click="TheDialogs.emit({ type: 'logoutDialog', arg: {} })"
         />
       </div>
-
-      <q-dialog v-model="logoutBtnClicked" persistent>
-        <q-card style="min-width: 300px">
-          <q-card-section class="bg-primary text-white row items-center">
-            <q-avatar
-              icon="logout"
-              color="white"
-              text-color="primary"
-              size="md"
-            />
-            <span class="text-h6 q-ml-sm">Confirm Logout</span>
-          </q-card-section>
-
-          <q-card-section class="q-pt-md">
-            <div class="row items-center">
-              <q-icon
-                name="warning"
-                color="warning"
-                size="md"
-                class="q-mr-sm"
-              />
-              <span>Are you sure you want to logout from the system?</span>
-            </div>
-          </q-card-section>
-
-          <q-card-actions align="right" class="bg-grey-1">
-            <q-btn
-              flat
-              label="Cancel"
-              color="dark"
-              v-close-popup
-              icon="close"
-              class="q-px-md"
-            />
-            <q-btn
-              flat
-              label="Logout"
-              color="negative"
-              v-close-popup
-              icon="logout"
-              class="q-px-md"
-            />
-          </q-card-actions>
-        </q-card>
-      </q-dialog>
     </q-drawer>
 
     <q-page-container>
@@ -105,6 +59,7 @@
       </q-toolbar>
 
       <router-view />
+      <LogOutDialog />
     </q-page-container>
   </q-layout>
 </template>
@@ -115,6 +70,8 @@ import MenuOptions from 'src/components/side-menu/MenuOptions.vue';
 import UserProfileCard from 'src/components/side-menu/UserProfileCard.vue';
 import { MenuOptionItem } from 'src/components/side-menu/types';
 import { useI18n } from 'vue-i18n';
+import { TheDialogs } from 'src/dialogs/the-dialogs';
+import LogOutDialog from 'src/dialogs/auth/LogOutDialog.vue';
 
 const { locale } = useI18n({ useScope: 'global' });
 
@@ -124,7 +81,6 @@ const localeOptions = [
 ];
 
 const leftDrawerOpen = ref(true);
-const logoutBtnClicked = ref(false);
 
 const menuOptions: MenuOptionItem[] = [
   { name: 'profile', label: 'PROFILE', icon: 'person' },

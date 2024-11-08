@@ -3,7 +3,12 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted } from 'vue';
+
 defineOptions({
-  name: 'App'
+  name: 'App',
+});
+onMounted(() => {
+  import('src/workflows');
 });
 </script>
