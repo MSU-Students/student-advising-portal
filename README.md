@@ -66,6 +66,20 @@ Reusable Business Logics
 
 Local State Management
 
+To generate new store file execute
+
+```bash
+quasar new store [Storename]
+```
+
+Example:
+
+```bash
+quasar new store schedules.store
+```
+
+Then edit the generated file by replacing all counter related to context of your store
+
 ### Services
 
 Access point to External Services
