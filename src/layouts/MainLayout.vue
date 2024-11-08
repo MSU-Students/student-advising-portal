@@ -76,14 +76,34 @@
     </q-drawer>
 
     <q-page-container>
-      <q-icon
-        v-if="!leftDrawerOpen"
-        class="absolute-top-left q-pa-md cursor-pointer z-top"
-        name="menu"
-        size="sm"
-        color="primary"
-        @click="toggleLeftDrawer"
-      />
+      <q-toolbar>
+        <q-btn
+          v-if="!leftDrawerOpen"
+          flat
+          round
+          dense
+          icon="menu"
+          size="sm"
+          color="primary"
+          @click="toggleLeftDrawer"
+        />
+        <q-toolbar-title>
+          {{ $t('ok') }}
+        </q-toolbar-title>
+        <q-space />
+        <q-select
+          v-model="locale"
+          :options="localeOptions"
+          label="Language"
+          dense
+          borderless
+          emit-value
+          map-options
+          options-dense
+          style="min-width: 150px"
+        />
+      </q-toolbar>
+
       <router-view />
     </q-page-container>
   </q-layout>
@@ -94,6 +114,14 @@ import { ref } from 'vue';
 import MenuOptions from 'src/components/side-menu/MenuOptions.vue';
 import UserProfileCard from 'src/components/side-menu/UserProfileCard.vue';
 import { MenuOptionItem } from 'src/components/side-menu/types';
+import { useI18n } from 'vue-i18n';
+
+const { locale } = useI18n({ useScope: 'global' });
+
+const localeOptions = [
+  { value: 'en-US', label: 'English' },
+  { value: 'fil-PH', label: 'Tagalog' },
+];
 
 const leftDrawerOpen = ref(true);
 const logoutBtnClicked = ref(false);
