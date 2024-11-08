@@ -15,5 +15,10 @@ export interface IAdviserProfile extends IProfileBase {
   primary: boolean;
 }
 
-export type IProfile = IStudentProfile | IAdviserProfile;
+export interface IAdminProfile extends IProfileBase {
+  type: 'admin';
+}
+
+
+export type IProfile = IStudentProfile | IAdviserProfile | IAdminProfile;
 

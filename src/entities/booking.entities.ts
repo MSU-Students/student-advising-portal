@@ -21,3 +21,6 @@ export interface IConsultationBooking extends IBookingBase {
   advisee: IStudentProfile;
 }
 
+
+export type IBooking = IAppointmentBooking | IConsultationBooking;
+

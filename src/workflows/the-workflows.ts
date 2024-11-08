@@ -1,7 +1,8 @@
 import { theBus } from 'src/the-bus';
 import { ToEmit, ToType } from 'src/structs';
+import { Auth } from './auth/definition';
 
-export type WorkflowStructs = { type: 'test', arg: 'dummy' };
+export type WorkflowStructs = Auth;
 
 type WorkflowEvents = ToEmit<WorkflowStructs, WorkflowStructs>;
 export type WorkflowTypes = ToType<WorkflowStructs, WorkflowStructs>;
