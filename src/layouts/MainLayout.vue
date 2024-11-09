@@ -14,8 +14,11 @@
         color="white"
         @click="toggleLeftDrawer"
       />
-
-      <UserProfileCard username="Username" email="email@gmail.com" />
+      <UserProfileCard
+        :avatar="authStore.currentUser?.avatar"
+        :username="authStore.currentUser?.fullName || ''"
+        :email="authStore.currentUser?.email || 'no-mail'"
+      />
       <MenuOptions :menu-options="menuOptions" class="q-mt-xl" />
       <div class="absolute-bottom text-center q-mb-md">
         <q-btn
@@ -72,8 +75,12 @@ import { MenuOptionItem } from 'src/components/side-menu/types';
 import { useI18n } from 'vue-i18n';
 import { TheDialogs } from 'src/dialogs/the-dialogs';
 import LogOutDialog from 'src/dialogs/auth/LogOutDialog.vue';
+import { useAuthStore } from 'src/stores/auth.store';
+import { useRouter } from 'vue-router';
 
 const { locale } = useI18n({ useScope: 'global' });
+
+const authStore = useAuthStore();
 
 const localeOptions = [
   { value: 'en-US', label: 'English' },
@@ -81,13 +88,19 @@ const localeOptions = [
 ];
 
 const leftDrawerOpen = ref(true);
+const $router = useRouter();
 
-const menuOptions: MenuOptionItem[] = [
-  { name: 'profile', label: 'PROFILE', icon: 'person' },
-  { name: 'appointment', label: 'APPOINTMENT', icon: 'event' },
-  { name: 'notification', label: 'NOTIFICATION', icon: 'notifications' },
-  { name: 'history', label: 'HISTORY', icon: 'history' },
-];
+const menuOptions: MenuOptionItem[] = $router
+  .getRoutes()
+  .filter((r) => r.meta?.menu)
+  .map((r) => {
+    return {
+      icon: r.meta.icon,
+      label: r.meta.menu,
+      name: r.name,
+      link: r,
+    } as MenuOptionItem;
+  });
 
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value;

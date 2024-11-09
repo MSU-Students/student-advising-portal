@@ -1,7 +1,8 @@
 <template>
   <div class="q-mt-md row items-center justify-center">
     <div class="column items-center">
-      <q-icon name="account_circle" color="white" size="64px" />
+      <q-icon v-if="!avatar" name="account_circle" color="white" size="64px" />
+      <q-avatar v-else><q-img :src="avatar" /></q-avatar>
       <div class="column items-center">
         <span class="text-white text-bold text-h6">{{
           truncateText(username, 14)
@@ -20,6 +21,7 @@ import { defineProps } from 'vue';
 defineProps<{
   username: string;
   email: string;
+  avatar?: string;
 }>();
 
 const truncateText = (text: string, maxLength: number = 39) =>

@@ -3,6 +3,7 @@ import { IBaseEntity } from './base.entity';
 export interface IProfileBase extends IBaseEntity {
   fullName: string;
   avatar: string;
+  email?: string;
 }
 
 export interface IStudentProfile extends IProfileBase {
@@ -20,5 +21,10 @@ export interface IAdminProfile extends IProfileBase {
 }
 
 
-export type IProfile = IStudentProfile | IAdviserProfile | IAdminProfile;
+export interface IAnonymousProfile extends IProfileBase {
+  type: 'anonymous';
+}
+
+
+export type IProfile = IStudentProfile | IAdviserProfile | IAdminProfile | IAnonymousProfile;
 
