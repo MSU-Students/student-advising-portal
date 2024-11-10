@@ -5,7 +5,7 @@
       :key="option.name"
       clickable
       v-ripple="activeOption === option.name"
-      :to="option.name"
+      :to="option.link || option.name"
       v-on:click="setActiveOption(option.name)"
       :active="activeOption === option.name"
       active-class="rounded-borders bg-white"

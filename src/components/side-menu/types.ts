@@ -1,3 +1,5 @@
+import { RouteLocationRaw } from 'vue-router';
+
 export enum MeetingStatus {
   PENDING = 'PENDING',
   REJECTED = 'REJECTED',
@@ -23,4 +25,5 @@ export interface MenuOptionItem {
   name: string;
   label: string;
   icon: string;
+  link?: RouteLocationRaw
 }

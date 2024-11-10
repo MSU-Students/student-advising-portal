@@ -1,5 +1,6 @@
 import { RouteRecordRaw } from 'vue-router';
 import { IRouteMeta } from './route.meta';
+import LoginPage from 'src/pages/auth/LoginPage.vue';
 
 
 declare module 'vue-router' {
@@ -11,13 +12,43 @@ declare module 'vue-router' {
 
 const routes: RouteRecordRaw[] = [
   {
+    path: '/auth',
+    component: () => import('layouts/PlainLayout.vue'),
+    children: [
+      {
+        path: 'login',
+        name: 'login',
+        component: LoginPage,
+        meta: {
+          anonymous: true
+        }
+      }
+    ]
+  },
+  {
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
     children: [
       {
-        path: '', component: () => import('pages/IndexPage.vue'),
+        path: '',
+        name: 'home',
+        component: () => import('pages/IndexPage.vue'),
+        meta: {
+          requiresLogin: true,
+          menu: 'Home',
+          title: 'Home Page',
+          icon: 'home'
+        }
       },
-      { path: 'student', component: () => import('pages/students/StudentsPage.vue') }
+      {
+        path: 'student',
+        component: () => import('pages/students/StudentsPage.vue'),
+        meta: {
+          menu: 'Student',
+          title: 'Student Page',
+          icon: 'person'
+        }
+      }
     ],
   },
 

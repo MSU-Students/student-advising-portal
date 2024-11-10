@@ -11,8 +11,13 @@
 
 const { configure } = require('quasar/wrappers');
 const path = require('path');
+const { version } = require('./package.json');
+const { firebaseConfig, firebaseConfigDev } = require('./src/services/firebase-config')
+
 
 module.exports = configure(function (/* ctx */) {
+  const dbConfig = (process.env.USE_LIVE !== 'live') ?
+    firebaseConfigDev : firebaseConfig;
   return {
     // https://v2.quasar.dev/quasar-cli-vite/prefetch-feature
     // preFetch: true,
@@ -22,7 +27,7 @@ module.exports = configure(function (/* ctx */) {
     // https://v2.quasar.dev/quasar-cli-vite/boot-files
     boot: [
       'i18n',
-      
+
     ],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
@@ -47,11 +52,11 @@ module.exports = configure(function (/* ctx */) {
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#build
     build: {
       target: {
-        browser: [ 'es2019', 'edge88', 'firefox78', 'chrome87', 'safari13.1' ],
+        browser: ['es2019', 'edge88', 'firefox78', 'chrome87', 'safari13.1'],
         node: 'node20'
       },
 
-      vueRouterMode: 'hash', // available values: 'hash', 'history'
+      vueRouterMode: 'history', // available values: 'hash', 'history'
       // vueRouterBase,
       // vueDevtools,
       // vueOptionsAPI: false,
@@ -60,7 +65,20 @@ module.exports = configure(function (/* ctx */) {
 
       // publicPath: '/',
       // analyze: true,
-      // env: {},
+      env: {
+        BUILD_DATE: (new Date()).toString(),
+        USE_LIVE: typeof process.env.USE_LIVE == 'undefined' ? '' : process.env.USE_LIVE,
+        EPUBKEY:
+          typeof process.env.EPUBKEY == 'undefined'
+            ? 'false'
+            : process.env.EPUBKEY,
+        EPRIKEY:
+          typeof process.env.EPRIKEY == 'undefined'
+            ? 'false'
+            : process.env.EPRIKEY,
+        DB_CONFIG: JSON.stringify(dbConfig),
+        APP_VERSION: version
+      },
       // rawDefine: {}
       // ignorePublicFolder: true,
       // minify: false,
@@ -136,7 +154,7 @@ module.exports = configure(function (/* ctx */) {
     // https://v2.quasar.dev/quasar-cli-vite/developing-ssr/configuring-ssr
     ssr: {
       // ssrPwaHtmlFilename: 'offline.html', // do NOT use index.html as name!
-                                          // will mess up SSR
+      // will mess up SSR
 
       // extendSSRWebserverConf (esbuildConf) {},
       // extendPackageJson (json) {},
@@ -147,7 +165,7 @@ module.exports = configure(function (/* ctx */) {
       // manualPostHydrationTrigger: true,
 
       prodPort: 3000, // The default port that the production server should use
-                      // (gets superseded if process.env.PORT is specified at runtime)
+      // (gets superseded if process.env.PORT is specified at runtime)
 
       middlewares: [
         'render' // keep this as last one
