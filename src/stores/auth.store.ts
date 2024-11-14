@@ -16,7 +16,6 @@ export const useAuthStore = defineStore('auth', {
 
   actions: {
     async loginWithGoogle() {
-      debugger;
       const credential = await firebaseService.signInWithGoogleAccount();
       const profileStore = useProfileStore();
       const profile = await profileStore.getProfile(credential.user.uid);
