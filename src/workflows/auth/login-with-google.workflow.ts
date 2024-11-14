@@ -9,7 +9,7 @@ TheWorkflows.on({
       await authStore.loginWithGoogle();
       e.success();
     } catch (error) {
-      e.error(new Error(String(error)));
+      if (e.error) e.error(new Error(String(error)));
     }
   },
 })
