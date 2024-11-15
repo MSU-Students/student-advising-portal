@@ -4,5 +4,4 @@ export interface IRouteMeta {
   icon?: string;
   anonymous?: true;
   requiresLogin?: true;
-  role?: string | string[];
 }
