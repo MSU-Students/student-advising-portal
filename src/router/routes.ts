@@ -6,6 +6,7 @@ declare module 'vue-router' {
   interface RouteMeta extends IRouteMeta {
     description?: string;
     keywords?: string[];
+    role?: string | string[];
   }
 }
 
@@ -19,8 +20,13 @@ const routes: RouteRecordRaw[] = [
         name: 'login',
         component: LoginPage,
         meta: {
-          anonymous: true,
+          anonygmous: true,
         },
+      },
+      {
+        path: 'get-started',
+        name: 'get-started',
+        component: () => import('pages/auth/AccountApplicationPage.vue'),
       },
     ],
   },
