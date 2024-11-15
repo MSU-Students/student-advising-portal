@@ -2,7 +2,6 @@ import { RouteRecordRaw } from 'vue-router';
 import { IRouteMeta } from './route.meta';
 import LoginPage from 'src/pages/auth/LoginPage.vue';
 
-
 declare module 'vue-router' {
   interface RouteMeta extends IRouteMeta {
     description?: string;
@@ -20,10 +19,10 @@ const routes: RouteRecordRaw[] = [
         name: 'login',
         component: LoginPage,
         meta: {
-          anonymous: true
-        }
-      }
-    ]
+          anonymous: true,
+        },
+      },
+    ],
   },
   {
     path: '/',
@@ -37,8 +36,8 @@ const routes: RouteRecordRaw[] = [
           requiresLogin: true,
           menu: 'Home',
           title: 'Home Page',
-          icon: 'home'
-        }
+          icon: 'home',
+        },
       },
       {
         path: 'student',
@@ -46,9 +45,9 @@ const routes: RouteRecordRaw[] = [
         meta: {
           menu: 'Student',
           title: 'Student Page',
-          icon: 'person'
-        }
-      }
+          icon: 'person',
+        },
+      },
     ],
   },
 
