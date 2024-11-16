@@ -5,3 +5,7 @@ export type Auth =
     success?: VoidCallback;
     error?: ErrorCallback;
   }>
+  | Struct<'confirmLockDialog', {
+    success?: VoidCallback;
+    error?: ErrorCallback;
+  }>
