@@ -119,7 +119,7 @@ Example: `login-with-email.workflow.ts`
 2. Invoke your dialog
 
 ```ts
-TheWorklows.emit({
+TheWorkflows.emit({
   type: 'confirmLoc',
   arg: {},
 });
