@@ -21,7 +21,7 @@
               <q-icon :name="role.icon" color="primary" size="80px" />
             </q-card-selection>
             <q-card-section
-              class="text-h4 text-weight-bolder text-primary q-pt-md"
+              class="text-h5 text-weight-bolder text-primary q-pt-sm"
             >
               {{ role.label }}
             </q-card-section>
@@ -52,13 +52,14 @@ interface Role {
 const role_options: Role[] = [
   { name: 'student', label: 'STUDENT', icon: 'school' },
   { name: 'faculty', label: 'FACULTY', icon: 'menu_book' },
-  { name: 'admin', label: 'ADMIN', icon: 'build' },
+  { name: 'admin', label: 'ADMIN', icon: 'construction' },
 ];
 
 const selectedRole = ref<string | null>(null);
 
 const selectRole = (roleName: string | undefined) => {
   selectedRole.value = roleName || null;
+  console.log(selectedRole.value);
 };
 </script>
 
