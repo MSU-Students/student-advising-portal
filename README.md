@@ -2,6 +2,8 @@
 
 Mobile Advising Portal for School
 
+View the deployment [here](https://gonana-o.web.app/).
+
 ## Install the dependencies
 
 ```bash
