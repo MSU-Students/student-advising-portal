@@ -15,13 +15,21 @@
             v-for="role in role_options"
             :key="role.name"
             @click="selectRole(role.name)"
+            :class="{ 'bg-primary': selectedRole === role.name }"
             v-ripple
           >
             <q-card-selection>
-              <q-icon :name="role.icon" color="primary" size="80px" />
+              <q-icon
+                :name="role.icon"
+                :color="selectedRole !== role.name ? 'primary' : 'white'"
+                size="80px"
+              />
             </q-card-selection>
             <q-card-section
-              class="text-h5 text-weight-bolder text-primary q-pt-sm"
+              class="text-h5 text-weight-bolder q-pt-sm"
+              :class="
+                selectedRole === role.name ? 'text-white' : 'text-primary'
+              "
             >
               {{ role.label }}
             </q-card-section>
