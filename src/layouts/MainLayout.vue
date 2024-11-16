@@ -63,6 +63,7 @@
 
       <router-view />
       <LogOutDialog />
+      <ConfirmLockDialog />
     </q-page-container>
   </q-layout>
 </template>
@@ -77,6 +78,7 @@ import { TheDialogs } from 'src/dialogs/the-dialogs';
 import LogOutDialog from 'src/dialogs/auth/LogOutDialog.vue';
 import { useAuthStore } from 'src/stores/auth.store';
 import { useRouter } from 'vue-router';
+import ConfirmLockDialog from 'src/dialogs/auth/ConfirmLockDialog.vue';
 
 const { locale } = useI18n({ useScope: 'global' });
 

@@ -13,6 +13,7 @@
 import { ref } from 'vue';
 import { Todo, Meta } from 'components/models';
 import ExampleComponent from 'components/ExampleComponent.vue';
+import { TheDialogs } from 'src/dialogs/the-dialogs';
 
 defineOptions({
   name: 'IndexPage',
@@ -44,4 +45,10 @@ const todos = ref<Todo[]>([
 const meta = ref<Meta>({
   totalCount: 1200,
 });
+function test() {
+  TheDialogs.emit({
+    type: 'confirmLockDialog',
+    arg: {},
+  });
+}
 </script>
