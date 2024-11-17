@@ -14,7 +14,13 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/get-started',
     name: 'get-started',
-    component: () => import('pages/auth/AccountApplicationPage.vue'),
+    component: () => import('layouts/GetStartedLayout.vue'),
+    children: [
+      {
+        path: '',
+        component: () => import('pages/GetStartedPage.vue'),
+      },
+    ],
   },
   {
     path: '/auth',
