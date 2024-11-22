@@ -1,5 +1,14 @@
 <template>
   <q-page class="column justify-center items-center q-page">
+    <div
+      class="absolute-top-left q-ma-lg flex items-center cursor-pointer"
+      v-ripple
+      @click="logout"
+    >
+      <q-btn round color="secondary" size="sm" icon="logout" class="q-mr-sm" />
+      <span class="text-primary text-h6 text-bold text-center">LOGOUT</span>
+    </div>
+
     <span
       class="text-center text-weight-bolder text-primary q-mb-xl"
       :class="{
@@ -51,15 +60,6 @@
       class="q-mt-xl"
       :class="$q.screen.gt.xs ? 'q-py-md q-px-xl' : 'q-py-sm q-px-lg'"
     />
-    <q-btn
-      unelevated
-      rounded
-      color="secondary"
-      label="Logout"
-      @click="logout"
-      class="q-mt-xl"
-      :class="$q.screen.gt.xs ? 'q-py-md q-px-xl' : 'q-py-sm q-px-lg'"
-    />
   </q-page>
 </template>
 
@@ -91,6 +91,7 @@ const selectRole = (roleName?: string) => {
   selectedRole.value = roleName || null;
   console.log(selectedRole.value);
 };
+
 function logout() {
   TheDialogs.emit({
     type: 'logoutDialog',
