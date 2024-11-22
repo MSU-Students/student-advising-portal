@@ -3,5 +3,5 @@ export interface IRouteMeta {
   menu?: string;
   icon?: string;
   anonymous?: true;
-  requiresLogin?: true;
+  requiresLogin?: string[] | true;
 }
