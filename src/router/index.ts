@@ -34,9 +34,14 @@ export default route(function (/* { store, ssrContext } */) {
   });
   Router.beforeEach(async (to, from, next) => {
     const user = await authStore.getUser();
+
     if (to.meta?.requiresLogin && !user) {
       next({
         name: 'login'
+      });
+    } else if (Array.isArray(to.meta?.requiresLogin) && user && !to.meta?.requiresLogin.includes(user.type)) {
+      next({
+        name: 'home'
       });
     } else if (to.meta.anonymous && !!user) {
       next({
