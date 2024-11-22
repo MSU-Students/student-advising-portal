@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import { IProfile } from 'src/entities';
 import { firebaseService } from 'src/services/firebase.service';
 import { useProfileStore } from './profile.store';
+import { User } from 'firebase/auth';
 
 
 
@@ -22,22 +23,28 @@ export const useAuthStore = defineStore('auth', {
       if (profile) {
         this.currentUser = profile;
       } else {
-        this.currentUser = {
-          key: credential.user.uid,
-          type: 'anonymous',
-          fullName: credential.user.displayName || '',
-          avatar: credential.user.photoURL || '',
-          email: credential.user.email || '',
-        }
-        profileStore.register(this.currentUser)
+
       }
 
     },
+    async registerCurrentUser(user: User) {
+      const profileStore = useProfileStore();
+      this.currentUser = {
+        key: user.uid,
+        type: 'anonymous',
+        fullName: user.displayName || '',
+        avatar: user.photoURL || '',
+        email: user.email || '',
+      }
+      return await profileStore.register(this.currentUser) as IProfile;
+    },
     async getUser() {
-      const user = await firebaseService.authenticate();
+      const user = await firebaseService.auth()
+        || await firebaseService.authenticate();
       const profileStore = useProfileStore();
       if (user) {
-        this.currentUser = await profileStore.getProfile(user.uid);
+        this.currentUser = await profileStore.getProfile(user.uid)
+          || await this.registerCurrentUser(user);
       } else {
         this.currentUser = undefined;
       }
