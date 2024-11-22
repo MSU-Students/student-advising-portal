@@ -1,5 +1,5 @@
 <template>
-  <q-page>
+  <q-page>npm
     <q-btn class="fixed-center" @click="onLogin">Login with Google</q-btn>
   </q-page>
 </template>

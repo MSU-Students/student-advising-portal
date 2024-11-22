@@ -12,17 +12,6 @@ declare module 'vue-router' {
 
 const routes: RouteRecordRaw[] = [
   {
-    path: '/get-started',
-    name: 'get-started',
-    component: () => import('layouts/GetStartedLayout.vue'),
-    children: [
-      {
-        path: '',
-        component: () => import('pages/GetStartedPage.vue'),
-      },
-    ],
-  },
-  {
     path: '/auth',
     component: () => import('layouts/PlainLayout.vue'),
     children: [
@@ -33,6 +22,11 @@ const routes: RouteRecordRaw[] = [
         meta: {
           anonygmous: true,
         },
+      },
+      {
+        path: 'get-started',
+        name: 'get-started',
+        component: () => import('pages/auth/GetStartedPage.vue'),
       },
     ],
   },
