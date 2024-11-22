@@ -18,7 +18,11 @@ export const useProfileStore = defineStore('profile', {
       return await firebaseService.create('profiles', profile);
     },
     async getProfile(key: string) {
-      return await firebaseService.get('profiles', key) as IProfile;
+      try {
+        return await firebaseService.get('profiles', key) as IProfile;
+      } catch {
+        return;
+      }
     }
   },
 });
