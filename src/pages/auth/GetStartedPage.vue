@@ -51,18 +51,29 @@
       class="q-mt-xl"
       :class="$q.screen.gt.xs ? 'q-py-md q-px-xl' : 'q-py-sm q-px-lg'"
     />
+    <q-btn
+      unelevated
+      rounded
+      color="secondary"
+      label="Logout"
+      @click="logout"
+      class="q-mt-xl"
+      :class="$q.screen.gt.xs ? 'q-py-md q-px-xl' : 'q-py-sm q-px-lg'"
+    />
   </q-page>
 </template>
 
 <script setup lang="ts">
+import { TheDialogs } from 'src/dialogs/the-dialogs';
 import { computed, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 interface Role {
   name: string;
   label: string;
   icon: string;
 }
-
+const $router = useRouter();
 const role_options: Role[] = [
   { name: 'student', label: 'STUDENT', icon: 'school' },
   { name: 'faculty', label: 'FACULTY', icon: 'menu_book' },
@@ -80,6 +91,18 @@ const selectRole = (roleName?: string) => {
   selectedRole.value = roleName || null;
   console.log(selectedRole.value);
 };
+function logout() {
+  TheDialogs.emit({
+    type: 'logoutDialog',
+    arg: {
+      success() {
+        $router.replace({
+          name: 'login',
+        });
+      },
+    },
+  });
+}
 </script>
 
 <style lang="sass">

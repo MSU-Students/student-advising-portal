@@ -27,6 +27,9 @@ const routes: RouteRecordRaw[] = [
         path: 'get-started',
         name: 'get-started',
         component: () => import('pages/auth/GetStartedPage.vue'),
+        meta: {
+          requiresLogin: true
+        }
       },
     ],
   },
