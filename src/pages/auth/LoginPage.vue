@@ -12,10 +12,16 @@ function onLogin() {
   TheWorkflows.emit({
     type: 'loginWithGoogle',
     arg: {
-      success: () => {
-        $router.replace({
-          name: 'home',
-        });
+      success: async (profile) => {
+        if (profile.type == 'anonymous' || !profile.type) {
+          await $router.replace({
+            name: 'get-started',
+          });
+        } else {
+          await $router.replace({
+            name: 'home',
+          });
+        }
       },
       error: (err) => {
         console.log(err);

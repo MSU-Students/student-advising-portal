@@ -1,8 +1,8 @@
+import { IProfile } from 'src/entities';
 import { Struct } from 'src/structs';
-
 export type Auth =
   Struct<'loginWithGoogle', {
-    success: VoidCallback;
+    success: (profile: IProfile) => void;
     error?: ErrorCallback;
   }>
   | Struct<'logOut', {

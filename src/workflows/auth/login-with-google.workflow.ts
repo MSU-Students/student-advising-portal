@@ -7,7 +7,12 @@ TheWorkflows.on({
     try {
       const authStore = useAuthStore();
       await authStore.loginWithGoogle();
-      e.success();
+      const profile = await authStore.getUser();
+      if (profile) {
+        e.success(profile);
+      } else {
+        if (e.error) e.error(new Error('Something went wrong'));
+      }
     } catch (error) {
       if (e.error) e.error(new Error(String(error)));
     }
