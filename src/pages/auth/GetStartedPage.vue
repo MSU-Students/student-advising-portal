@@ -59,6 +59,7 @@
       :disable="!selectedRole"
       class="q-mt-xl"
       :class="$q.screen.gt.xs ? 'q-py-md q-px-xl' : 'q-py-sm q-px-lg'"
+      @click="continueAs"
     />
   </q-page>
 </template>
@@ -90,6 +91,12 @@ const selectRole = (roleName?: string) => {
   if (!roleName) return;
   selectedRole.value = roleName || null;
   console.log(selectedRole.value);
+};
+
+const continueAs = () => {
+  if (selectedRole.value === 'admin') {
+    TheDialogs.emit({ type: 'adminDialog', arg: {} });
+  }
 };
 
 function logout() {
