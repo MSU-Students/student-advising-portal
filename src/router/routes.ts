@@ -6,7 +6,6 @@ declare module 'vue-router' {
   interface RouteMeta extends IRouteMeta {
     description?: string;
     keywords?: string[];
-    role?: string | string[];
   }
 }
 
