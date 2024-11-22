@@ -38,7 +38,11 @@ export default route(function (/* { store, ssrContext } */) {
       next({
         name: 'login'
       });
-    } else if (Array.isArray(to.meta?.requiresLogin) && user && !to.meta?.requiresLogin.includes(user.type)) {
+    } else if (Array.isArray(to.meta?.requiresLogin) && (!user?.type || user.type == 'anonymous')) {
+      next({
+        name: 'get-started'
+      });
+    } else if (Array.isArray(to.meta?.requiresLogin) && user?.type && !to.meta?.requiresLogin.includes(user.type)) {
       next({
         name: 'home'
       });

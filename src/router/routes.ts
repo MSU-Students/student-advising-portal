@@ -39,7 +39,7 @@ const routes: RouteRecordRaw[] = [
         name: 'home',
         component: () => import('pages/IndexPage.vue'),
         meta: {
-          requiresLogin: true,
+          requiresLogin: ['admin', 'student', 'adviser'],
           menu: 'Home',
           title: 'Home Page',
           icon: 'home',
