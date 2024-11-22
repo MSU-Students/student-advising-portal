@@ -63,7 +63,7 @@ import { WhereFilterOp } from './firebase-operators';
 import { Observable, Subject, retry } from 'rxjs';
 import { Models } from './firebase.models';
 import { getCollections } from './firebase.collections';
-
+import firebase from '../../firebase.json';
 export enum AccessStatus {
   offline = 1,
   online = 2,
@@ -87,10 +87,23 @@ const fbStorage = getStorage(app);
 const googleProvider = new GoogleAuthProvider();
 
 if (/development/i.test(process.env.NODE_ENV) && !(process.env.USE_LIVE)) {
-  connectAuthEmulator(auth, 'http://localhost:9099');
-  connectFirestoreEmulator(fbStore, 'localhost', 8080);
-  connectDatabaseEmulator(fbDb, 'localhost', 9001);
-  connectStorageEmulator(fbStorage, 'localhost', 9199);
+  if (firebase.emulators) {
+    type EmulatorConfig = { [key: string]: { port: number } };
+    const emulators = firebase.emulators as unknown as EmulatorConfig;
+    if (emulators.auth) {
+      connectAuthEmulator(auth, 'http://localhost:' + emulators.auth.port);
+    }
+    if (emulators.firestore) {
+      connectFirestoreEmulator(fbStore, 'localhost', emulators.firestore.port);
+    }
+    if (emulators.database) {
+      connectDatabaseEmulator(fbDb, 'localhost', emulators.database.port);
+    }
+    if (emulators.storage) {
+      connectStorageEmulator(fbStorage, 'localhost', emulators.storage.port);
+
+    }
+  }
 }
 
 const imagesStorageRef = ref(fbStorage, 'images');

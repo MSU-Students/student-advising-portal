@@ -38,6 +38,10 @@ export default route(function (/* { store, ssrContext } */) {
       next({
         name: 'login'
       });
+    } else if (Array.isArray(to.meta?.requiresLogin) && user && !to.meta?.requiresLogin.includes(user.type)) {
+      next({
+        name: 'home'
+      });
     } else if (to.meta.anonymous && !!user) {
       next({
         name: 'home'
