@@ -34,7 +34,6 @@ export default route(function (/* { store, ssrContext } */) {
   });
   Router.beforeEach(async (to, from, next) => {
     const user = await authStore.getUser();
-
     if (to.meta?.requiresLogin && !user) {
       next({
         name: 'login'
