@@ -12,7 +12,8 @@
       </q-card-section>
 
       <q-card-section class="q-pt-md">
-        <span>Do you want to proceed as Student?</span>
+        <q-input v-model="text" label="ID Number" />
+        <q-input v-model="text2" label="Program" />
       </q-card-section>
 
       <q-card-actions align="right" class="bg-grey-1">
@@ -34,6 +35,8 @@ import { ref } from 'vue';
 import { TheDialogs } from 'src/dialogs/the-dialogs';
 
 const studentAdminDialog = ref(false);
+const text = ref('');
+const text2 = ref('');
 
 TheDialogs.on({
   type: 'studentDialog',
@@ -43,7 +46,7 @@ TheDialogs.on({
 });
 
 function confirmStudent() {
-  console.log('Student confirmed');
+  console.log('Student/ confirmed');
   studentAdminDialog.value = false;
 }
 </script>
