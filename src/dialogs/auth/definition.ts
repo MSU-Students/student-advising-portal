@@ -14,9 +14,25 @@ export type Auth =
         success?: VoidCallback;
         error?: ErrorCallback;
       }
-    >
+    >;
+
+export type AccountApplication =
   | Struct<
       'adminDialog',
+      {
+        success?: VoidCallback;
+        error?: ErrorCallback;
+      }
+    >
+  | Struct<
+      'studentDialog',
+      {
+        success?: VoidCallback;
+        error?: ErrorCallback;
+      }
+    >
+  | Struct<
+      'adviserDialog',
       {
         success?: VoidCallback;
         error?: ErrorCallback;

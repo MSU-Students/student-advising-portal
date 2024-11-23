@@ -1,9 +1,8 @@
 import { theBus } from 'src/the-bus';
 import { ToEmit, ToType } from 'src/structs';
-import { Auth } from './auth/definition';
+import { AccountApplication, Auth } from './auth/definition';
 
-export type DialogStructs =
-  | Auth;
+export type DialogStructs = Auth | AccountApplication;
 
 type DialogEvents = ToEmit<DialogStructs, DialogStructs>;
 export type WorkflowTypes = ToType<DialogStructs, DialogStructs>;

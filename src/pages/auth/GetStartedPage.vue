@@ -77,7 +77,7 @@ interface Role {
 const $router = useRouter();
 const role_options: Role[] = [
   { name: 'student', label: 'STUDENT', icon: 'school' },
-  { name: 'faculty', label: 'FACULTY', icon: 'menu_book' },
+  { name: 'adviser', label: 'FACULTY', icon: 'menu_book' },
   { name: 'admin', label: 'ADMIN', icon: 'construction' },
 ];
 
@@ -96,6 +96,10 @@ const selectRole = (roleName?: string) => {
 const continueAs = () => {
   if (selectedRole.value === 'admin') {
     TheDialogs.emit({ type: 'adminDialog', arg: {} });
+  } else if (selectedRole.value === 'student') {
+    TheDialogs.emit({ type: 'studentDialog', arg: {} });
+  } else if (selectedRole.value === 'adviser') {
+    TheDialogs.emit({ type: 'adviserDialog', arg: {} });
   }
 };
 
