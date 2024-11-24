@@ -23,6 +23,12 @@ export const useProfileStore = defineStore('profile', {
       } catch {
         return;
       }
+    },
+    async findProfiles(keyword: string) {
+      return (await firebaseService.findAll('profiles') as IProfile[])
+        .filter(profile => {
+          return profile.type == 'adviser' && profile.fullName.toLowerCase().match(keyword.toLowerCase())
+        });
     }
   },
 });
