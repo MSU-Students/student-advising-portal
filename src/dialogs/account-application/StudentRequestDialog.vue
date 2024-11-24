@@ -46,7 +46,7 @@ TheDialogs.on({
 });
 
 function confirmStudent() {
-  console.log('Student/ confirmed');
+  console.log('Student confirmed');
   studentAdminDialog.value = false;
 }
 </script>
