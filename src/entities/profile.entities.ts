@@ -8,7 +8,8 @@ export interface IProfileBase extends IBaseEntity {
 
 export interface IStudentProfile extends IProfileBase {
   type: 'student';
-  foreign: boolean;
+  idNumber: string;
+  program: string;
 }
 
 export interface IAdviserProfile extends IProfileBase {
@@ -20,11 +21,12 @@ export interface IAdminProfile extends IProfileBase {
   type: 'admin';
 }
 
-
 export interface IAnonymousProfile extends IProfileBase {
   type: 'anonymous';
 }
 
-
-export type IProfile = IStudentProfile | IAdviserProfile | IAdminProfile | IAnonymousProfile;
-
+export type IProfile =
+  | IStudentProfile
+  | IAdviserProfile
+  | IAdminProfile
+  | IAnonymousProfile;
