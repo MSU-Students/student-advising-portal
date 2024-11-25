@@ -23,7 +23,7 @@
           label="Confirm"
           color="primary"
           icon="check_circle"
-          @click="confirmStudent"
+          @click="onRequest"
         />
       </q-card-actions>
     </q-card>
@@ -31,13 +31,28 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive } from 'vue';
+import { ref, reactive, computed } from 'vue';
 import { TheDialogs } from 'src/dialogs/the-dialogs';
+import { IProfile, IStudentProfile } from 'src/entities';
+import { useAuthStore } from 'src/stores/auth.store';
+import { TheWorkflows } from 'src/workflows/the-workflows';
+import { uid, useQuasar } from 'quasar';
 
+const authStore = useAuthStore();
 const studentAdminDialog = ref(false);
+const $q = useQuasar();
 const formFields = reactive({
   idNumber: '',
   program: '',
+});
+
+const newData = computed(() => {
+  return {
+    ...(authStore.currentUser as IProfile),
+    type: 'student',
+    idNumber: formFields.idNumber,
+    program: formFields.program,
+  } as IStudentProfile;
 });
 
 TheDialogs.on({
@@ -47,8 +62,29 @@ TheDialogs.on({
   },
 });
 
-function confirmStudent() {
-  console.log('Student confirmed');
-  studentAdminDialog.value = false;
+function resetFormFields() {
+  formFields.idNumber = '';
+  formFields.program = '';
+}
+
+function onRequest() {
+  TheWorkflows.emit({
+    type: 'createRequest',
+    arg: {
+      applicant: {
+        key: uid(),
+        status: 'pending',
+        createdAt: Date(),
+        data: { ...newData.value },
+      },
+      success: () => {
+        $q.notify('Student application was successful.');
+        resetFormFields();
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    },
+  });
 }
 </script>
