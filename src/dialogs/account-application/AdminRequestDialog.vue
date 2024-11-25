@@ -50,7 +50,7 @@ const newData = computed(() => {
 });
 
 TheDialogs.on({
-  type: 'adminDialog',
+  type: 'adminApplicationDialog',
   cb() {
     adminDialogVisible.value = true;
   },

@@ -39,7 +39,7 @@ const text = ref('');
 const text2 = ref('');
 
 TheDialogs.on({
-  type: 'studentDialog',
+  type: 'studentApplicationDialog',
   cb() {
     studentAdminDialog.value = true;
   },

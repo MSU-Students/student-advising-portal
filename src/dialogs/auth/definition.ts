@@ -18,14 +18,14 @@ export type Auth =
 
 export type AccountApplication =
   | Struct<
-      'adminDialog',
+      'adminApplicationDialog',
       {
         success?: VoidCallback;
         error?: ErrorCallback;
       }
     >
   | Struct<
-      'studentDialog',
+      'studentApplicationDialog',
       {
         success?: VoidCallback;
         error?: ErrorCallback;

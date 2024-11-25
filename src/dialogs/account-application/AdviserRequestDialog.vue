@@ -63,7 +63,7 @@ const newData = computed(() => {
 });
 
 TheDialogs.on({
-  type: 'adviserDialog',
+  type: 'adviserApplicationDialog',
   cb() {
     adviserDialogVisible.value = true;
   },
