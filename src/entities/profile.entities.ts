@@ -17,6 +17,7 @@ export interface IAdviserProfile extends IProfileBase {
   college: string;
   department: string;
   position: string;
+  employeeID: string;
 }
 
 export interface IAdminProfile extends IProfileBase {

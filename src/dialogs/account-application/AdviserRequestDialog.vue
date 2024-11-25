@@ -15,6 +15,7 @@
         <q-input v-model="formFields.college" label="College" />
         <q-input v-model="formFields.department" label="Department" />
         <q-input v-model="formFields.position" label="Position" />
+        <q-input v-model="formFields.employeeID" label="Employee ID" />
       </q-card-section>
 
       <q-card-actions align="right" class="bg-grey-1">
@@ -47,6 +48,7 @@ const formFields = reactive({
   college: '',
   department: '',
   position: '',
+  employeeID: '',
 });
 
 const newData = computed(() => {
@@ -56,6 +58,7 @@ const newData = computed(() => {
     college: formFields.college,
     department: formFields.department,
     position: formFields.position,
+    employeeID: formFields.employeeID,
   } as IAdviserProfile;
 });
 
@@ -70,6 +73,7 @@ function resetFormFields() {
   formFields.college = '';
   formFields.department = '';
   formFields.position = '';
+  formFields.employeeID = '';
 }
 
 function onRequest() {
