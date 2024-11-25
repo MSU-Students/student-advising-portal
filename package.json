@@ -40,7 +40,7 @@
     "ts-jest": "^29.2.5",
     "typescript": "^5.7.2",
     "vite-plugin-checker": "^0.8.0",
-    "vue-tsc": "^2.1.10",
+    "vue-tsc": "^2.0.29",
     "workbox-build": "7.0.x",
     "workbox-cacheable-response": "7.0.x",
     "workbox-core": "7.0.x",
