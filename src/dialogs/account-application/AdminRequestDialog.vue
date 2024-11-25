@@ -31,18 +31,21 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from 'vue';
+import { ref } from 'vue';
 import { TheDialogs } from 'src/dialogs/the-dialogs';
 import { TheWorkflows } from 'src/workflows/the-workflows';
 import { uid, useQuasar } from 'quasar';
 import { useAuthStore } from 'src/stores/auth.store';
-import { IProfile } from 'src/entities';
+import { IAdminProfile, IProfile } from 'src/entities';
 
 const authStore = useAuthStore();
 const adminDialogVisible = ref(false);
 const $q = useQuasar();
 
-const currentUser = computed(() => authStore.currentUser as IProfile);
+const newData = {
+  ...(authStore.currentUser as IProfile),
+  type: 'admin',
+} as IAdminProfile;
 
 TheDialogs.on({
   type: 'adminDialog',
@@ -57,10 +60,9 @@ function onRequest() {
     arg: {
       applicant: {
         key: uid(),
-        role: 'admin',
         status: 'pending',
         createdAt: Date(),
-        data: { ...currentUser.value },
+        data: newData,
       },
       success: () => {
         console.log('HELLO THERE');
