@@ -1,15 +1,22 @@
 import { Struct } from 'src/structs';
 
-export type Auth =
+export type AccountApplication =
   | Struct<
-      'logoutDialog',
+      'adminApplicationDialog',
       {
         success?: VoidCallback;
         error?: ErrorCallback;
       }
     >
   | Struct<
-      'confirmLockDialog',
+      'studentApplicationDialog',
+      {
+        success?: VoidCallback;
+        error?: ErrorCallback;
+      }
+    >
+  | Struct<
+      'adviserApplicationDialog',
       {
         success?: VoidCallback;
         error?: ErrorCallback;
