@@ -2,7 +2,7 @@ import { useRequestStore } from 'src/stores/request.store';
 import { TheWorkflows } from '../the-workflows';
 
 TheWorkflows.on({
-  type: 'request',
+  type: 'createRequest',
   cb(e) {
     try {
       const requestStore = useRequestStore();

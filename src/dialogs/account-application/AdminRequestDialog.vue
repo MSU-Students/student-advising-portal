@@ -58,7 +58,7 @@ TheDialogs.on({
 
 function onRequest() {
   TheWorkflows.emit({
-    type: 'request',
+    type: 'createRequest',
     arg: {
       applicant: {
         key: uid(),

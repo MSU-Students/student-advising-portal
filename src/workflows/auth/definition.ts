@@ -16,7 +16,7 @@ export type Auth =
       }
     >
   | Struct<
-      'request',
+      'createRequest',
       {
         applicant: IRequest;
         success: VoidCallback;
