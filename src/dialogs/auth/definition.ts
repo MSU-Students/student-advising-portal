@@ -32,7 +32,7 @@ export type AccountApplication =
       }
     >
   | Struct<
-      'adviserDialog',
+      'adviserApplicationDialog',
       {
         success?: VoidCallback;
         error?: ErrorCallback;

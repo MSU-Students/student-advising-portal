@@ -12,8 +12,8 @@
       </q-card-section>
 
       <q-card-section class="q-pt-md">
-        <q-input v-model="text" label="ID Number" />
-        <q-input v-model="text2" label="Program" />
+        <q-input v-model="formFields.idNumber" label="ID Number" />
+        <q-input v-model="formFields.program" label="Program" />
       </q-card-section>
 
       <q-card-actions align="right" class="bg-grey-1">
@@ -31,12 +31,14 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { ref, reactive } from 'vue';
 import { TheDialogs } from 'src/dialogs/the-dialogs';
 
 const studentAdminDialog = ref(false);
-const text = ref('');
-const text2 = ref('');
+const formFields = reactive({
+  idNumber: '',
+  program: '',
+});
 
 TheDialogs.on({
   type: 'studentApplicationDialog',
