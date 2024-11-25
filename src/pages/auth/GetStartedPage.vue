@@ -1,5 +1,14 @@
 <template>
   <q-page class="column justify-center items-center q-page">
+    <div
+      class="absolute-top-left q-ma-lg flex items-center cursor-pointer"
+      v-ripple
+      @click="logout"
+    >
+      <q-btn round color="secondary" size="sm" icon="logout" class="q-mr-sm" />
+      <span class="text-primary text-h6 text-bold text-center">LOGOUT</span>
+    </div>
+
     <span
       class="text-center text-weight-bolder text-primary q-mb-xl"
       :class="{
@@ -9,7 +18,6 @@
       }"
       >SELECT USER TYPE</span
     >
-
     <div
       class="row justify-center items-center q-cards"
       :class="$q.screen.gt.xs ? 'q-gutter-xl' : 'q-gutter-md'"
@@ -50,15 +58,7 @@
       :disable="!selectedRole"
       class="q-mt-xl"
       :class="$q.screen.gt.xs ? 'q-py-md q-px-xl' : 'q-py-sm q-px-lg'"
-    />
-    <q-btn
-      unelevated
-      rounded
-      color="secondary"
-      label="Logout"
-      @click="logout"
-      class="q-mt-xl"
-      :class="$q.screen.gt.xs ? 'q-py-md q-px-xl' : 'q-py-sm q-px-lg'"
+      @click="continueAs"
     />
   </q-page>
 </template>
@@ -76,7 +76,7 @@ interface Role {
 const $router = useRouter();
 const role_options: Role[] = [
   { name: 'student', label: 'STUDENT', icon: 'school' },
-  { name: 'faculty', label: 'FACULTY', icon: 'menu_book' },
+  { name: 'adviser', label: 'FACULTY', icon: 'menu_book' },
   { name: 'admin', label: 'ADMIN', icon: 'construction' },
 ];
 
@@ -89,8 +89,18 @@ const buttonLabel = computed(() =>
 const selectRole = (roleName?: string) => {
   if (!roleName) return;
   selectedRole.value = roleName || null;
-  console.log(selectedRole.value);
 };
+
+const continueAs = () => {
+  if (selectedRole.value === 'admin') {
+    TheDialogs.emit({ type: 'adminApplicationDialog', arg: {} });
+  } else if (selectedRole.value === 'student') {
+    TheDialogs.emit({ type: 'studentApplicationDialog', arg: {} });
+  } else if (selectedRole.value === 'adviser') {
+    TheDialogs.emit({ type: 'adviserApplicationDialog', arg: {} });
+  }
+};
+
 function logout() {
   TheDialogs.emit({
     type: 'logoutDialog',
