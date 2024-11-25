@@ -18,7 +18,6 @@
       }"
       >SELECT USER TYPE</span
     >
-
     <div
       class="row justify-center items-center q-cards"
       :class="$q.screen.gt.xs ? 'q-gutter-xl' : 'q-gutter-md'"
@@ -90,16 +89,15 @@ const buttonLabel = computed(() =>
 const selectRole = (roleName?: string) => {
   if (!roleName) return;
   selectedRole.value = roleName || null;
-  console.log(selectedRole.value);
 };
 
 const continueAs = () => {
   if (selectedRole.value === 'admin') {
-    TheDialogs.emit({ type: 'adminDialog', arg: {} });
+    TheDialogs.emit({ type: 'adminApplicationDialog', arg: {} });
   } else if (selectedRole.value === 'student') {
-    TheDialogs.emit({ type: 'studentDialog', arg: {} });
+    TheDialogs.emit({ type: 'studentApplicationDialog', arg: {} });
   } else if (selectedRole.value === 'adviser') {
-    TheDialogs.emit({ type: 'adviserDialog', arg: {} });
+    TheDialogs.emit({ type: 'adviserApplicationDialog', arg: {} });
   }
 };
 

@@ -1,6 +1,7 @@
 import { theBus } from 'src/the-bus';
 import { ToEmit, ToType } from 'src/structs';
-import { AccountApplication, Auth } from './auth/definition';
+import { Auth } from './auth/definition';
+import { AccountApplication } from './account-application/definition';
 
 export type DialogStructs = Auth | AccountApplication;
 
