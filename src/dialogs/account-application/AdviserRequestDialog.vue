@@ -66,6 +66,12 @@ TheDialogs.on({
   },
 });
 
+function resetFormFields() {
+  formFields.college = '';
+  formFields.department = '';
+  formFields.position = '';
+}
+
 function onRequest() {
   TheWorkflows.emit({
     type: 'request',
@@ -78,6 +84,7 @@ function onRequest() {
       },
       success: () => {
         $q.notify('Adviser application was successful.');
+        resetFormFields();
       },
       error: (err) => {
         console.log(err);
