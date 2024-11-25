@@ -14,7 +14,9 @@ export interface IStudentProfile extends IProfileBase {
 
 export interface IAdviserProfile extends IProfileBase {
   type: 'adviser';
-  primary: boolean;
+  college: string;
+  department: string;
+  position: string;
 }
 
 export interface IAdminProfile extends IProfileBase {

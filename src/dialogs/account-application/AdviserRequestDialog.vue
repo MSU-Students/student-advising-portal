@@ -12,7 +12,9 @@
       </q-card-section>
 
       <q-card-section class="q-pt-md">
-        <span>Do you want to proceed as Adviser?</span>
+        <q-input v-model="formFields.college" label="College" />
+        <q-input v-model="formFields.department" label="Department" />
+        <q-input v-model="formFields.position" label="Position" />
       </q-card-section>
 
       <q-card-actions align="right" class="bg-grey-1">
@@ -22,7 +24,8 @@
           label="Confirm"
           color="primary"
           icon="check_circle"
-          @click="confirmAdviser"
+          @click="onRequest"
+          v-close-popup
         />
       </q-card-actions>
     </q-card>
@@ -30,10 +33,31 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { ref, reactive, computed } from 'vue';
 import { TheDialogs } from 'src/dialogs/the-dialogs';
+import { TheWorkflows } from 'src/workflows/the-workflows';
+import { uid, useQuasar } from 'quasar';
+import { useAuthStore } from 'src/stores/auth.store';
+import { IAdviserProfile, IProfile } from 'src/entities';
 
+const authStore = useAuthStore();
+const $q = useQuasar();
 const adviserDialogVisible = ref(false);
+const formFields = reactive({
+  college: '',
+  department: '',
+  position: '',
+});
+
+const newData = computed(() => {
+  return {
+    ...(authStore.currentUser as IProfile),
+    type: 'adviser',
+    college: formFields.college,
+    department: formFields.department,
+    position: formFields.position,
+  } as IAdviserProfile;
+});
 
 TheDialogs.on({
   type: 'adviserDialog',
@@ -42,8 +66,23 @@ TheDialogs.on({
   },
 });
 
-function confirmAdviser() {
-  console.log('Adviser confirmed');
-  adviserDialogVisible.value = false;
+function onRequest() {
+  TheWorkflows.emit({
+    type: 'request',
+    arg: {
+      applicant: {
+        key: uid(),
+        status: 'pending',
+        createdAt: Date(),
+        data: { ...newData.value },
+      },
+      success: () => {
+        $q.notify('Adviser application was successful.');
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    },
+  });
 }
 </script>
