@@ -24,6 +24,7 @@
           color="primary"
           icon="check_circle"
           @click="onRequest"
+          v-close-popup
         />
       </q-card-actions>
     </q-card>
