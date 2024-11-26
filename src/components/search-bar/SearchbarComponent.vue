@@ -28,7 +28,7 @@
       >
         <q-item-section avatar>
           <q-avatar class="avatar">
-            <img :src="`https://cdn.quasar.dev/img/${profile.avatar}`">
+            <img :src="`${profile.avatar}`">
           </q-avatar>
         </q-item-section>
         
