@@ -27,8 +27,8 @@ const routes: RouteRecordRaw[] = [
         name: 'get-started',
         component: () => import('pages/auth/GetStartedPage.vue'),
         meta: {
-          requiresLogin: true
-        }
+          requiresLogin: true,
+        },
       },
     ],
   },
@@ -54,6 +54,16 @@ const routes: RouteRecordRaw[] = [
           menu: 'Student',
           title: 'Student Page',
           icon: 'person',
+        },
+      },
+      {
+        path: 'admin',
+        name: 'admin',
+        component: () => import('pages/admin/AdminPage.vue'),
+        meta: {
+          menu: 'Admin',
+          title: 'Admin Page',
+          icon: 'admin_panel_settings',
         },
       },
     ],
