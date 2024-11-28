@@ -1,17 +1,13 @@
 <template>
   <q-dialog v-model="studentAdminDialog" persistent>
-    <q-card style="min-width: 300px">
-      <q-card-section class="bg-primary text-white row items-center">
-        <q-avatar
-          icon="admin_panel_settings"
-          color="white"
-          text-color="primary"
-          size="md"
-        />
-        <span class="text-h6 q-ml-sm">Student Confirmation</span>
+    <q-card style="min-width: 300px; border-radius: 22px">
+      <q-card-section class="text-center bg-primary text-white">
+        <span class="text-h6 q-ml-sm q-pa-xl text-bold"
+          >STUDENT CONFIRMATION</span
+        >
       </q-card-section>
 
-      <q-card-section class="q-pt-md">
+      <q-card-section>
         <q-input
           v-model="formFields.idNumber"
           label="ID Number"
@@ -108,15 +104,11 @@ function onRequest() {
 <style lang="scss">
 .no-spinner {
   input[type='number'] {
-    // Chrome, Safari, Edge
     &::-webkit-outer-spin-button,
     &::-webkit-inner-spin-button {
       -webkit-appearance: none;
       margin: 0;
     }
-
-    // Firefox
-    -moz-appearance: textfield;
   }
 }
 </style>
