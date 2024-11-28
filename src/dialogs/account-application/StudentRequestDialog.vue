@@ -15,10 +15,15 @@
         <q-input
           v-model="formFields.idNumber"
           label="ID Number"
-          filled
-          :rules="[isRequired, isNumeric]"
+          :rules="[isRequired]"
+          class="no-spinner"
+          type="number"
         />
-        <q-input v-model="formFields.program" label="Program" />
+        <q-input
+          v-model="formFields.program"
+          label="Program"
+          :rules="[isRequired]"
+        />
       </q-card-section>
 
       <q-card-actions align="right" class="bg-grey-1">
@@ -54,11 +59,6 @@ const formFields = reactive({
 
 const isRequired = (val: string) => {
   if (!val) return 'Field is required!';
-  return true;
-};
-
-const isNumeric = (val: string) => {
-  if (typeof val !== 'number') return 'Invalid input, must be a number.';
   return true;
 };
 
@@ -104,3 +104,19 @@ function onRequest() {
   });
 }
 </script>
+
+<style lang="scss">
+.no-spinner {
+  input[type='number'] {
+    // Chrome, Safari, Edge
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    // Firefox
+    -moz-appearance: textfield;
+  }
+}
+</style>
