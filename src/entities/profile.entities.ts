@@ -4,6 +4,7 @@ export interface IProfileBase extends IBaseEntity {
   fullName: string;
   avatar: string;
   email?: string;
+  emailVerified?: boolean;
 }
 
 export interface IStudentProfile extends IProfileBase {

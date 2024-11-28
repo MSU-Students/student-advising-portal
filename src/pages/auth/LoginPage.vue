@@ -82,7 +82,7 @@
             <!-- Signup Section -->
             <p class="signup-text q-mt-lg">
               Don’t have an account?
-              <router-link to="/signup" class="signup-link"
+              <router-link :to="{ name: 'sign-up' }" class="signup-link"
                 >Sign Up</router-link
               >
             </p>
