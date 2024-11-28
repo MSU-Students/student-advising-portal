@@ -31,6 +31,7 @@
           icon="check_circle"
           @click="onRequest"
           v-close-popup
+          :disable="!isFormValid"
         />
       </q-card-actions>
     </q-card>
@@ -57,6 +58,10 @@ const isRequired = (val: string) => {
   if (!val) return 'Field is required!';
   return true;
 };
+
+const isFormValid = computed(() => {
+  return formFields.idNumber && formFields.program;
+});
 
 const newData = computed(() => {
   return {
