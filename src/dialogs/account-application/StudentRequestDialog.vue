@@ -12,7 +12,12 @@
       </q-card-section>
 
       <q-card-section class="q-pt-md">
-        <q-input v-model="formFields.idNumber" label="ID Number" />
+        <q-input
+          v-model="formFields.idNumber"
+          label="ID Number"
+          filled
+          :rules="[isRequired, isNumeric]"
+        />
         <q-input v-model="formFields.program" label="Program" />
       </q-card-section>
 
@@ -46,6 +51,16 @@ const formFields = reactive({
   idNumber: '',
   program: '',
 });
+
+const isRequired = (val: string) => {
+  if (!val) return 'Field is required!';
+  return true;
+};
+
+const isNumeric = (val: string) => {
+  if (typeof val !== 'number') return 'Invalid input, must be a number.';
+  return true;
+};
 
 const newData = computed(() => {
   return {
