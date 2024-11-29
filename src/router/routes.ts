@@ -27,8 +27,22 @@ const routes: RouteRecordRaw[] = [
         name: 'get-started',
         component: () => import('pages/auth/GetStartedPage.vue'),
         meta: {
-          requiresLogin: true
-        }
+          requiresLogin: true,
+        },
+      },
+      {
+        path: 'sign-up',
+        name: 'sign-up',
+        component: () => import('pages/auth/SignupPage.vue'),
+        meta: {},
+      },
+      {
+        path: 'email-verify',
+        name: 'email-verify',
+        component: () => import('pages/auth/EmailVerificationPage.vue'),
+        meta: {
+          requiresLogin: true,
+        },
       },
     ],
   },

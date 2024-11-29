@@ -120,7 +120,7 @@ Example: `login-with-email.workflow.ts`
 
 ```ts
 TheWorkflows.emit({
-  type: 'confirmLoc',
+  type: 'confirmLock',
   arg: {},
 });
 ```
