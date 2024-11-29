@@ -1,21 +1,34 @@
 <template>
   <q-dialog v-model="adviserDialogVisible" persistent>
-    <q-card style="min-width: 300px">
-      <q-card-section class="bg-primary text-white row items-center">
-        <q-avatar
-          icon="admin_panel_settings"
-          color="white"
-          text-color="primary"
-          size="md"
-        />
-        <span class="text-h6 q-ml-sm">Adviser Confirmation</span>
+    <q-card style="min-width: 300px; border-radius: 22px">
+      <q-card-section class="text-center bg-primary text-white">
+        <span class="text-h6 q-ml-sm q-pa-xl text-bold"
+          >ADVISER CONFIRMATION</span
+        >
       </q-card-section>
 
       <q-card-section class="q-pt-md">
-        <q-input v-model="formFields.college" label="College" />
-        <q-input v-model="formFields.department" label="Department" />
-        <q-input v-model="formFields.position" label="Position" />
-        <q-input v-model="formFields.employeeID" label="Employee ID" />
+        <q-input
+          v-model="formFields.college"
+          label="College"
+          :rules="[isRequired]"
+        />
+        <q-input
+          v-model="formFields.department"
+          label="Department"
+          :rules="[isRequired]"
+        />
+        <q-input
+          v-model="formFields.position"
+          label="Position"
+          :rules="[isRequired]"
+        /><q-input
+          v-model="formFields.employeeID"
+          label="Employee ID"
+          :rules="[isRequired]"
+          class="no-spinner"
+          type="number"
+        />
       </q-card-section>
 
       <q-card-actions align="right" class="bg-grey-1">
@@ -26,6 +39,7 @@
           color="primary"
           icon="check_circle"
           @click="onRequest"
+          :disable="!isFormValid"
           v-close-popup
         />
       </q-card-actions>
@@ -49,6 +63,20 @@ const formFields = reactive({
   department: '',
   position: '',
   employeeID: '',
+});
+
+const isRequired = (val: string) => {
+  if (!val) return 'Field is required!';
+  return true;
+};
+
+const isFormValid = computed(() => {
+  return (
+    formFields.college &&
+    formFields.department &&
+    formFields.employeeID &&
+    formFields.position
+  );
 });
 
 const newData = computed(() => {

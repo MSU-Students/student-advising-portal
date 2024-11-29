@@ -30,6 +30,20 @@ const routes: RouteRecordRaw[] = [
           requiresLogin: true,
         },
       },
+      {
+        path: 'sign-up',
+        name: 'sign-up',
+        component: () => import('pages/auth/SignupPage.vue'),
+        meta: {},
+      },
+      {
+        path: 'email-verify',
+        name: 'email-verify',
+        component: () => import('pages/auth/EmailVerificationPage.vue'),
+        meta: {
+          requiresLogin: true,
+        },
+      },
     ],
   },
   {
