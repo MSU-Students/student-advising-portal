@@ -33,8 +33,10 @@ import { TheWorkflows } from 'src/workflows/the-workflows';
 import { uid, useQuasar } from 'quasar';
 import { useAuthStore } from 'src/stores/auth.store';
 import { IAdminProfile, IProfile } from 'src/entities';
+import { useRouter } from 'vue-router';
 
 const authStore = useAuthStore();
+const router = useRouter();
 const adminDialogVisible = ref(false);
 const $q = useQuasar();
 
@@ -64,6 +66,7 @@ function onRequest() {
       },
       success: () => {
         $q.notify('Admin application was successful.');
+        router.replace({ name: 'pending-application' });
       },
       error: (err) => {
         console.log(err);

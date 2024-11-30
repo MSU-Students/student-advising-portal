@@ -66,14 +66,13 @@
 <script setup lang="ts">
 import { TheDialogs } from 'src/dialogs/the-dialogs';
 import { computed, ref } from 'vue';
-import { useRouter } from 'vue-router';
 
 interface Role {
   name: string;
   label: string;
   icon: string;
 }
-const $router = useRouter();
+
 const role_options: Role[] = [
   { name: 'student', label: 'STUDENT', icon: 'school' },
   { name: 'adviser', label: 'FACULTY', icon: 'menu_book' },
