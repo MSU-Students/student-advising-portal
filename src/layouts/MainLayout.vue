@@ -48,6 +48,9 @@
           {{ $t('ok') }}
         </q-toolbar-title>
         <q-space />
+
+        <SearchbarComponent />
+        
         <q-select
           v-model="locale"
           :options="localeOptions"
@@ -79,6 +82,7 @@ import LogOutDialog from 'src/dialogs/auth/LogOutDialog.vue';
 import { useAuthStore } from 'src/stores/auth.store';
 import { useRouter } from 'vue-router';
 import ConfirmLockDialog from 'src/dialogs/auth/ConfirmLockDialog.vue';
+import SearchbarComponent from 'src/components/search-bar/SearchbarComponent.vue';
 
 const { locale } = useI18n({ useScope: 'global' });
 

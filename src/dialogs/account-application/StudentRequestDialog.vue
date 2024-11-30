@@ -1,19 +1,25 @@
 <template>
   <q-dialog v-model="studentAdminDialog" persistent>
-    <q-card style="min-width: 300px">
-      <q-card-section class="bg-primary text-white row items-center">
-        <q-avatar
-          icon="admin_panel_settings"
-          color="white"
-          text-color="primary"
-          size="md"
-        />
-        <span class="text-h6 q-ml-sm">Student Confirmation</span>
+    <q-card style="min-width: 300px; border-radius: 22px">
+      <q-card-section class="text-center bg-primary text-white">
+        <span class="text-h6 q-ml-sm q-pa-xl text-bold"
+          >STUDENT CONFIRMATION</span
+        >
       </q-card-section>
 
-      <q-card-section class="q-pt-md">
-        <q-input v-model="formFields.idNumber" label="ID Number" />
-        <q-input v-model="formFields.program" label="Program" />
+      <q-card-section>
+        <q-input
+          v-model="formFields.idNumber"
+          label="ID Number"
+          :rules="[isRequired]"
+          class="no-spinner"
+          type="number"
+        />
+        <q-input
+          v-model="formFields.program"
+          label="Program"
+          :rules="[isRequired]"
+        />
       </q-card-section>
 
       <q-card-actions align="right" class="bg-grey-1">
@@ -25,6 +31,7 @@
           icon="check_circle"
           @click="onRequest"
           v-close-popup
+          :disable="!isFormValid"
         />
       </q-card-actions>
     </q-card>
@@ -45,6 +52,15 @@ const $q = useQuasar();
 const formFields = reactive({
   idNumber: '',
   program: '',
+});
+
+const isRequired = (val: string) => {
+  if (!val) return 'Field is required!';
+  return true;
+};
+
+const isFormValid = computed(() => {
+  return formFields.idNumber && formFields.program;
 });
 
 const newData = computed(() => {
@@ -89,3 +105,15 @@ function onRequest() {
   });
 }
 </script>
+
+<style lang="scss">
+.no-spinner {
+  input[type='number'] {
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+  }
+}
+</style>
