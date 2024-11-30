@@ -1,31 +1,28 @@
 <template>
-  <q-page class="row items-center justify-evenly q-px-lg">
-    <q-banner v-if="message" rounded class="bg-purple-8 text-white full-width">
-      {{ message }}
-    </q-banner>
-    <q-btn @click="lockScreen" icon="lock">Lock Screen</q-btn>
+  <q-page class="q-pa-md">
+    <q-card class="q-mb-md" flat bordered>
+      <q-card-section>
+        <h2>Welcome to Your Dashboard!</h2>
+        <p>Track your data and Activity logs here.</p>
+      </q-card-section>
+    </q-card>
+
+    <q-card class="q-mb-md" flat bordered>
+      <q-card-section>
+        <h3>Data Analytics</h3>
+        <p>This section will show data analysis and charts.</p>
+      </q-card-section>
+    </q-card>
+
+    <q-card flat bordered>
+      <q-card-section>
+        <h3>Activity Logs</h3>
+        <p>View your recent activities and interactions.</p>
+      </q-card-section>
+    </q-card>
   </q-page>
 </template>
 
-<script setup lang="ts">
-import { TheDialogs } from 'src/dialogs/the-dialogs';
-import { ref } from 'vue';
-const message = ref('');
-defineOptions({
-  name: 'IndexPage',
-});
+<script setup lang="ts"></script>
 
-function lockScreen() {
-  TheDialogs.emit({
-    type: 'confirmLockDialog',
-    arg: {
-      success() {
-        message.value = "You're screen is about to lock";
-      },
-      error(err) {
-        message.value = String(err);
-      },
-    },
-  });
-}
-</script>
+<style scoped></style>
