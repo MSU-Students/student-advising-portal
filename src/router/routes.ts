@@ -56,6 +56,15 @@ const routes: RouteRecordRaw[] = [
           icon: 'person',
         },
       },
+      {
+        path: 'booking',
+        component: () => import('pages/students/BookingPage.vue'),
+        meta: {
+          menu: 'Booking',
+          title: 'Booking Page',
+          icon: 'library_books',
+        },
+      },
     ],
   },
 
