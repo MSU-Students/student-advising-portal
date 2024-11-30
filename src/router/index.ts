@@ -38,41 +38,50 @@ export default route(function (/* { store, ssrContext } */) {
   });
   Router.beforeEach(async (to, from, next) => {
     const user = await authStore.getUser();
-    const request = await requestStore.getRequest(user?.key || '');
+    const userType = user?.type;
+    const userKey = user?.key || '';
+    const request = await requestStore.getRequest(userKey);
 
-    if (to.meta?.requiresLogin && !user) {
-      next({
-        name: 'login',
-      });
-    } else if (
-      user?.type == 'anonymous' &&
+    const requiresLogin = Array.isArray(to.meta?.requiresLogin)
+      ? to.meta.requiresLogin
+      : to.meta?.requiresLogin;
+
+    // redirect to login if route requires login and user is not logged in.
+    if (requiresLogin && !user) {
+      console.log('hi');
+      return next({ name: 'login' });
+    }
+
+    // redirect anonymous users with no pending request to the get started page.
+    if (userType === 'anonymous' && !request && to.name !== 'get-started') {
+      return next({ name: 'get-started' });
+    }
+
+    // redirect anonymous users with pending request to the pending application page.
+    if (
+      userType === 'anonymous' &&
       request?.status === 'pending' &&
       to.name !== 'pending-application'
     ) {
-      console.log('hi');
-      next({ name: 'pending-application' });
-    } else if (
-      Array.isArray(to.meta?.requiresLogin) &&
-      (!user?.type || user.type == 'anonymous')
-    ) {
-      next({
-        name: 'get-started',
-      });
-    } else if (
-      Array.isArray(to.meta?.requiresLogin) &&
-      user?.type &&
-      !to.meta?.requiresLogin.includes(user.type)
-    ) {
-      next({
-        name: 'home',
-      });
-    } else if (to.meta.anonymous && !!user) {
-      next({
-        name: 'home',
-      });
-    } else {
-      next();
+      return next({ name: 'pending-application' });
     }
+
+    // Redirect to the home page if the user's role does not match the required roles for the route.
+    if (
+      Array.isArray(requiresLogin) &&
+      userType &&
+      !requiresLogin.includes(userType)
+    ) {
+      return next({ name: 'home' });
+    }
+
+    // redirect authenticated users away from anonymous-focused routes.
+    if (to.meta.anonymous && !!user) {
+      return next({ name: 'home' });
+    }
+
+    // Allow navigation if none of the conditions are met.
+    return next();
   });
 
   return Router;
