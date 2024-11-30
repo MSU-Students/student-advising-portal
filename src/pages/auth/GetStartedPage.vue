@@ -1,13 +1,6 @@
 <template>
   <q-page class="column justify-center items-center q-page">
-    <div
-      class="absolute-top-left q-ma-lg flex items-center cursor-pointer"
-      v-ripple
-      @click="logout"
-    >
-      <q-btn round color="secondary" size="sm" icon="logout" class="q-mr-sm" />
-      <span class="text-primary text-h6 text-bold text-center">LOGOUT</span>
-    </div>
+    <LogoutButtonComponent />
 
     <span
       class="text-center text-weight-bolder text-primary q-mb-xl"
@@ -64,6 +57,7 @@
 </template>
 
 <script setup lang="ts">
+import LogoutButtonComponent from 'src/components/LogoutButtonComponent.vue';
 import { TheDialogs } from 'src/dialogs/the-dialogs';
 import { computed, ref } from 'vue';
 
@@ -99,19 +93,6 @@ const continueAs = () => {
     TheDialogs.emit({ type: 'adviserApplicationDialog', arg: {} });
   }
 };
-
-function logout() {
-  TheDialogs.emit({
-    type: 'logoutDialog',
-    arg: {
-      success() {
-        $router.replace({
-          name: 'login',
-        });
-      },
-    },
-  });
-}
 </script>
 
 <style lang="sass">

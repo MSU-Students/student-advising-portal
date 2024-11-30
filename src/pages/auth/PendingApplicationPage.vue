@@ -1,13 +1,6 @@
 <template>
   <q-page class="column justify-center items-center q-page">
-    <div
-      class="absolute-top-left q-ma-lg flex items-center cursor-pointer"
-      v-ripple
-      @click="logout"
-    >
-      <q-btn round color="secondary" size="sm" icon="logout" class="q-mr-sm" />
-      <span class="text-primary text-h6 text-bold text-center">LOGOUT</span>
-    </div>
+    <LogoutButtonComponent />
 
     <span
       class="text-primary text-center"
@@ -17,7 +10,7 @@
         'text-h4 q-mb-lg': $q.screen.md,
         'text-h2 q-mb-lg': $q.screen.lg,
       }"
-      >YOUR APPLICATION IS BEING PROCESSED.</span
+      >YOUR APPLICATION IS BEING PROCESSED...</span
     >
 
     <q-spinner
@@ -28,23 +21,7 @@
 </template>
 
 <script setup lang="ts">
-import { TheDialogs } from 'src/dialogs/the-dialogs';
-import { useRouter } from 'vue-router';
-
-const $router = useRouter();
-
-function logout() {
-  TheDialogs.emit({
-    type: 'logoutDialog',
-    arg: {
-      success() {
-        $router.replace({
-          name: 'login',
-        });
-      },
-    },
-  });
-}
+import LogoutButtonComponent from 'src/components/LogoutButtonComponent.vue';
 </script>
 
 <style lang="sass"></style>
