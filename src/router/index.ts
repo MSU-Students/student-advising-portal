@@ -8,6 +8,7 @@ import {
 
 import routes from './routes';
 import { useAuthStore } from 'src/stores/auth.store';
+import { useRequestStore } from 'src/stores/request.store';
 
 /*
  * If not building with SSR mode, you can
@@ -21,8 +22,11 @@ import { useAuthStore } from 'src/stores/auth.store';
 export default route(function (/* { store, ssrContext } */) {
   const createHistory = process.env.SERVER
     ? createMemoryHistory
-    : (process.env.VUE_ROUTER_MODE === 'history' ? createWebHistory : createWebHashHistory);
+    : process.env.VUE_ROUTER_MODE === 'history'
+    ? createWebHistory
+    : createWebHashHistory;
   const authStore = useAuthStore();
+  const requestStore = useRequestStore();
   const Router = createRouter({
     scrollBehavior: () => ({ left: 0, top: 0 }),
     routes,
@@ -34,26 +38,42 @@ export default route(function (/* { store, ssrContext } */) {
   });
   Router.beforeEach(async (to, from, next) => {
     const user = await authStore.getUser();
+    const request = await requestStore.getRequest(user?.key || '');
+
     if (to.meta?.requiresLogin && !user) {
       next({
-        name: 'login'
+        name: 'login',
       });
-    } else if (Array.isArray(to.meta?.requiresLogin) && (!user?.type || user.type == 'anonymous')) {
+    } else if (
+      user?.type == 'anonymous' &&
+      request?.status === 'pending' &&
+      to.name !== 'pending-application'
+    ) {
+      console.log('hi');
+      next({ name: 'pending-application' });
+    } else if (
+      Array.isArray(to.meta?.requiresLogin) &&
+      (!user?.type || user.type == 'anonymous')
+    ) {
       next({
-        name: 'get-started'
+        name: 'get-started',
       });
-    } else if (Array.isArray(to.meta?.requiresLogin) && user?.type && !to.meta?.requiresLogin.includes(user.type)) {
+    } else if (
+      Array.isArray(to.meta?.requiresLogin) &&
+      user?.type &&
+      !to.meta?.requiresLogin.includes(user.type)
+    ) {
       next({
-        name: 'home'
+        name: 'home',
       });
     } else if (to.meta.anonymous && !!user) {
       next({
-        name: 'home'
+        name: 'home',
       });
     } else {
       next();
     }
-  })
+  });
 
   return Router;
 });
