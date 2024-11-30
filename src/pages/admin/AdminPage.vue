@@ -42,13 +42,42 @@
           <template v-slot:body-cell-actions="props">
             <q-td :props="props" class="text-right">
               <q-btn color="green" class="q-mx-sm">Approve</q-btn>
-              <q-btn color="red" class="q-mx-sm">Reject</q-btn>
+              <q-btn
+                color="red"
+                class="q-mx-sm"
+                @click="showRejectDialog(props.row)"
+                >Reject</q-btn
+              >
             </q-td>
           </template>
         </q-table>
       </q-card-section>
     </q-card>
   </q-page>
+
+  <q-dialog v-model="rejectDialog" persistent>
+    <q-card class="q-pa-md" style="border-radius: 15px; background-color: gray">
+      <q-card-section class="text-center">
+        <div class="text-h6 text-white">
+          Are you sure you want to reject {{ selectedApplicant }}?
+        </div>
+      </q-card-section>
+      <q-card-actions>
+        <q-btn
+          flat
+          label="Cancel"
+          color="primary"
+          @click="rejectDialog = false"
+        />
+        <q-btn
+          flat
+          label="Reject"
+          color="negative"
+          @click="rejectApplication"
+        />
+      </q-card-actions>
+    </q-card>
+  </q-dialog>
 </template>
 
 <script setup>
@@ -116,6 +145,20 @@ const columns = [
     style: 'width: 1px;',
   },
 ];
+
+const rejectDialog = ref(false);
+
+const selectedApplicant = ref('');
+
+const showRejectDialog = (row) => {
+  selectedApplicant.value = row.applicant;
+  rejectDialog.value = true;
+};
+
+const rejectApplication = () => {
+  console.log('Application rejected');
+  rejectDialog.value = false;
+};
 </script>
 
 <style scoped>
