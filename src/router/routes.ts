@@ -79,6 +79,16 @@ const routes: RouteRecordRaw[] = [
           icon: 'library_books',
         },
       },
+      {
+        path: 'admin',
+        name: 'admin',
+        component: () => import('pages/admin/AdminPage.vue'),
+        meta: {
+          menu: 'Admin',
+          title: 'Admin Page',
+          icon: 'admin_panel_settings',
+        },
+      },
     ],
   },
 
