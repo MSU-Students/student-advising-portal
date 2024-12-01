@@ -1,6 +1,9 @@
 <template>
   <q-dialog v-model="rejectDialog" persistent>
-    <q-card class="q-pa-md" style="border-radius: 15px; background-color: gray">
+    <q-card
+      class="q-pa-md"
+      style="border-radius: 15px; background-color: black"
+    >
       <q-card-section class="text-center">
         <div class="text-h6 text-white">
           Are you sure you want to reject {{ selectedApplicant }}?
@@ -10,7 +13,7 @@
         <q-btn
           flat
           label="Cancel"
-          color="primary"
+          color="blue-9"
           @click="rejectDialog = false"
         />
         <q-btn
