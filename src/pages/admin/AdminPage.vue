@@ -60,7 +60,7 @@
 
 <script setup>
 import { ref } from 'vue';
-import RejectDialog from 'src/components/admin/RejectDialog.vue'; // Import the RejectDialog component
+import RejectDialog from 'src/dialogs/admin/RejectDialog.vue';
 
 const applications = ref([
   {
@@ -129,7 +129,7 @@ const rejectDialogRef = ref(null);
 
 const showRejectDialog = (row) => {
   if (rejectDialogRef.value) {
-    rejectDialogRef.value.showRejectDialog(row); // Call showRejectDialog on the ref
+    rejectDialogRef.value.showRejectDialog(row); // Call showRejectDialog
   }
 };
 </script>
