@@ -1,8 +1,8 @@
 <template>
-  <q-page class="column justify-center items-center q-page" style="gap: 20px">
+  <q-page class="column justify-center items-center q-page" style="gap: 5px">
     <!-- Rectangle div -->
-    <div class="rectangle-wrapper">
-      <div>
+    <div class="booking-page-container col-lg">
+      <div class="booking-search-cont bg-secondar column">
         <q-btn
           v-if="!isSearchExpanded"
           class="bg-primary search-btn"
@@ -32,11 +32,7 @@
           </q-input>
         </div>
       </div>
-      <div class="rectangle bg-secondary">
-        <div class="adviser-list-container">
-          <h1 class="adviser-list text-primary">List of Adviser</h1>
-        </div>
-      </div>
+      <div class="adviser-lists-container bg-secondary col-lg"></div>
     </div>
   </q-page>
 </template>
@@ -59,15 +55,20 @@ const collapseSearch = () => {
 </script>
 
 <style>
-.rectangle-wrapper {
+.booking-page-container {
+  width: 100%;
+  max-width: 1400px;
+  align-items: center;
+  justify-content: space-between;
   position: relative;
   display: inline-block;
+  margin: 0 auto;
 }
 
 .search-btn {
   position: absolute;
-  top: -70px;
   right: 0px;
+  bottom: 5px;
   width: 55px;
   height: 55px;
   border-radius: 8px;
@@ -76,11 +77,11 @@ const collapseSearch = () => {
 
 .search-input-wrapper {
   position: absolute;
-  top: -70px;
   right: 0px;
-  z-index: 10;
+  bottom: 5px;
   border-radius: 8px;
-  width: 500px; /* Adjust width as needed */
+  width: 100%;
+  max-width: 500px;
   transition: ease-in;
 }
 
@@ -92,24 +93,48 @@ const collapseSearch = () => {
   color: white;
 }
 
-.rectangle {
-  width: 1400px; /* Define the width of the rectangle */
-  height: 700px; /* Define the height of the rectangle */
-  padding-top: 5%;
-  border-radius: 8px; /* Optional: Rounded corners */
-  display: flex; /* Optional: Control content inside the rectangle */
-  align-items: center; /* Optional: Center content vertically */
-  justify-content: center; /* Optional: Center content horizontally */
+.booking-search-cont {
+  position: relative;
+  height: 100px;
 }
 
-.adviser-list-container {
-  top: 10px; /* Adjust as necessary for spacing */
-  left: 10px; /* Adjust as necessary for spacing */
-  z-index: 20; /* Make sure the title stays on top */
+.adviser-lists-container {
+  width: 100%;
+  max-width: 1400px;
+  height: 700px;
+  border: 1px solid var(--q-color-primary);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20px auto;
 }
 
-.adviser-list {
-  font-size: 2rem; /* Adjust the font size as needed */
-  font-weight: bold; /* Makes the text bold */
+/* Media Queries for Small Devices */
+@media (max-width: 768px) {
+  .booking-search-cont {
+    height: auto;
+    padding: 10px;
+  }
+
+  .search-btn {
+    width: 55px;
+    height: 55px;
+    bottom: 0px;
+    right: 10px;
+  }
+
+  .adviser-lists-container {
+    height: 500px;
+  }
+}
+
+@media (max-width: 480px) {
+  .search-input-wrapper {
+    width: 70%;
+    right: 0;
+    bottom: 0px;
+    right: 10px;
+  }
 }
 </style>

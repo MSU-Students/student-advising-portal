@@ -45,12 +45,12 @@
           @click="toggleLeftDrawer"
         />
         <q-toolbar-title>
-          {{ $t('ok') }}
+          {{ 'Student Advising Portal' }}
         </q-toolbar-title>
         <q-space />
 
-        <SearchbarComponent />
-        
+        <SearchbarComponent v-if="$route.name !== 'booking'" />
+
         <q-select
           v-model="locale"
           :options="localeOptions"
