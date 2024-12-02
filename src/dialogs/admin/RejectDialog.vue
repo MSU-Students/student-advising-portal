@@ -4,7 +4,7 @@
       class="q-pa-md bg-white rounded-borders"
     >
       <q-card-section class="text-center">
-        <div class="text-h6 text-white">
+        <div class="text-h6">
           Are you sure you want to reject {{ selectedApplicant }}?
         </div>
       </q-card-section>
