@@ -45,10 +45,8 @@ import { IProfile, IStudentProfile } from 'src/entities';
 import { useAuthStore } from 'src/stores/auth.store';
 import { TheWorkflows } from 'src/workflows/the-workflows';
 import { uid, useQuasar } from 'quasar';
-import { useRouter } from 'vue-router';
 
 const authStore = useAuthStore();
-const router = useRouter();
 const studentAdminDialog = ref(false);
 const $q = useQuasar();
 const formFields = reactive({
@@ -99,7 +97,6 @@ function onRequest() {
       success: () => {
         $q.notify('Student application was successful.');
         resetFormFields();
-        router.replace({ name: 'pending-application' });
       },
       error: (err) => {
         console.log(err);

@@ -31,14 +31,6 @@ const routes: RouteRecordRaw[] = [
         },
       },
       {
-        path: 'pending-application',
-        name: 'pending-application',
-        component: () => import('pages/auth/PendingApplicationPage.vue'),
-        meta: {
-          requiresLogin: true,
-        },
-      },
-      {
         path: 'sign-up',
         name: 'sign-up',
         component: () => import('pages/auth/SignupPage.vue'),
