@@ -1,8 +1,7 @@
 <template>
   <q-dialog v-model="rejectDialog" persistent>
     <q-card
-      class="q-pa-md"
-      style="border-radius: 15px; background-color: black"
+      class="q-pa-md bg-white rounded-borders"
     >
       <q-card-section class="text-center">
         <div class="text-h6 text-white">
