@@ -9,6 +9,7 @@
         <DataTable />
       </q-card-section>
     </q-card>
+    <router-view />
   </q-page>
 </template>
 
