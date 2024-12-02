@@ -29,23 +29,23 @@
 
 <script setup>
 import { ref } from 'vue';
+import { TheDialogs } from '../the-dialogs';
 
 const rejectDialog = ref(false);
 const selectedApplicant = ref('');
 
-const showRejectDialog = (row) => {
-  selectedApplicant.value = row.applicant;
-  rejectDialog.value = true;
-};
+TheDialogs.on({
+  type: 'applicationRejectDialog',
+  cb(e) {
+    rejectDialog.value = true;
+    e.success;
+  },
+});
 
 const rejectApplication = () => {
   console.log('Application rejected');
   rejectDialog.value = false;
 };
-
-defineExpose({
-  showRejectDialog,
-});
 </script>
 
 <style scoped>

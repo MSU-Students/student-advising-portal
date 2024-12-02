@@ -45,7 +45,9 @@
               <q-btn
                 color="red"
                 class="q-mx-sm"
-                @click="showRejectDialog(props.row)"
+                @click="
+                  TheDialogs.emit({ type: 'applicationRejectDialog', arg: {} })
+                "
                 >Reject</q-btn
               >
             </q-td>
@@ -54,14 +56,11 @@
       </q-card-section>
     </q-card>
   </q-page>
-
-  <RejectDialog ref="rejectDialogRef" />
 </template>
 
 <script setup>
+import { TheDialogs } from 'src/dialogs/the-dialogs';
 import { ref } from 'vue';
-import RejectDialog from 'src/dialogs/admin/RejectDialog.vue';
-
 const applications = ref([
   {
     id: 1,
@@ -124,14 +123,6 @@ const columns = [
     style: 'width: 1px;',
   },
 ];
-
-const rejectDialogRef = ref(null);
-
-const showRejectDialog = (row) => {
-  if (rejectDialogRef.value) {
-    rejectDialogRef.value.showRejectDialog(row); // Call showRejectDialog
-  }
-};
 </script>
 
 <style scoped>
