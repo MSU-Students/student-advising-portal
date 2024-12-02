@@ -1,14 +1,10 @@
 <template>
   <q-dialog v-model="adminDialogVisible" persistent>
-    <q-card style="min-width: 300px">
-      <q-card-section class="bg-primary text-white row items-center">
-        <q-avatar
-          icon="admin_panel_settings"
-          color="white"
-          text-color="primary"
-          size="md"
-        />
-        <span class="text-h6 q-ml-sm">Admin Confirmation</span>
+    <q-card style="min-width: 300px; border-radius: 22px">
+      <q-card-section class="text-center bg-primary text-white">
+        <span class="text-h6 q-ml-sm q-pa-xl text-bold"
+          >ADMIN CONFIRMATION</span
+        >
       </q-card-section>
 
       <q-card-section class="q-pt-md">

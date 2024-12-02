@@ -1,5 +1,13 @@
 import { IProfile, IRequest } from 'src/entities';
 import { Struct } from 'src/structs';
+export type SignUpPayload = {
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  middleName: string;
+  avatar?: File;
+};
 export type Auth =
   | Struct<
       'loginWithGoogle',
@@ -21,5 +29,13 @@ export type Auth =
         applicant: IRequest;
         success: VoidCallback;
         error: ErrorCallback;
+      }
+    >
+  | Struct<
+      'signUpWithEmail',
+      {
+        payload: SignUpPayload;
+        success?: VoidCallback;
+        error?: ErrorCallback;
       }
     >;

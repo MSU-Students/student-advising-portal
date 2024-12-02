@@ -27,8 +27,22 @@ const routes: RouteRecordRaw[] = [
         name: 'get-started',
         component: () => import('pages/auth/GetStartedPage.vue'),
         meta: {
-          requiresLogin: true
-        }
+          requiresLogin: true,
+        },
+      },
+      {
+        path: 'sign-up',
+        name: 'sign-up',
+        component: () => import('pages/auth/SignupPage.vue'),
+        meta: {},
+      },
+      {
+        path: 'email-verify',
+        name: 'email-verify',
+        component: () => import('pages/auth/EmailVerificationPage.vue'),
+        meta: {
+          requiresLogin: true,
+        },
       },
     ],
   },
@@ -49,11 +63,22 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: 'student',
+        name: 'student',
         component: () => import('pages/students/StudentsPage.vue'),
         meta: {
           menu: 'Student',
           title: 'Student Page',
           icon: 'person',
+        },
+      },
+      {
+        path: 'admin',
+        name: 'admin',
+        component: () => import('pages/admin/AdminPage.vue'),
+        meta: {
+          menu: 'Admin',
+          title: 'Admin Page',
+          icon: 'admin_panel_settings',
         },
       },
     ],
