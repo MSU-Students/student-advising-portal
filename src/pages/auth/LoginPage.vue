@@ -1,60 +1,78 @@
 <template>
   <q-page class="login-container">
-    <!-- Header title -->
+    <!-- Header Title -->
     <div class="text-center q-mb-lg">
       <h1 class="site-title">Student Advising Portal</h1>
     </div>
 
-    <!-- Login card -->
+    <!-- Login Card -->
     <q-card bordered flat class="login-card">
       <q-card-section>
         <div class="row q-col-gutter-lg">
-          <!-- Left section with image and quote -->
-          <div class="col-12 col-md-6 login-image text-center">
+          <!-- Left Section: Image & Quote -->
+          <div class="col-12 col-md-6 login-image">
             <q-img
               src="/src/assets/SAPlogo.png"
               alt="SAP Logo"
               class="corner-logo"
             />
             <q-img src="/src/assets/CICSlogo.png" alt="CICS Logo" />
-            <p class="image-quote q-mt-md">
+            <p class="image-quote">
               “Where questions meet answers—your portal to personalized
               advising.”
             </p>
           </div>
 
-          <!-- Right section with form -->
-          <div class="col-12 col-md-6 login-form">
+          <!-- Right Section: Login Form -->
+          <div class="login-form">
             <h2 class="q-mb-md">Welcome</h2>
             <p class="form-subtitle q-mb-lg">Sign in to continue</p>
 
-            <!-- Form -->
-            <q-form class="q-gutter-sm">
-              <q-input
-                filled
-                v-model="username"
-                label="Username"
-                placeholder="Username"
-                dense
-                required
-                class="q-my-md"
-              />
-              <q-input
-                filled
-                v-model="password"
-                label="Password"
-                placeholder="Enter your password"
-                type="password"
-                dense
-                required
-                class="q-mb-md"
-              />
+            <!-- Login Form -->
+            <q-form>
+              <div class="input-wrapper">
+                <!-- Username Input -->
+                <q-input
+                  v-model="username"
+                  placeholder="Username"
+                  filled
+                  dense
+                  required
+                  aria-label="Username"
+                />
 
-              <!-- Forgot Password Link -->
-              <div class="forgot-password q-mb-md">
-                <q-btn flat label="Forgot Password?" />
+                <!-- Password Input with Show/Hide Toggle -->
+                <q-input
+                  v-model="password"
+                  placeholder="Password"
+                  :type="passwordVisible ? 'text' : 'password'"
+                  filled
+                  dense
+                  required
+                  aria-label="Password"
+                >
+                  <!-- Password Toggle Button -->
+                  <template v-slot:append>
+                    <q-btn
+                      flat
+                      :icon="passwordVisible ? 'visibility_off' : 'visibility'"
+                      @click="togglePasswordVisibility"
+                      class="password-toggle-btn"
+                      aria-label="Toggle password visibility"
+                      :style="{ visibility: password ? 'visible' : 'hidden' }"
+                    />
+                  </template>
+                </q-input>
               </div>
 
+              <!-- Forgot Password -->
+              <div class="forgot-password q-mb-md">
+                <router-link to="forgot-password" class="forgot-password-link">
+                  Forgot Password?
+                </router-link>
+              </div>
+
+              <!-- Sign In Button -->
               <q-btn
                 type="submit"
                 label="Sign In"
@@ -79,10 +97,10 @@
               Sign in with Google
             </q-btn>
 
-            <!-- Signup Section -->
+            <!-- Sign Up Section -->
             <p class="signup-text q-mt-lg">
               Don’t have an account?
-              <router-link :to="{ name: 'sign-up' }" class="signup-link"
+              <router-link to="sign-up" class="signup-link"
                 >Sign Up</router-link
               >
             </p>
@@ -92,12 +110,22 @@
     </q-card>
   </q-page>
 </template>
+
 <script lang="ts" setup>
+import { ref } from 'vue'; // Import ref from Vue
 import { TheWorkflows } from 'src/workflows/the-workflows';
 import { useRouter } from 'vue-router';
+
 const $router = useRouter();
-const username = '';
-const password = '';
+const username = ref('');
+const password = ref('');
+const passwordVisible = ref(false); // State to toggle password visibility
+
+// Function to toggle password visibility
+function togglePasswordVisibility() {
+  passwordVisible.value = !passwordVisible.value;
+}
+
 function googleLogin() {
   TheWorkflows.emit({
     type: 'loginWithGoogle',
@@ -126,7 +154,22 @@ function googleLogin() {
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
 
 * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
   font-family: 'Poppins', sans-serif;
+}
+
+/* Adjusted input wrapper for better spacing */
+.input-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Space between inputs */
+  width: 100%; /* Ensures inputs take full width */
+}
+
+.input-wrapper q-input {
+  font-size: 16px; /* Adjust font size for better readability */
 }
 
 /* Container */
@@ -157,6 +200,7 @@ function googleLogin() {
 
 /* Login card */
 .login-card {
+  display: flex;
   flex-direction: row;
   background: #fff;
   border-radius: 15px;
@@ -164,6 +208,10 @@ function googleLogin() {
   overflow: hidden;
   max-width: 900px;
   width: 100%;
+  animation: fadeIn 0.5s ease-in-out; /* Add fade-in effect */
+}
+.login-card:hover {
+  background-color: #f9f9f9; /* Light background color change on hover */
 }
 
 /* Left image section */
@@ -176,45 +224,50 @@ function googleLogin() {
   background: linear-gradient(135deg, #4a78ff, #2a4fb7, #1a237e);
   padding: 30px;
   position: relative;
+  gap: 15px; /* Add spacing between image and quote */
 }
+
 .login-image img {
-  max-width: auto;
+  max-width: 100%;
   height: auto;
   object-fit: cover;
 }
+
 .image-quote {
-  position: absolute;
-  bottom: 20px;
-  color: #fff;
-  font-size: 18px; /* Adjusted for better readability */
+  position: relative; /* Changed to flow naturally in the layout */
+  margin-top: 10px; /* Additional spacing from the images */
+  font-size: 18px;
   line-height: 1.4;
   text-align: center;
   font-style: italic;
-  width: 80%;
+  color: #fff;
+  max-width: 90%; /* Prevent long quotes from overflowing */
 }
+
 /* Additional styling for logo in top-left corner of login-image */
 .corner-logo {
   position: absolute;
   top: 15px;
   left: 15px;
   width: 50px;
-  height: 5000;
+  height: auto;
   z-index: 10;
 }
 
 /* Right form section */
 .login-form {
+  flex: 1;
   padding: 50px 40px;
-  color: #000;
+  display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
 }
 
 .login-form h2 {
-  font-size: 28px;
+  font-size: 30px;
   font-weight: 600;
-  margin-bottom: 10px;
+  margin-bottom: 0;
   color: #333;
 }
 
@@ -224,46 +277,30 @@ function googleLogin() {
   margin-bottom: 30px;
 }
 
-.error-message {
-  color: #d9534f;
-  background: #f8d7da;
-  padding: 10px;
-  border-radius: 8px;
-  margin-bottom: 20px;
-  width: 100%;
-  text-align: center;
+/* Input styles */
+.q-input {
+  --q-primary: transparent; /* Remove default highlight color */
+  --q-primary-focus: transparent; /* Remove focus color */
+  border-radius: 12px; /* Make corners rounder */
+  padding: 1px; /* Adjust inner spacing */
+  background-color: #f9f9f9; /* Optional: Set a background color */
+  margin-bottom: 0;
 }
 
-/* Input styles */
-.input-group {
-  width: 100%;
-  margin-bottom: 15px;
-  margin-top: 15px;
-}
-.input-group input {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  font-size: 14px;
-  transition: 0.3s;
-}
-.input-group input:focus {
-  border-color: #4a78ff;
-  box-shadow: 0 0 8px rgba(74, 144, 226, 0.5);
+.password-toggle-btn {
+  width: 24px; /* Set a fixed width */
+  height: 24px; /* Set a fixed height */
 }
 
 /* Forgot password */
 .forgot-password {
-  margin-bottom: 20px;
+  margin-bottom: 30px;
   width: 100%;
-  text-align: center;
-  color: #2a4fb7;
-  font-size: 5px;
+  text-align: right;
 }
 .forgot-password a {
-  font-size: 8px;
-  color: #3a68f3;
+  font-size: 12px;
+  color: #4a78ff;
   text-decoration: none;
 }
 .forgot-password a:hover {
@@ -285,6 +322,10 @@ function googleLogin() {
 }
 .login-btn:hover {
   background: linear-gradient(40deg, #2a4fb7, #1a237e);
+}
+.login-btn:focus {
+  outline: 2px solid #4a78ff;
+  outline-offset: 2px;
 }
 
 /* Social login */
@@ -350,15 +391,28 @@ function googleLogin() {
   color: #777;
 }
 
-/* Responsive styles */
+/* Animation for the container */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Styles */
 @media (max-width: 768px) {
   .login-card {
     flex-direction: column;
   }
 
   .login-image {
-    padding: 20px;
-    text-align: center; /* Center-align content */
+    flex: none;
+    padding: 30px;
+    text-align: center;
   }
 
   .login-image img {
@@ -392,7 +446,7 @@ function googleLogin() {
   }
 
   .login-image {
-    padding: 15px;
+    padding: 25px;
     text-align: center;
   }
 
@@ -407,7 +461,8 @@ function googleLogin() {
     margin-top: 8px;
   }
 
-  .login-form h2 {
+  .login-form {
+    padding: 20px;
     font-size: 20px;
   }
 
@@ -415,7 +470,7 @@ function googleLogin() {
     font-size: 12px;
   }
 
-  .input-group input {
+  .q-input {
     padding: 10px;
     font-size: 12px;
   }
