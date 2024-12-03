@@ -2,7 +2,7 @@
   <q-page class="flex flex-center">
     <div class="container">
       <div class="welcome-message">
-        <h2>Welcome to Your Dashboard!!</h2>
+        <h2>Welcome to Your Dashboard!</h2>
       </div>
       <div class="data-analytics">
         <h2>Data Analytics</h2>
