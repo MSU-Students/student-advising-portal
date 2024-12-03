@@ -16,7 +16,7 @@
             placeholder="Search Adviser"
             filled
             class="expanded-search-input"
-            @blur="collapseSearch"
+            @click="collapseSearch"
           >
             <template v-slot:prepend>
               <q-icon name="search" color="white" />
@@ -32,7 +32,11 @@
           </q-input>
         </div>
       </div>
-      <div class="adviser-lists-container bg-secondary col-lg"></div>
+      <div class="adviser-lists-container bg-secondary col-lg">
+        <div class="adviser-list-text text-h3 text-bold text-primary">
+          Adviser
+        </div>
+      </div>
     </div>
   </q-page>
 </template>
@@ -58,9 +62,8 @@ const collapseSearch = () => {
 .booking-page-container {
   width: 100%;
   max-width: 1400px;
-  align-items: center;
-  justify-content: space-between;
-  position: relative;
+  align-items: flex-start;
+  justify-content: center;
   display: inline-block;
   margin: 0 auto;
 }
@@ -82,11 +85,10 @@ const collapseSearch = () => {
   border-radius: 8px;
   width: 100%;
   max-width: 500px;
-  transition: ease-in;
 }
 
 .expanded-search-input .q-field__native {
-  color: white; /* Makes the input text white */
+  color: white;
 }
 
 .expanded-search-input ::placeholder {
@@ -98,14 +100,21 @@ const collapseSearch = () => {
   height: 100px;
 }
 
+.adviser-list-text {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+}
+
 .adviser-lists-container {
+  position: relative;
   width: 100%;
   max-width: 1400px;
   height: 700px;
   border: 1px solid var(--q-color-primary);
   border-radius: 8px;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   margin: 20px auto;
 }
