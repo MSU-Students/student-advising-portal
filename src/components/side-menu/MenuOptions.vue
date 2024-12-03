@@ -1,7 +1,7 @@
 <template>
   <q-list>
     <q-item
-      v-for="option in filteredMenuOptions"
+      v-for="option in menuOptions"
       :key="option.name"
       clickable
       v-ripple="activeOption === option.name"
@@ -30,30 +30,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, defineProps } from 'vue';
+import { ref, onMounted, defineProps } from 'vue';
 import { useRoute } from 'vue-router';
-import { useAuthStore } from 'src/stores/auth.store';
 import { MenuOptionItem } from './types';
 
 const route = useRoute();
-const authStore = useAuthStore();
 const activeOption = ref('');
 
-const props = defineProps<{ menuOptions: MenuOptionItem[] }>();
-
-const filteredMenuOptions = computed(() => {
-  const user = authStore.currentUser;
-  const userType = user?.type || 'anonymous';
-
-  return props.menuOptions.filter((option) => {
-    const routeMeta = route.matched.find((r) => r.name === option.name)?.meta;
-    const requiresLogin = routeMeta?.requiresLogin;
-
-    return Array.isArray(requiresLogin)
-      ? requiresLogin.includes(userType)
-      : requiresLogin === true;
-  });
-});
+defineProps<{ menuOptions: MenuOptionItem[] }>();
 
 const setActiveOption = (optionName: string) => {
   activeOption.value = optionName;

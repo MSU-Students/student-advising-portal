@@ -74,21 +74,12 @@ const routes: RouteRecordRaw[] = [
         name: 'student',
         component: () => import('pages/students/StudentsPage.vue'),
         meta: {
+          requiresLogin: ['student'],
           menu: 'Student',
           title: 'Student Page',
           icon: 'person',
         },
       },
-      // {
-      //   path: 'admin',
-      //   name: 'admin',
-      //   component: () => import('pages/admin/AdminPage.vue'),
-      //   meta: {
-      //     menu: 'Admin',
-      //     title: 'Admin Page',
-      //     icon: 'admin_panel_settings',
-      //   },
-      // },
       {
         path: 'application',
         name: 'application',
