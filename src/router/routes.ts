@@ -80,6 +80,16 @@ const routes: RouteRecordRaw[] = [
         },
       },
       {
+        path: 'booking',
+        name: 'booking',
+        component: () => import('pages/students/BookingPage.vue'),
+        meta: {
+          menu: 'Booking',
+          title: 'Booking Page',
+          icon: 'library_books',
+        },
+      },
+      {
         path: 'admin',
         name: 'admin',
         component: () => import('pages/admin/AdminPage.vue'),
