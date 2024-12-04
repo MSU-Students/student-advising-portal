@@ -1,5 +1,5 @@
 <template>
-  <q-dialog v-model="adminDialogVisible" persistent>
+  <q-dialog v-model="adminDialogVisible">
     <q-card style="min-width: 300px; border-radius: 22px">
       <q-card-section class="text-center bg-primary text-white">
         <span class="text-h6 q-ml-sm q-pa-xl text-bold"

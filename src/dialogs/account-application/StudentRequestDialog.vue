@@ -1,5 +1,5 @@
 <template>
-  <q-dialog v-model="studentAdminDialog" persistent>
+  <q-dialog v-model="studentAdminDialog">
     <q-card style="min-width: 300px; border-radius: 22px">
       <q-card-section class="text-center bg-primary text-white">
         <span class="text-h6 q-ml-sm q-pa-xl text-bold"
@@ -7,33 +7,35 @@
         >
       </q-card-section>
 
-      <q-card-section>
+      <q-form class="q-pa-md" @confirm="onRequest">
         <q-input
           v-model="formFields.idNumber"
           label="ID Number"
           :rules="[isRequired]"
           class="no-spinner"
           type="number"
+          @keydown.enter="focusNext"
         />
         <q-input
           v-model="formFields.program"
           label="Program"
           :rules="[isRequired]"
+          @keydown.enter="focusNext"
         />
-      </q-card-section>
 
-      <q-card-actions align="right" class="bg-grey-1">
-        <q-btn flat label="Cancel" color="dark" v-close-popup icon="close" />
-        <q-btn
-          flat
-          label="Confirm"
-          color="primary"
-          icon="check_circle"
-          @click="onRequest"
-          v-close-popup
-          :disable="!isFormValid"
-        />
-      </q-card-actions>
+        <div align="right">
+          <q-btn flat label="Cancel" color="dark" v-close-popup icon="close" />
+          <q-btn
+            flat
+            label="Confirm"
+            color="primary"
+            icon="check_circle"
+            type="confirm"
+            v-close-popup
+            :disable="!isFormValid"
+          />
+        </div>
+      </q-form>
     </q-card>
   </q-dialog>
 </template>
@@ -98,14 +100,33 @@ function onRequest() {
       },
       success: () => {
         $q.notify('Student application was successful.');
-        resetFormFields();
         router.replace({ name: 'pending-application' });
+        resetFormFields();
       },
       error: (err) => {
         console.log(err);
       },
     },
   });
+}
+
+function focusNext(e: KeyboardEvent) {
+  const target = e.target as HTMLInputElement | null;
+
+  if (target) {
+    const inputs = Array.from(
+      target.form?.querySelectorAll('input') || []
+    ) as HTMLInputElement[];
+    const index = inputs.indexOf(target);
+
+    if (index < inputs.length - 1) {
+      inputs[index + 1].focus();
+    } else if (isFormValid.value) {
+      onRequest();
+    }
+
+    e.preventDefault();
+  }
 }
 </script>
 
