@@ -3,5 +3,6 @@ export interface IRouteMeta {
   menu?: string;
   icon?: string;
   anonymous?: true;
+  parent?: string;
   requiresLogin?: string[] | true;
 }

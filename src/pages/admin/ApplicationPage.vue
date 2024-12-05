@@ -6,7 +6,17 @@
       </q-card-section>
 
       <q-card-section>
-        <DataTable />
+        <q-tabs v-model="tab">
+          <q-tab name="student">Student</q-tab>
+          <q-tab name="adviser">Adviser</q-tab>
+          <q-tab name="admin">Admin</q-tab>
+        </q-tabs>
+        <q-tab-panel v-model="tab">
+          <q-tab-panel name="student">
+            <!-- <DataTable /> -->
+            <router-view />
+          </q-tab-panel>
+        </q-tab-panel>
       </q-card-section>
     </q-card>
     <router-view />
@@ -15,7 +25,8 @@
 
 <script setup>
 import Toolbar from 'src/components/admin/Toolbar.vue';
-import DataTable from 'src/components/admin/DataTable.vue';
+import { ref } from 'vue';
+const tab = ref('student');
 </script>
 
 <style scoped>

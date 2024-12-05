@@ -25,5 +25,6 @@ export interface MenuOptionItem {
   name: string;
   label: string;
   icon: string;
-  link?: RouteLocationRaw
+  link?: RouteLocationRaw;
+  submenu?: MenuOptionItem[];
 }

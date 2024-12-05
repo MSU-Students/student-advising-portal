@@ -19,7 +19,7 @@ const routes: RouteRecordRaw[] = [
         name: 'login',
         component: LoginPage,
         meta: {
-          anonygmous: true,
+          anonymous: true,
         },
       },
       {
@@ -100,6 +100,7 @@ const routes: RouteRecordRaw[] = [
               menu: 'Admin Application',
               title: 'Admin Page',
               icon: 'admin_panel_settings',
+              parent: 'application',
             },
           },
           {
@@ -111,6 +112,7 @@ const routes: RouteRecordRaw[] = [
               menu: 'Adviser Application',
               title: 'Adviser Page',
               icon: 'school',
+              parent: 'application',
             },
           },
           {
@@ -122,6 +124,7 @@ const routes: RouteRecordRaw[] = [
               menu: 'Student Application',
               title: 'Student Page',
               icon: 'person',
+              parent: 'application',
             },
           },
         ],

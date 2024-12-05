@@ -50,7 +50,7 @@
         <q-space />
 
         <SearchbarComponent />
-        
+
         <q-select
           v-model="locale"
           :options="localeOptions"
@@ -95,16 +95,25 @@ const localeOptions = [
 
 const leftDrawerOpen = ref(true);
 const $router = useRouter();
-
-const menuOptions: MenuOptionItem[] = $router
-  .getRoutes()
-  .filter((r) => r.meta?.menu)
+const allRoutes = $router.getRoutes();
+const menuOptions: MenuOptionItem[] = allRoutes
+  .filter((r) => r.meta?.menu && !r.meta.parent)
   .map((r) => {
     return {
       icon: r.meta.icon,
       label: r.meta.menu,
       name: r.name,
       link: r,
+      submenu: allRoutes
+        .filter((r2) => r2.meta.parent == r.name && r2.meta?.menu)
+        .map((r2) => {
+          return {
+            label: r2.meta.menu,
+            name: r2.name,
+            link: r2,
+            icon: r2.meta.icon,
+          } as MenuOptionItem;
+        }),
     } as MenuOptionItem;
   });
 
