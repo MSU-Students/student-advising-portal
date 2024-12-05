@@ -32,7 +32,7 @@ export const useRequestStore = defineStore('requests', {
         await firebaseService.patch(
           'requests',
           request.key,
-          'remakrs',
+          'remarks',
           request.remarks
         );
       }

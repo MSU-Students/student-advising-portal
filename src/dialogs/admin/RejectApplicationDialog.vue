@@ -48,11 +48,18 @@ TheDialogs.on({
 });
 
 const rejectApplication = () => {
+  if (!request.value) return;
+  request.value.remarks = reason.value;
   TheWorkflows.emit({
-    type: '',
+    type: 'rejectApplication',
+    arg: {
+      payload: request.value,
+      success() {
+        succesCb.value && succesCb.value();
+        rejectDialog.value = false;
+      },
+    },
   });
-  succesCb.value && succesCb.value();
-  rejectDialog.value = false;
 };
 </script>
 
