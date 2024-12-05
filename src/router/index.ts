@@ -21,7 +21,9 @@ import { useAuthStore } from 'src/stores/auth.store';
 export default route(function (/* { store, ssrContext } */) {
   const createHistory = process.env.SERVER
     ? createMemoryHistory
-    : (process.env.VUE_ROUTER_MODE === 'history' ? createWebHistory : createWebHashHistory);
+    : process.env.VUE_ROUTER_MODE === 'history'
+    ? createWebHistory
+    : createWebHashHistory;
   const authStore = useAuthStore();
   const Router = createRouter({
     scrollBehavior: () => ({ left: 0, top: 0 }),
@@ -33,27 +35,34 @@ export default route(function (/* { store, ssrContext } */) {
     history: createHistory(process.env.VUE_ROUTER_BASE),
   });
   Router.beforeEach(async (to, from, next) => {
-    const user = await authStore.getUser();
+    const user = authStore.currentUser || (await authStore.getUser());
     if (to.meta?.requiresLogin && !user) {
       next({
-        name: 'login'
+        name: 'login',
       });
-    } else if (Array.isArray(to.meta?.requiresLogin) && (!user?.type || user.type == 'anonymous')) {
+    } else if (
+      Array.isArray(to.meta?.requiresLogin) &&
+      (!user?.type || user.type == 'anonymous')
+    ) {
       next({
-        name: 'get-started'
+        name: 'get-started',
       });
-    } else if (Array.isArray(to.meta?.requiresLogin) && user?.type && !to.meta?.requiresLogin.includes(user.type)) {
+    } else if (
+      Array.isArray(to.meta?.requiresLogin) &&
+      user?.type &&
+      !to.meta?.requiresLogin.includes(user.type)
+    ) {
       next({
-        name: 'home'
+        name: 'home',
       });
     } else if (to.meta.anonymous && !!user) {
       next({
-        name: 'home'
+        name: 'home',
       });
     } else {
       next();
     }
-  })
+  });
 
   return Router;
 });

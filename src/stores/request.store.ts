@@ -11,5 +11,12 @@ export const useRequestStore = defineStore('requests', {
     async createRequest(request: IRequest) {
       return await firebaseService.create('requests', request);
     },
+    streamRequests(filter?: Record<string, string>) {
+      firebaseService.streamWith('requests', filter).subscribe({
+        next: (records) => {
+          this.requests = records as IRequest[];
+        },
+      });
+    },
   },
 });
