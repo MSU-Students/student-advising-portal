@@ -45,12 +45,11 @@
           @click="toggleLeftDrawer"
         />
         <q-toolbar-title>
-          {{ $t('ok') }}
+          {{ 'Student Advising Portal' }}
         </q-toolbar-title>
         <q-space />
 
-        <SearchbarComponent />
-        
+        <SearchbarComponent v-if="$route.name !== 'booking'" />
         <q-select
           v-model="locale"
           :options="localeOptions"
@@ -67,6 +66,7 @@
       <router-view />
       <LogOutDialog />
       <ConfirmLockDialog />
+      <RejectDialog />
     </q-page-container>
   </q-layout>
 </template>
@@ -83,6 +83,7 @@ import { useAuthStore } from 'src/stores/auth.store';
 import { useRouter } from 'vue-router';
 import ConfirmLockDialog from 'src/dialogs/auth/ConfirmLockDialog.vue';
 import SearchbarComponent from 'src/components/search-bar/SearchbarComponent.vue';
+import RejectDialog from 'src/dialogs/admin/RejectDialog.vue';
 
 const { locale } = useI18n({ useScope: 'global' });
 

@@ -31,14 +31,6 @@ const routes: RouteRecordRaw[] = [
         },
       },
       {
-        path: 'pending-application',
-        name: 'pending-application',
-        component: () => import('pages/auth/PendingApplicationPage.vue'),
-        meta: {
-          requiresLogin: true,
-        },
-      },
-      {
         path: 'sign-up',
         name: 'sign-up',
         component: () => import('pages/auth/SignupPage.vue'),
@@ -77,6 +69,16 @@ const routes: RouteRecordRaw[] = [
           menu: 'Student',
           title: 'Student Page',
           icon: 'person',
+        },
+      },
+      {
+        path: 'booking',
+        name: 'booking',
+        component: () => import('pages/students/BookingPage.vue'),
+        meta: {
+          menu: 'Booking',
+          title: 'Booking Page',
+          icon: 'library_books',
         },
       },
       {
