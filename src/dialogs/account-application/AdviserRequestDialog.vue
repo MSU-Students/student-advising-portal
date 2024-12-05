@@ -58,10 +58,8 @@ import { TheWorkflows } from 'src/workflows/the-workflows';
 import { uid, useQuasar } from 'quasar';
 import { useAuthStore } from 'src/stores/auth.store';
 import { IAdviserProfile, IProfile } from 'src/entities';
-import { useRouter } from 'vue-router';
 
 const authStore = useAuthStore();
-const router = useRouter();
 const $q = useQuasar();
 const adviserDialogVisible = ref(false);
 const formFields = reactive({
@@ -122,7 +120,6 @@ function onRequest() {
       },
       success: () => {
         $q.notify('Adviser application was successful.');
-        router.replace({ name: 'pending-application' });
         resetFormFields();
       },
       error: (err) => {
