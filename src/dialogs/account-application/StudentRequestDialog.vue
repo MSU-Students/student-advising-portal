@@ -7,20 +7,18 @@
         >
       </q-card-section>
 
-      <q-form class="q-pa-md" @confirm="onRequest">
+      <q-form class="q-pa-md" @submit="onRequest">
         <q-input
           v-model="formFields.idNumber"
           label="ID Number"
           :rules="[isRequired]"
           class="no-spinner"
           type="number"
-          @keydown.enter="focusNext"
         />
         <q-input
           v-model="formFields.program"
           label="Program"
           :rules="[isRequired]"
-          @keydown.enter="focusNext"
         />
 
         <div align="right">
@@ -30,9 +28,7 @@
             label="Confirm"
             color="primary"
             icon="check_circle"
-            type="confirm"
-            v-close-popup
-            :disable="!isFormValid"
+            type="submit"
           />
         </div>
       </q-form>
@@ -61,10 +57,6 @@ const isRequired = (val: string) => {
   return true;
 };
 
-const isFormValid = computed(() => {
-  return formFields.idNumber && formFields.program;
-});
-
 const newData = computed(() => {
   return {
     ...(authStore.currentUser as IProfile),
@@ -73,11 +65,12 @@ const newData = computed(() => {
     program: formFields.program,
   } as IStudentProfile;
 });
-
+const succesCb = ref<VoidCallback>();
 TheDialogs.on({
   type: 'studentApplicationDialog',
-  cb() {
+  cb(e) {
     studentAdminDialog.value = true;
+    succesCb.value = e.success;
   },
 });
 
@@ -98,6 +91,8 @@ function onRequest() {
       },
       success: () => {
         $q.notify('Student application was successful.');
+        studentAdminDialog.value = false;
+        succesCb.value && succesCb.value();
         resetFormFields();
       },
       error: (err) => {
@@ -105,25 +100,6 @@ function onRequest() {
       },
     },
   });
-}
-
-function focusNext(e: KeyboardEvent) {
-  const target = e.target as HTMLInputElement | null;
-
-  if (target) {
-    const inputs = Array.from(
-      target.form?.querySelectorAll('input') || []
-    ) as HTMLInputElement[];
-    const index = inputs.indexOf(target);
-
-    if (index < inputs.length - 1) {
-      inputs[index + 1].focus();
-    } else if (isFormValid.value) {
-      onRequest();
-    }
-
-    e.preventDefault();
-  }
 }
 </script>
 

@@ -7,31 +7,27 @@
         >
       </q-card-section>
 
-      <q-form class="q-pa-md" @confirm="onRequest">
+      <q-form class="q-pa-md" @submit="onRequest">
         <q-input
           v-model="formFields.college"
           label="College"
           :rules="[isRequired]"
-          @keydown.enter="focusNext"
         />
         <q-input
           v-model="formFields.department"
           label="Department"
           :rules="[isRequired]"
-          @keydown.enter="focusNext"
         />
         <q-input
           v-model="formFields.position"
           label="Position"
           :rules="[isRequired]"
-          @keydown.enter="focusNext"
         /><q-input
           v-model="formFields.employeeID"
           label="Employee ID"
           :rules="[isRequired]"
           class="no-spinner"
           type="number"
-          @keydown.enter="focusNext"
         />
 
         <div align="right">
@@ -41,9 +37,7 @@
             label="Confirm"
             color="primary"
             icon="check_circle"
-            type="confirm"
-            :disable="!isFormValid"
-            v-close-popup
+            type="submit"
           />
         </div>
       </q-form>
@@ -74,15 +68,6 @@ const isRequired = (val: string) => {
   return true;
 };
 
-const isFormValid = computed(() => {
-  return (
-    formFields.college &&
-    formFields.department &&
-    formFields.employeeID &&
-    formFields.position
-  );
-});
-
 const newData = computed(() => {
   return {
     ...(authStore.currentUser as IProfile),
@@ -93,11 +78,12 @@ const newData = computed(() => {
     employeeID: formFields.employeeID,
   } as IAdviserProfile;
 });
-
+const succesCb = ref<VoidCallback>();
 TheDialogs.on({
   type: 'adviserApplicationDialog',
-  cb() {
+  cb(e) {
     adviserDialogVisible.value = true;
+    succesCb.value = e.success;
   },
 });
 
@@ -121,31 +107,18 @@ function onRequest() {
       success: () => {
         $q.notify('Adviser application was successful.');
         resetFormFields();
+        adviserDialogVisible.value = false;
+        succesCb.value && succesCb.value();
       },
       error: (err) => {
-        console.log(err);
+        $q.notify({
+          message: String(err),
+          icon: 'error',
+          color: 'negative',
+          caption: 'Adviser application failed.',
+        });
       },
     },
   });
-}
-
-function focusNext(e: KeyboardEvent) {
-  const target = e.target as HTMLInputElement | null;
-
-  if (target) {
-    const inputs = Array.from(
-      target.form?.querySelectorAll('input') || []
-    ) as HTMLInputElement[];
-    console.log(inputs);
-    const index = inputs.indexOf(target);
-
-    if (index < inputs.length - 1) {
-      inputs[index + 1].focus();
-    } else if (isFormValid.value) {
-      onRequest();
-    }
-
-    e.preventDefault();
-  }
 }
 </script>

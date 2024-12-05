@@ -44,11 +44,12 @@ const newData = computed(() => {
     type: 'admin',
   } as IAdminProfile;
 });
-
+const succesCb = ref<VoidCallback>();
 TheDialogs.on({
   type: 'adminApplicationDialog',
-  cb() {
+  cb(e) {
     adminDialogVisible.value = true;
+    succesCb.value = e.success;
   },
 });
 
@@ -64,6 +65,8 @@ function onRequest() {
       },
       success: () => {
         $q.notify('Admin application was successful.');
+        adminDialogVisible.value = false;
+        succesCb.value && succesCb.value();
       },
       error: (err) => {
         console.log(err);
