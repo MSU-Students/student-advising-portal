@@ -1,25 +1,23 @@
 <template>
   <q-page>
-    <q-card class="q-pa-md">
+    <q-card class="q-ma-md" bordered flat>
       <q-card-section>
         <Toolbar />
-      </q-card-section>
 
-      <q-card-section>
-        <q-tabs v-model="tab">
-          <q-tab name="student">Student</q-tab>
-          <q-tab name="adviser">Adviser</q-tab>
-          <q-tab name="admin">Admin</q-tab>
+        <q-tabs v-model="tab" dense active-color="primary">
+          <q-route-tab to="student" label="Student" />
+          <q-route-tab to="adviser" label="Adviser" />
+          <q-route-tab to="admin" label="Admin" />
         </q-tabs>
         <q-tab-panel v-model="tab">
-          <q-tab-panel name="student">
-            <!-- <DataTable /> -->
+          <!-- <DataTable /> -->
+          <q-card class="q-pa-md" bordered flat>
             <router-view />
-          </q-tab-panel>
+          </q-card>
         </q-tab-panel>
       </q-card-section>
     </q-card>
-    <router-view />
+    <!-- <router-view /> -->
   </q-page>
 </template>
 

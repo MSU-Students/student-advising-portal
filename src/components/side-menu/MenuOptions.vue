@@ -6,7 +6,7 @@
         clickable
         v-ripple="activeOption === option.name"
         :to="option.link || option.name"
-        v-on:click="setActiveOption(option.name)"
+        @click="setActiveOption(option.name)"
         :active="activeOption === option.name"
         active-class="rounded-borders bg-white"
         class="q-mb-md"
@@ -30,9 +30,13 @@
       </q-item>
       <q-expansion-item
         v-else
+        expand-icon-toggle
+        expand-icon-class="text-white"
+        clickable
+        @click="setActiveOption(option.name)"
         :active="activeOption === option.name"
         active-class="rounded-borders bg-white"
-        class="q-mb-md"
+        class="q-mb-md text-white"
         :label="option.label"
         :icon="option.icon"
       >
@@ -47,7 +51,6 @@ import { ref, onMounted, defineProps } from 'vue';
 import { useRoute } from 'vue-router';
 import { MenuOptionItem } from './types';
 
-const route = useRoute();
 const activeOption = ref('');
 
 defineProps<{ menuOptions: MenuOptionItem[] }>();
@@ -59,16 +62,7 @@ const setActiveOption = (optionName: string) => {
 };
 
 onMounted(() => {
-  const currentPath = route.path;
-
-  if (currentPath.includes('notification')) {
-    activeOption.value = 'notification';
-  } else if (currentPath.includes('history')) {
-    activeOption.value = 'history';
-  } else if (currentPath.includes('profile')) {
-    activeOption.value = 'profile';
-  } else {
-    activeOption.value = 'appointment'; // Default to appointment
-  }
+  const route = useRoute();
+  activeOption.value = route.name as string;
 });
 </script>
