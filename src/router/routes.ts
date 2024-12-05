@@ -48,7 +48,9 @@ const routes: RouteRecordRaw[] = [
         path: 'forgot-password',
         name: 'forgot-password',
         component: () => import('pages/auth/ForgotPasswordPage.vue'),
-        meta: {},
+        meta: {
+              anonygmous: true,
+        },
       },
       {
         path: 'email-verify',
