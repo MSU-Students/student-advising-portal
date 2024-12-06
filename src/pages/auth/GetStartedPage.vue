@@ -148,6 +148,7 @@ const continueAs = async () => {
     } else if (pending?.status == 'rejected') {
       Notify.create({
         message: 'Your request has been rejected',
+        caption: pending.remarks,
         icon: 'warning',
         color: 'warning',
       });
