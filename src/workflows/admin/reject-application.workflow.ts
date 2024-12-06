@@ -4,6 +4,7 @@ import { useProfileStore } from 'src/stores/profile.store';
 
 TheWorkflows.on({
   type: 'rejectApplication',
+  loggable: 'operation',
   async cb(e) {
     if (!e.payload.data.key) return;
     const requestStore = useRequestStore();

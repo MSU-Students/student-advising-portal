@@ -4,6 +4,7 @@ import { useAuthStore } from 'src/stores/auth.store';
 
 TheWorkflows.on({
   type: 'logOut',
+  loggable: 'operation',
   async cb(e) {
     try {
       await firebaseService.signOut();
@@ -14,4 +15,4 @@ TheWorkflows.on({
       e.error(new Error(String(error)));
     }
   },
-})
+});

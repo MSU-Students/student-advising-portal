@@ -12,7 +12,7 @@
         <h2>Activity Log</h2>
         <ul>
           <li v-for="(activity, index) in activities" :key="index">
-            {{ activity }}
+            {{ activity.type }} {{ activity.date }}
           </li>
         </ul>
       </div>
@@ -20,19 +20,22 @@
   </q-page>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref } from 'vue';
-
-export default defineComponent({
-  setup() {
-    const activities = ref([
-      'User John logged in at 10:00 AM',
-      'User Jane updated her profile at 10:15 AM',
-      'User Bob  logged in at 10:30 AM',
-    ]);
-
-    return { activities };
-  },
+<script lang="ts" setup>
+import { date } from 'quasar';
+import { ILoggable } from 'src/entities';
+import { useAuthStore } from 'src/stores/auth.store';
+import { useTransactionLogsStore } from 'src/stores/transaction-log-store';
+import { onMounted, ref } from 'vue';
+const logStore = useTransactionLogsStore();
+const authStore = useAuthStore();
+const activities = ref<ILoggable[]>([]);
+onMounted(async () => {
+  const logs = await logStore.findTransactions({
+    operator: authStore.currentUser?.key || '',
+  });
+  activities.value = logs.sort((a, b) =>
+    date.getDateDiff(b.date, a.date, 'seconds')
+  );
 });
 </script>
 

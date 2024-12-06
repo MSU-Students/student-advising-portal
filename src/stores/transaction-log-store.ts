@@ -11,6 +11,7 @@ export const useTransactionLogsStore = defineStore('transactionLogs', {
   getters: {},
   actions: {
     async saveTransaction(log: ILoggable) {
+      log.key = log.key || `${log.type}:${log.operator}${log.date}`;
       this.logs.push(log);
       return (await firebaseService.create('logs', log)) as ILoggable;
     },
