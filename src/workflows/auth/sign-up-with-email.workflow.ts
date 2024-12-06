@@ -3,6 +3,7 @@ import { TheWorkflows } from '../the-workflows';
 
 TheWorkflows.on({
   type: 'signUpWithEmail',
+  loggable: 'post-operation',
   async cb(e) {
     try {
       const authStore = useAuthStore();
