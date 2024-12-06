@@ -5,5 +5,6 @@ export function getCollections(fbStore: Firestore) {
     profiles: () => collection(fbStore, 'profiles'),
     bookings: () => collection(fbStore, 'bookings'),
     requests: () => collection(fbStore, 'requests'),
+    logs: () => collection(fbStore, 'logs'),
   };
 }
