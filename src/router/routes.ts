@@ -81,12 +81,7 @@ const routes: RouteRecordRaw[] = [
         },
       },
       {
-        path: 'application',
-        name: 'application',
-        component: () => import('pages/admin/ApplicationPage.vue'),
         path: 'booking',
-      },
-      {
         name: 'booking',
         component: () => import('pages/students/BookingPage.vue'),
         meta: {
@@ -96,9 +91,9 @@ const routes: RouteRecordRaw[] = [
         },
       },
       {
-        path: 'admin',
-        name: 'admin',
-        component: () => import('pages/admin/AdminPage.vue'),
+        path: 'application',
+        name: 'application',
+        component: () => import('pages/admin/ApplicationPage.vue'),
         meta: {
           requiresLogin: ['admin'],
           menu: 'Application',
