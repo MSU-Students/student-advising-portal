@@ -81,8 +81,10 @@
               <img :src="avatar" alt="Avatar Preview" class="avatar-image" />
               <q-btn icon="delete" round>Remove Avatar</q-btn>
             </div>
-            <div v-else class="avatar-placeholder">No Avatar Selected</div>
-            <q-btn type="submit" class="signup-btn">Sign Up</q-btn>
+            <div v-else class="avatar-placeholder"></div>
+            <div class="signup-button-container">
+              <q-btn type="submit" class="signup-btn">Sign Up</q-btn>
+            </div>
           </q-form>
           <p class="signup-footer">
             Already have an account? <a href="/">Sign In</a>
@@ -375,70 +377,8 @@ h1 {
     margin-top: 15px;
   }
 }
-
-.avatar-preview-container {
-  display: flex; /* Use flexbox for centering */
-  justify-content: center; /* Center horizontally */
-  margin-top: 10px; /* Space above the avatar preview */
-}
-
-.avatar-preview {
-  display: flex;
-  align-items: center; /* Align items vertically */
-  margin: 10px 0; /* Space above and below the avatar preview */
-  position: relative; /* Position relative to allow absolute positioning of the button */
-  width: 100px; /* Fixed width for the preview */
-  height: 100px; /* Fixed height for the preview */
-  border-radius: 15px; /* Rounded corners */
-  overflow: hidden; /* Ensure content doesn't overflow */
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
-  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for hover effects */
-  background-color: #f9f9f9; /* Light background color */
-}
-
-.avatar-preview:hover {
-  transform: scale(1.05); /* Slightly enlarge on hover */
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3); /* Deeper shadow on hover */
-}
-
-/* Other styles remain unchanged */
-
-.avatar-image {
-  width: 100%; /* Full width of the container */
-  height: 100%; /* Full height of the container */
-  object-fit: cover; /* Cover the container without distortion */
-  border-radius: 15px; /* Match the border radius of the container */
-  transition: transform 0.3s ease; /* Smooth scaling effect */
-}
-
-.remove-avatar-btn {
-  background: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
-  border: none; /* Remove border */
-  cursor: pointer; /* Pointer cursor on hover */
-  padding: 5px 10px; /* Padding for button */
-  border-radius: 10px; /* Rounded corners for button */
-  position: absolute; /* Position button absolutely */
-  bottom: 10px; /* Align to the bottom of the avatar */
-  right: 10px; /* Align to the right of the avatar */
-  display: flex; /* Use flex for alignment */
-  align-items: center; /* Center icon and text vertically */
-  opacity: 0; /* Initially hidden */
-  transition: opacity 0.3s ease, transform 0.3s ease; /* Smooth transition for opacity */
-}
-
-.avatar-preview:hover .remove-avatar-btn {
-  opacity: 1; /* Show button on hover */
-  transform: translateY(0); /* Reset any translation on hover */
-}
-
-.remove-icon {
-  width: 16px; /* Size of the icon */
-  height: 16px; /* Size of the icon */
-  margin-right: 5px; /* Space between icon and text */
-}
-
-.remove-avatar-btn:hover {
-  background: rgba(255, 255, 255, 1); /* Solid background on hover */
-  transform: scale(1.05); /* Slightly enlarge the button on hover */
+.avatar-placeholder {
+  height: 5px;
+  margin-bottom: 5px;
 }
 </style>

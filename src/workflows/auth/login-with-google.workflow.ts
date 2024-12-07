@@ -3,6 +3,7 @@ import { TheWorkflows } from '../the-workflows';
 
 TheWorkflows.on({
   type: 'loginWithGoogle',
+  loggable: 'post-operation',
   async cb(e) {
     try {
       const authStore = useAuthStore();
@@ -17,4 +18,4 @@ TheWorkflows.on({
       if (e.error) e.error(new Error(String(error)));
     }
   },
-})
+});

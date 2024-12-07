@@ -5,4 +5,5 @@ export interface IRequest {
   status: 'pending' | 'approved' | 'rejected';
   createdAt: string;
   data: IProfile;
+  remarks?: string;
 }

@@ -57,5 +57,8 @@ export const useAuthStore = defineStore('auth', {
         `${payload.firstName} ${payload.middleName} ${payload.lastName}`
       );
     },
+    async resendEmailVerification() {
+      await firebaseService.resendEmailVerification();
+    },
   },
 });

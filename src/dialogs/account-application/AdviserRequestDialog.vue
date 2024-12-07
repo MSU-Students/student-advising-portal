@@ -1,5 +1,5 @@
 <template>
-  <q-dialog v-model="adviserDialogVisible" persistent>
+  <q-dialog v-model="adviserDialogVisible">
     <q-card style="min-width: 300px; border-radius: 22px">
       <q-card-section class="text-center bg-primary text-white">
         <span class="text-h6 q-ml-sm q-pa-xl text-bold"
@@ -7,7 +7,7 @@
         >
       </q-card-section>
 
-      <q-card-section class="q-pt-md">
+      <q-form class="q-pa-md" @submit="onRequest">
         <q-input
           v-model="formFields.college"
           label="College"
@@ -29,20 +29,18 @@
           class="no-spinner"
           type="number"
         />
-      </q-card-section>
 
-      <q-card-actions align="right" class="bg-grey-1">
-        <q-btn flat label="Cancel" color="dark" v-close-popup icon="close" />
-        <q-btn
-          flat
-          label="Confirm"
-          color="primary"
-          icon="check_circle"
-          @click="onRequest"
-          :disable="!isFormValid"
-          v-close-popup
-        />
-      </q-card-actions>
+        <div align="right">
+          <q-btn flat label="Cancel" color="dark" v-close-popup icon="close" />
+          <q-btn
+            flat
+            label="Confirm"
+            color="primary"
+            icon="check_circle"
+            type="submit"
+          />
+        </div>
+      </q-form>
     </q-card>
   </q-dialog>
 </template>
@@ -54,10 +52,8 @@ import { TheWorkflows } from 'src/workflows/the-workflows';
 import { uid, useQuasar } from 'quasar';
 import { useAuthStore } from 'src/stores/auth.store';
 import { IAdviserProfile, IProfile } from 'src/entities';
-import { useRouter } from 'vue-router';
 
 const authStore = useAuthStore();
-const router = useRouter();
 const $q = useQuasar();
 const adviserDialogVisible = ref(false);
 const formFields = reactive({
@@ -72,15 +68,6 @@ const isRequired = (val: string) => {
   return true;
 };
 
-const isFormValid = computed(() => {
-  return (
-    formFields.college &&
-    formFields.department &&
-    formFields.employeeID &&
-    formFields.position
-  );
-});
-
 const newData = computed(() => {
   return {
     ...(authStore.currentUser as IProfile),
@@ -91,11 +78,12 @@ const newData = computed(() => {
     employeeID: formFields.employeeID,
   } as IAdviserProfile;
 });
-
+const succesCb = ref<VoidCallback>();
 TheDialogs.on({
   type: 'adviserApplicationDialog',
-  cb() {
+  cb(e) {
     adviserDialogVisible.value = true;
+    succesCb.value = e.success;
   },
 });
 
@@ -119,10 +107,16 @@ function onRequest() {
       success: () => {
         $q.notify('Adviser application was successful.');
         resetFormFields();
-        router.replace({ name: 'pending-application' });
+        adviserDialogVisible.value = false;
+        succesCb.value && succesCb.value();
       },
       error: (err) => {
-        console.log(err);
+        $q.notify({
+          message: String(err),
+          icon: 'error',
+          color: 'negative',
+          caption: 'Adviser application failed.',
+        });
       },
     },
   });

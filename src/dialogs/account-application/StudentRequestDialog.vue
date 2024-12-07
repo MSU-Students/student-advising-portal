@@ -1,5 +1,5 @@
 <template>
-  <q-dialog v-model="studentAdminDialog" persistent>
+  <q-dialog v-model="studentAdminDialog">
     <q-card style="min-width: 300px; border-radius: 22px">
       <q-card-section class="text-center bg-primary text-white">
         <span class="text-h6 q-ml-sm q-pa-xl text-bold"
@@ -7,7 +7,7 @@
         >
       </q-card-section>
 
-      <q-card-section>
+      <q-form class="q-pa-md" @submit="onRequest">
         <q-input
           v-model="formFields.idNumber"
           label="ID Number"
@@ -20,20 +20,18 @@
           label="Program"
           :rules="[isRequired]"
         />
-      </q-card-section>
 
-      <q-card-actions align="right" class="bg-grey-1">
-        <q-btn flat label="Cancel" color="dark" v-close-popup icon="close" />
-        <q-btn
-          flat
-          label="Confirm"
-          color="primary"
-          icon="check_circle"
-          @click="onRequest"
-          v-close-popup
-          :disable="!isFormValid"
-        />
-      </q-card-actions>
+        <div align="right">
+          <q-btn flat label="Cancel" color="dark" v-close-popup icon="close" />
+          <q-btn
+            flat
+            label="Confirm"
+            color="primary"
+            icon="check_circle"
+            type="submit"
+          />
+        </div>
+      </q-form>
     </q-card>
   </q-dialog>
 </template>
@@ -45,10 +43,8 @@ import { IProfile, IStudentProfile } from 'src/entities';
 import { useAuthStore } from 'src/stores/auth.store';
 import { TheWorkflows } from 'src/workflows/the-workflows';
 import { uid, useQuasar } from 'quasar';
-import { useRouter } from 'vue-router';
 
 const authStore = useAuthStore();
-const router = useRouter();
 const studentAdminDialog = ref(false);
 const $q = useQuasar();
 const formFields = reactive({
@@ -61,10 +57,6 @@ const isRequired = (val: string) => {
   return true;
 };
 
-const isFormValid = computed(() => {
-  return formFields.idNumber && formFields.program;
-});
-
 const newData = computed(() => {
   return {
     ...(authStore.currentUser as IProfile),
@@ -73,11 +65,12 @@ const newData = computed(() => {
     program: formFields.program,
   } as IStudentProfile;
 });
-
+const succesCb = ref<VoidCallback>();
 TheDialogs.on({
   type: 'studentApplicationDialog',
-  cb() {
+  cb(e) {
     studentAdminDialog.value = true;
+    succesCb.value = e.success;
   },
 });
 
@@ -98,8 +91,9 @@ function onRequest() {
       },
       success: () => {
         $q.notify('Student application was successful.');
+        studentAdminDialog.value = false;
+        succesCb.value && succesCb.value();
         resetFormFields();
-        router.replace({ name: 'pending-application' });
       },
       error: (err) => {
         console.log(err);

@@ -31,18 +31,18 @@ const routes: RouteRecordRaw[] = [
         },
       },
       {
-        path: 'pending-application',
-        name: 'pending-application',
-        component: () => import('pages/auth/PendingApplicationPage.vue'),
-        meta: {
-          requiresLogin: true,
-        },
-      },
-      {
         path: 'sign-up',
         name: 'sign-up',
         component: () => import('pages/auth/SignupPage.vue'),
         meta: {},
+      },
+      {
+        path: 'forgot-password',
+        name: 'forgot-password',
+        component: () => import('pages/auth/ForgotPasswordPage.vue'),
+        meta: {
+              anonygmous: true,
+        },
       },
       {
         path: 'email-verify',
@@ -84,6 +84,21 @@ const routes: RouteRecordRaw[] = [
         path: 'application',
         name: 'application',
         component: () => import('pages/admin/ApplicationPage.vue'),
+        path: 'booking',
+      },
+      {
+        name: 'booking',
+        component: () => import('pages/students/BookingPage.vue'),
+        meta: {
+          menu: 'Booking',
+          title: 'Booking Page',
+          icon: 'library_books',
+        },
+      },
+      {
+        path: 'admin',
+        name: 'admin',
+        component: () => import('pages/admin/AdminPage.vue'),
         meta: {
           requiresLogin: ['admin'],
           menu: 'Application',
