@@ -1,50 +1,5 @@
 <template>
   <q-table :rows="applications" :columns="columns" row-key="id" hide-bottom>
-    <template #header="props">
-      <q-tr :props="props">
-        <q-th
-          v-for="col in props.cols"
-          :key="col.name"
-          :props="props"
-          class="bg-primary text-white"
-        >
-          {{ col.label }}
-        </q-th>
-      </q-tr>
-    </template>
-
-    <template #body="props">
-      <q-tr :props="props" @click="onRowClick(props.row)">
-        <q-td v-for="col in props.cols" :key="col.name" :props="props">
-          <template v-if="col.name === 'actions'">
-            <q-btn
-              color="green"
-              class="q-mx-sm"
-              :disable="props.row.status !== 'pending'"
-              @click.stop="approveApplication(props.row)"
-            >
-              Approve
-            </q-btn>
-            <q-btn
-              color="red"
-              class="q-mx-sm"
-              :disable="props.row.status !== 'pending'"
-              @click.stop="
-                TheDialogs.emit({
-                  type: 'applicationRejectDialog',
-                  arg: { payload: props.row },
-                })
-              "
-            >
-              Reject
-            </q-btn>
-          </template>
-          <template v-else>
-            {{ col.value }}
-          </template>
-        </q-td>
-      </q-tr>
-    </template>
   </q-table>
 </template>
 
