@@ -1,5 +1,5 @@
 <template>
-  <DataTable />
+  <DataTable type="admin" />
 </template>
 
 <script setup lang="ts">

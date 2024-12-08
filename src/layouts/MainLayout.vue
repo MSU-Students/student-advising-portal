@@ -80,7 +80,7 @@ import { useI18n } from 'vue-i18n';
 import { TheDialogs } from 'src/dialogs/the-dialogs';
 import LogOutDialog from 'src/dialogs/auth/LogOutDialog.vue';
 import { useAuthStore } from 'src/stores/auth.store';
-import { useRouter } from 'vue-router';
+import { RouteMeta, useRouter } from 'vue-router';
 import ConfirmLockDialog from 'src/dialogs/auth/ConfirmLockDialog.vue';
 import SearchbarComponent from 'src/components/search-bar/SearchbarComponent.vue';
 import RejectApplicationDialog from 'src/dialogs/admin/RejectApplicationDialog.vue';
@@ -97,8 +97,15 @@ const localeOptions = [
 const leftDrawerOpen = ref(true);
 const $router = useRouter();
 const allRoutes = $router.getRoutes();
+function hasAccess(routeMeta?: RouteMeta) {
+  if (!authStore.currentUser) return false;
+  if (!routeMeta || !routeMeta.requiresLogin) return true;
+  return Array.isArray(routeMeta.requiresLogin)
+    ? routeMeta.requiresLogin.includes(authStore.currentUser.type)
+    : !!routeMeta.requiresLogin && !!authStore.currentUser.type;
+}
 const menuOptions: MenuOptionItem[] = allRoutes
-  .filter((r) => r.meta?.menu && !r.meta.parent)
+  .filter((r) => r.meta?.menu && !r.meta.parent && hasAccess(r.meta))
   .map((r) => {
     return {
       icon: r.meta.icon,
@@ -106,7 +113,10 @@ const menuOptions: MenuOptionItem[] = allRoutes
       name: r.name,
       link: r,
       submenu: allRoutes
-        .filter((r2) => r2.meta.parent == r.name && r2.meta?.menu)
+        .filter(
+          (r2) =>
+            r2.meta.parent == r.name && r2.meta?.menu && hasAccess(r2.meta)
+        )
         .map((r2) => {
           return {
             label: r2.meta.menu,

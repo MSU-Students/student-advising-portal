@@ -57,11 +57,13 @@
 <script lang="ts" setup>
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { useRequestStore } from 'src/stores/request.store';
-import { IRequest } from 'src/entities';
+import { IRequest, IProfile } from 'src/entities';
 import { date, Notify, QTableColumn } from 'quasar';
 import { TheDialogs } from 'src/dialogs/the-dialogs';
 import { TheWorkflows } from 'src/workflows/the-workflows';
-
+const props = defineProps<{
+  type: IProfile['type'];
+}>();
 const requestStore = useRequestStore();
 const applications = computed(() => {
   return requestStore.requests;
@@ -130,6 +132,7 @@ function updateFilter() {
   sub?.unsubscribe();
   sub = requestStore.streamRequests({
     'status ==': filter.value,
+    'data.type': props.type,
   });
 }
 onUnmounted(() => {
