@@ -66,22 +66,24 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import MenuOptions from 'src/components/side-menu/MenuOptions.vue';
-import UserProfileCard from 'src/components/side-menu/UserProfileCard.vue';
 import { MenuOptionItem } from 'src/components/side-menu/types';
 import { useI18n } from 'vue-i18n';
-import { TheDialogs } from 'src/dialogs/the-dialogs';
-import LogOutDialog from 'src/dialogs/auth/LogOutDialog.vue';
 import { useAuthStore } from 'src/stores/auth.store';
 import { RouteMeta, useRouter } from 'vue-router';
+
+// COMPONENTS
+import MenuOptions from 'src/components/side-menu/MenuOptions.vue';
+import UserProfileCard from 'src/components/side-menu/UserProfileCard.vue';
+import LogoutButton from 'src/components/LogoutButton.vue';
+
+// DIALOGS
 import ConfirmLockDialog from 'src/dialogs/auth/ConfirmLockDialog.vue';
 import SearchbarComponent from 'src/components/search-bar/SearchbarComponent.vue';
 import RejectApplicationDialog from 'src/dialogs/admin/RejectApplicationDialog.vue';
+import LogOutDialog from 'src/dialogs/auth/LogOutDialog.vue';
 
 const { locale } = useI18n({ useScope: 'global' });
-
 const authStore = useAuthStore();
-
 const localeOptions = [
   { value: 'en-US', label: 'English' },
   { value: 'fil-PH', label: 'Tagalog' },
@@ -97,6 +99,7 @@ function hasAccess(routeMeta?: RouteMeta) {
     ? routeMeta.requiresLogin.includes(authStore.currentUser.type)
     : !!routeMeta.requiresLogin && !!authStore.currentUser.type;
 }
+
 const menuOptions: MenuOptionItem[] = allRoutes
   .filter((r) => r.meta?.menu && !r.meta.parent && hasAccess(r.meta))
   .map((r) => {
