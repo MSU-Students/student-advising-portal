@@ -75,10 +75,10 @@ import { RouteMeta, useRouter } from 'vue-router';
 import MenuOptions from 'src/components/side-menu/MenuOptions.vue';
 import UserProfileCard from 'src/components/side-menu/UserProfileCard.vue';
 import LogoutButton from 'src/components/LogoutButton.vue';
+import SearchbarComponent from 'src/components/search-bar/SearchbarComponent.vue';
 
 // DIALOGS
 import ConfirmLockDialog from 'src/dialogs/auth/ConfirmLockDialog.vue';
-import SearchbarComponent from 'src/components/search-bar/SearchbarComponent.vue';
 import RejectApplicationDialog from 'src/dialogs/admin/RejectApplicationDialog.vue';
 import LogOutDialog from 'src/dialogs/auth/LogOutDialog.vue';
 
