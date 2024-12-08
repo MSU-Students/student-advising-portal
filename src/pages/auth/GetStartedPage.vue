@@ -103,6 +103,9 @@ const authStore = useAuthStore();
 
 onMounted(async () => {
   const user = authStore.currentUser;
+  if (user?.type && user.type != 'anonymous') {
+    $router.replace({ name: 'home' });
+  }
   if (user?.key) {
     requestStore.streamRequests({
       'data.key': user.key,
