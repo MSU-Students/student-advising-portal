@@ -14,7 +14,7 @@
       />
     </template>
 
-    <template v-slot:header="props">
+    <template #header="props">
       <q-tr :props="props">
         <q-th
           v-for="col in props.cols"
@@ -27,7 +27,7 @@
       </q-tr>
     </template>
 
-    <template v-slot:body="props">
+    <template #body="props">
       <q-tr :props="props" @click="onRowClick(props.row)">
         <q-td v-for="col in props.cols" :key="col.name" :props="props">
           <template v-if="col.name === 'actions'">
