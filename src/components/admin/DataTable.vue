@@ -26,6 +26,14 @@
       </q-tr>
     </template>
 
+    <template v-slot:body="props">
+      <q-tr :props="props" @click="onRowClick(props.row)">
+        <q-td v-for="col in props.cols" :key="col.name" :props="props">
+          {{ col.value }}s
+        </q-td>
+      </q-tr>
+    </template>
+
     <template v-slot:body-cell-actions="props">
       <q-td :props="props" class="text-right">
         <q-btn
@@ -35,6 +43,7 @@
           @click="approveApplication(props.row)"
           >Approve</q-btn
         >
+
         <q-btn
           color="red"
           class="q-mx-sm"
@@ -61,15 +70,19 @@ import { IRequest, IProfile } from 'src/entities';
 import { date, Notify, QTableColumn } from 'quasar';
 import { TheDialogs } from 'src/dialogs/the-dialogs';
 import { TheWorkflows } from 'src/workflows/the-workflows';
+
 const props = defineProps<{
   type: IProfile['type'];
 }>();
+
 const requestStore = useRequestStore();
+
 const applications = computed(() => {
   return requestStore.requests;
 });
 
 const filter = ref<IRequest['status']>('pending');
+
 const filterOptions = [
   {
     label: 'Pending',
@@ -84,6 +97,7 @@ const filterOptions = [
     value: 'rejected',
   },
 ] as { label: string; value: IRequest['status'] }[];
+
 const columns = [
   {
     name: 'application',
@@ -123,6 +137,7 @@ const columns = [
     style: 'width: 1px;',
   },
 ] as QTableColumn[];
+
 let sub: ReturnType<typeof requestStore.streamRequests> | undefined;
 onMounted(() => {
   updateFilter();
@@ -135,6 +150,7 @@ function updateFilter() {
     'data.type': props.type,
   });
 }
+
 onUnmounted(() => {
   sub?.unsubscribe();
 });
@@ -162,4 +178,8 @@ function approveApplication(request: IRequest) {
     ],
   });
 }
+
+const onRowClick = (row: IRequest) => {
+  alert(`${row.data.fullName} clicked`);
+};
 </script>
