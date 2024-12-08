@@ -29,7 +29,7 @@
     <template v-slot:body="props">
       <q-tr :props="props" @click="onRowClick(props.row)">
         <q-td v-for="col in props.cols" :key="col.name" :props="props">
-          {{ col.value }}s
+          {{ col.value }}
         </q-td>
       </q-tr>
     </template>
