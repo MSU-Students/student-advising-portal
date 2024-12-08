@@ -1,5 +1,46 @@
 <template>
-  <q-table :rows="applications" :columns="columns" row-key="id" hide-bottom>
+  <q-table
+    hide-bottom
+    flat
+    bordered
+    separator="vertical"
+    :rows="applications"
+    :columns="columns"
+  >
+    <template #header>
+      <q-tr class="bg-primary text-white">
+        <q-th v-for="col in columns" :key="col.name">{{ col.label }}</q-th>
+      </q-tr>
+    </template>
+    <template #body="prop">
+      <q-tr>
+        <!-- application status -->
+        <q-td>
+          <q-icon
+            :name="prop.row.status == 'pending' ? 'autorenew' : ''"
+            color="warning"
+            size="md"
+          />
+          <span>{{ prop.row.status == 'pending' ? 'Pending' : '' }}</span>
+        </q-td>
+        <!-- applicant name -->
+        <q-td>
+          {{ prop.row.data.fullName }}
+        </q-td>
+        <!-- applicant role -->
+        <q-td>
+          {{ prop.row.data.type }}
+        </q-td>
+        <!-- application creation time -->
+        <q-td>
+          {{ prop.row.createdAt }}
+        </q-td>
+        <!-- application actions -->
+        <q-td>
+          <ActionButtons :props="prop.row" />
+        </q-td>
+      </q-tr>
+    </template>
   </q-table>
 </template>
 
@@ -7,9 +48,9 @@
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { useRequestStore } from 'src/stores/request.store';
 import { IRequest, IProfile } from 'src/entities';
-import { date, Notify, QTableColumn } from 'quasar';
-import { TheDialogs } from 'src/dialogs/the-dialogs';
-import { TheWorkflows } from 'src/workflows/the-workflows';
+import { date, QTableColumn } from 'quasar';
+
+import ActionButtons from './ActionButtons.vue';
 
 const props = defineProps<{
   type: IProfile['type'];
@@ -94,32 +135,4 @@ function updateFilter() {
 onUnmounted(() => {
   sub?.unsubscribe();
 });
-
-function approveApplication(request: IRequest) {
-  Notify.create({
-    message: 'Are you sure?',
-    position: 'center',
-    actions: [
-      {
-        name: 'yes',
-        label: 'yes',
-        handler() {
-          TheWorkflows.emit({
-            type: 'approveApplication',
-            arg: {
-              payload: { ...request, data: { ...request.data } },
-            },
-          });
-        },
-      },
-      {
-        label: 'No',
-      },
-    ],
-  });
-}
-
-const onRowClick = (row: IRequest) => {
-  alert(`${row.data.fullName} clicked`);
-};
 </script>
