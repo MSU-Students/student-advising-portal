@@ -13,6 +13,7 @@
         class="q-ml-sm text-capitalize"
       />
     </template>
+
     <template v-slot:header="props">
       <q-tr :props="props">
         <q-th
@@ -29,36 +30,34 @@
     <template v-slot:body="props">
       <q-tr :props="props" @click="onRowClick(props.row)">
         <q-td v-for="col in props.cols" :key="col.name" :props="props">
-          {{ col.value }}
+          <template v-if="col.name === 'actions'">
+            <q-btn
+              color="green"
+              class="q-mx-sm"
+              :disable="props.row.status !== 'pending'"
+              @click.stop="approveApplication(props.row)"
+            >
+              Approve
+            </q-btn>
+            <q-btn
+              color="red"
+              class="q-mx-sm"
+              :disable="props.row.status !== 'pending'"
+              @click.stop="
+                TheDialogs.emit({
+                  type: 'applicationRejectDialog',
+                  arg: { payload: props.row },
+                })
+              "
+            >
+              Reject
+            </q-btn>
+          </template>
+          <template v-else>
+            {{ col.value }}
+          </template>
         </q-td>
       </q-tr>
-    </template>
-
-    <template v-slot:body-cell-actions="props">
-      <q-td :props="props" class="text-right">
-        <q-btn
-          color="green"
-          class="q-mx-sm"
-          :disable="props.row.status !== 'pending'"
-          @click="approveApplication(props.row)"
-          >Approve</q-btn
-        >
-
-        <q-btn
-          color="red"
-          class="q-mx-sm"
-          :disable="props.row.status !== 'pending'"
-          @click="
-            TheDialogs.emit({
-              type: 'applicationRejectDialog',
-              arg: {
-                payload: props.row,
-              },
-            })
-          "
-          >Reject</q-btn
-        >
-      </q-td>
     </template>
   </q-table>
 </template>
