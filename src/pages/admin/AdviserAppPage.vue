@@ -1,3 +1,7 @@
-<template>Adviser Page (Temporary Text)</template>
+<template>
+  <DataTable />
+</template>
 
-<script setup></script>
+<script setup lang="ts">
+import DataTable from '/src/components/admin/DataTable.vue';
+</script>

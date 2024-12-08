@@ -81,8 +81,8 @@ const routes: RouteRecordRaw[] = [
         },
       },
       {
-        path: 'booking',
         name: 'booking',
+        path: 'booking',
         component: () => import('pages/students/BookingPage.vue'),
         meta: {
           menu: 'Booking',

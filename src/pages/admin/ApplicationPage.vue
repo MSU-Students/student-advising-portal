@@ -3,18 +3,14 @@
     <q-card class="q-ma-md" bordered flat>
       <q-card-section>
         <Toolbar />
-
         <q-tabs v-model="tab" dense active-color="primary">
           <q-route-tab to="student" label="Student" />
           <q-route-tab to="adviser" label="Adviser" />
           <q-route-tab to="admin" label="Admin" />
         </q-tabs>
-        <q-tab-panel v-model="tab">
-          <!-- <DataTable /> -->
-          <q-card class="q-pa-md" bordered flat>
-            <router-view />
-          </q-card>
-        </q-tab-panel>
+        <q-card class="q-pa-md" bordered flat>
+          <router-view />
+        </q-card>
       </q-card-section>
     </q-card>
     <!-- <router-view /> -->
