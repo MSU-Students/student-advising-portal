@@ -16,12 +16,16 @@
       <q-tr>
         <!-- application status -->
         <q-td>
-          <q-icon
-            :name="prop.row.status == 'pending' ? 'autorenew' : ''"
-            color="warning"
-            size="md"
-          />
-          <span>{{ prop.row.status == 'pending' ? 'Pending' : '' }}</span>
+          <div class="flex justify-center items-center">
+            <q-icon
+              :name="prop.row.status == 'pending' ? 'autorenew' : ''"
+              color="orange"
+              size="md"
+            />
+            <span class="text-weight-bolder text-orange">{{
+              prop.row.status == 'pending' ? 'PENDING' : ''
+            }}</span>
+          </div>
         </q-td>
         <!-- applicant name -->
         <q-td>
@@ -33,7 +37,7 @@
         </q-td>
         <!-- application creation time -->
         <q-td>
-          {{ prop.row.createdAt }}
+          {{ date.formatDate(prop.row.createdAt, 'MMM DD YYYY hh:mm A') }}
         </q-td>
         <!-- application actions -->
         <q-td>
