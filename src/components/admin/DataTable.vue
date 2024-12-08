@@ -1,19 +1,5 @@
 <template>
   <q-table :rows="applications" :columns="columns" row-key="id" hide-bottom>
-    <template #top-right>
-      <q-select
-        v-model="filter"
-        :options="filterOptions"
-        option-value="value"
-        option-label="label"
-        emit-value
-        label="Filter"
-        color="primary"
-        @update:model-value="updateFilter"
-        class="q-ml-sm text-capitalize"
-      />
-    </template>
-
     <template #header="props">
       <q-tr :props="props">
         <q-th
@@ -82,20 +68,20 @@ const applications = computed(() => {
 
 const filter = ref<IRequest['status']>('pending');
 
-const filterOptions = [
-  {
-    label: 'Pending',
-    value: 'pending',
-  },
-  {
-    label: 'Approved',
-    value: 'approved',
-  },
-  {
-    label: 'Rejected',
-    value: 'rejected',
-  },
-] as { label: string; value: IRequest['status'] }[];
+// const filterOptions = [
+//   {
+//     label: 'Pending',
+//     value: 'pending',
+//   },
+//   {
+//     label: 'Approved',
+//     value: 'approved',
+//   },
+//   {
+//     label: 'Rejected',
+//     value: 'rejected',
+//   },
+// ] as { label: string; value: IRequest['status'] }[];
 
 const columns = [
   {
