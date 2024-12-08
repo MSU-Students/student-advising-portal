@@ -21,14 +21,7 @@
       />
       <MenuOptions :menu-options="menuOptions" class="q-mt-xl" />
       <div class="absolute-bottom text-center q-mb-md">
-        <q-btn
-          outline
-          rounded
-          color="white"
-          label="LOGOUT"
-          class="q-px-xl"
-          @click="TheDialogs.emit({ type: 'logoutDialog', arg: {} })"
-        />
+        <LogoutButton white />
       </div>
     </q-drawer>
 
