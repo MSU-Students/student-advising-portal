@@ -41,7 +41,7 @@ import {
   count,
   FieldPath,
   startAfter,
-  startAt
+  startAt,
 } from 'firebase/firestore';
 import {
   connectStorageEmulator,
@@ -72,7 +72,9 @@ export enum AccessStatus {
   expired = 16,
 }
 const dbConfig = JSON.parse(
-  typeof process.env.DB_CONFIG == 'string' ? process.env.DB_CONFIG : '{"apiKey":"AIzaSyAnTpKMfEF1aNHOoiGbqNHTdL2ihKr7jDk","authDomain":"gonana-o.firebaseapp.com","projectId":"gonana-o","storageBucket":"gonana-o.firebasestorage.app","messagingSenderId":"301350859500","appId":"1:301350859500:web:b20ddc5d5860ebb9c3abc9","measurementId":"G-ZB0G111937"}'
+  typeof process.env.DB_CONFIG == 'string'
+    ? process.env.DB_CONFIG
+    : '{"apiKey":"AIzaSyAnTpKMfEF1aNHOoiGbqNHTdL2ihKr7jDk","authDomain":"gonana-o.firebaseapp.com","projectId":"gonana-o","storageBucket":"gonana-o.firebasestorage.app","messagingSenderId":"301350859500","appId":"1:301350859500:web:b20ddc5d5860ebb9c3abc9","measurementId":"G-ZB0G111937"}'
 ) as FirebaseOptions;
 // Initialize Firebase
 const app = initializeApp({
@@ -86,7 +88,7 @@ const fbStorage = getStorage(app);
 
 const googleProvider = new GoogleAuthProvider();
 
-if (/development/i.test(process.env.NODE_ENV) && !(process.env.USE_LIVE)) {
+if (/development/i.test(process.env.NODE_ENV) && !process.env.USE_LIVE) {
   if (firebase.emulators) {
     type EmulatorConfig = { [key: string]: { port: number } };
     const emulators = firebase.emulators as unknown as EmulatorConfig;
@@ -101,7 +103,6 @@ if (/development/i.test(process.env.NODE_ENV) && !(process.env.USE_LIVE)) {
     }
     if (emulators.storage) {
       connectStorageEmulator(fbStorage, 'localhost', emulators.storage.port);
-
     }
   }
 }
@@ -122,8 +123,8 @@ export type QueryOptions = {
   firstVisible?: unknown;
   size?: number;
   orderBy?: string;
-  order?: 'asc' | 'desc'
-}
+  order?: 'asc' | 'desc';
+};
 class FirebaseService {
   constructor() {
     this.accessObs = new Subject();
@@ -161,15 +162,17 @@ class FirebaseService {
     return auth.currentUser?.getIdToken(/* forceRefresh */ true);
   }
   async checkTokenRefresh() {
-    return auth.currentUser?.getIdTokenResult()
-      .then((idTokenResult) => {
-        // Compare idTokenResult.expirationTime with current time
-        // If the token is about to expire, refresh it
-        if (idTokenResult && new Date(idTokenResult.expirationTime).getTime() < Date.now()) {
-          // Call the function to refresh the token
-          return this.refreshToken();
-        }
-      });
+    return auth.currentUser?.getIdTokenResult().then((idTokenResult) => {
+      // Compare idTokenResult.expirationTime with current time
+      // If the token is about to expire, refresh it
+      if (
+        idTokenResult &&
+        new Date(idTokenResult.expirationTime).getTime() < Date.now()
+      ) {
+        // Call the function to refresh the token
+        return this.refreshToken();
+      }
+    });
   }
   authenticate() {
     return new Promise<User | null>((resolve) => {
@@ -222,8 +225,11 @@ class FirebaseService {
     const cred = await this.authenticate();
     if (cred) {
       await sendEmailVerification(cred);
+    } else {
+      throw new Error('No user is currently signed in.');
     }
   }
+
   async forgetPassword(email: string) {
     return sendPasswordResetEmail(auth, email);
   }
@@ -245,14 +251,13 @@ class FirebaseService {
   async uploadFile(file: File, options?: { task?: UploadTask; path: string }) {
     const fileRef = ref(
       attachmentsStorageRef,
-      options ? `${options.path}/${file.name}` : file.name,
+      options ? `${options.path}/${file.name}` : file.name
     );
     const upload = await uploadBytes(fileRef, file, {
-      contentType: file.type
-    })
+      contentType: file.type,
+    });
     return getDownloadURL(upload.ref);
   }
-
 
   async updateProfile(displayName: string, photoURL?: string) {
     if (auth.currentUser) {
@@ -272,7 +277,8 @@ class FirebaseService {
   }
   streamWith<T>(
     modelName: ModelName,
-    filter: { [field: string]: string | string[] } = {}, options?: QueryOptions
+    filter: { [field: string]: string | string[] } = {},
+    options?: QueryOptions
   ) {
     const { queryRef, collectionRef } = this.getQueryFromFilter(
       modelName,
@@ -329,10 +335,16 @@ class FirebaseService {
   }
   async count(modelName: ModelName, filter?: Record<string, string>) {
     const query = this.getQueryFromFilter(modelName, filter || {});
-    const result = await getCountFromServer(query.queryRef || query.collectionRef);
+    const result = await getCountFromServer(
+      query.queryRef || query.collectionRef
+    );
     return result.data().count;
   }
-  async aggregate(modelName: ModelName, specs: Record<string, string>, filter?: Record<string, string>) {
+  async aggregate(
+    modelName: ModelName,
+    specs: Record<string, string>,
+    filter?: Record<string, string>
+  ) {
     const query = this.getQueryFromFilter(modelName, filter || {});
     const specVariables = Object.keys(specs);
     const aggregateSpecs = {
@@ -345,9 +357,12 @@ class FirebaseService {
           prev[curr.replace('.', '')] = count();
         }
         return prev;
-      }, {} as AggregateSpec)
+      }, {} as AggregateSpec),
     };
-    const result = await getAggregateFromServer(query.queryRef || query.collectionRef, aggregateSpecs);
+    const result = await getAggregateFromServer(
+      query.queryRef || query.collectionRef,
+      aggregateSpecs
+    );
     if (specVariables.length == 1) {
       return result.data()[specVariables[0].replace('.', '')];
     } else {
@@ -369,18 +384,19 @@ class FirebaseService {
         if (match) {
           const OPERAND = 1,
             OPERATOR = 2;
-          const operand = /\./.test(match[OPERAND]) ?
-            new FieldPath(...match[OPERAND].split('.')) : match[OPERAND];
+          const operand = /\./.test(match[OPERAND])
+            ? new FieldPath(...match[OPERAND].split('.'))
+            : match[OPERAND];
           const operator = match[OPERATOR] as WhereFilterOp;
           return where(operand, operator, filter[f]);
         }
         return where(f, '==', filter[f]);
       });
     if (typeof options?.orderBy == 'string') {
-      conditions.push(orderBy(options?.orderBy, options.order ?? 'asc'))
+      conditions.push(orderBy(options?.orderBy, options.order ?? 'asc'));
     }
     if (typeof limits == 'number') {
-      conditions.push(limit(limits))
+      conditions.push(limit(limits));
     }
     if (options?.next) {
       conditions.push(startAfter(options?.next));
@@ -408,11 +424,11 @@ class FirebaseService {
             setTimeout(() => {
               rej('timeout');
             }, 5 * 1000);
-          })
+          });
         } catch (error) {
           rej(error);
         }
-      })
+      });
     }
     return value;
   }
