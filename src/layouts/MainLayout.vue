@@ -98,8 +98,6 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
-import MenuOptions from 'src/components/side-menu/MenuOptions.vue';
-import UserProfileCard from 'src/components/side-menu/UserProfileCard.vue';
 import { MenuOptionItem } from 'src/components/side-menu/types';
 import { useI18n } from 'vue-i18n';
 import { useAuthStore } from 'src/stores/auth.store';
@@ -121,7 +119,6 @@ import {
 import { theBus } from 'src/the-bus';
 import { date } from 'quasar';
 import LogOutDialog from 'src/dialogs/auth/LogOutDialog.vue';
-
 
 const { locale } = useI18n({ useScope: 'global' });
 const authStore = useAuthStore();
