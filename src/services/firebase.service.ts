@@ -16,6 +16,7 @@ import {
   signInAnonymously,
   sendPasswordResetEmail,
   confirmPasswordReset,
+  applyActionCode,
 } from 'firebase/auth';
 
 import {
@@ -229,6 +230,9 @@ class FirebaseService {
     } else {
       throw new Error('No user is currently signed in.');
     }
+  }
+  async applyEmailActionCode(oobCode: string) {
+    return applyActionCode(auth, oobCode);
   }
 
   async sendForgetPassword(email: string) {
