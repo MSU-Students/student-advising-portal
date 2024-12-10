@@ -1,13 +1,6 @@
 <template>
   <q-page class="column justify-center items-center q-page">
-    <div
-      class="absolute-top-left q-ma-lg flex items-center cursor-pointer"
-      v-ripple
-      @click="logout"
-    >
-      <q-btn round color="secondary" size="sm" icon="logout" class="q-mr-sm" />
-      <span class="text-primary text-h6 text-bold text-center">LOGOUT</span>
-    </div>
+    <LogoutButton class="absolute-top-left q-ma-lg" />
 
     <span
       class="text-center text-weight-bolder text-primary q-mb-xl"
@@ -81,6 +74,9 @@ import { useRequestStore } from 'src/stores/request.store';
 import { computed, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
+// COMPONENTS
+import LogoutButton from 'src/components/LogoutButton.vue';
+
 interface Role {
   name: IProfile['type'];
   label: string;
@@ -103,6 +99,9 @@ const authStore = useAuthStore();
 
 onMounted(async () => {
   const user = authStore.currentUser;
+  if (user?.type && user.type != 'anonymous') {
+    $router.replace({ name: 'home' });
+  }
   if (user?.key) {
     requestStore.streamRequests({
       'data.key': user.key,
@@ -184,19 +183,6 @@ const continueAs = async () => {
     });
   }
 };
-
-function logout() {
-  TheDialogs.emit({
-    type: 'logoutDialog',
-    arg: {
-      success() {
-        $router.replace({
-          name: 'login',
-        });
-      },
-    },
-  });
-}
 </script>
 
 <style lang="sass">
