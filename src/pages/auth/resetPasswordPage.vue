@@ -19,6 +19,10 @@
           filled
           dense
           required
+          :rules="[
+            (val:string) => val.length >= 8 || 'Password too short',
+            (val:string) => /\d/.test(val) || 'Should contain number'
+          ]"
           class="q-mb-md"
         />
         <q-input
@@ -28,6 +32,9 @@
           filled
           dense
           required
+          :rules="[
+              (val:string) => val == password || 'Password did not match',
+            ]"
         />
         <q-btn
           label="Reset Password"
@@ -38,9 +45,6 @@
         />
       </q-form>
 
-      <div v-if="errorMessage" class="error-message">
-        {{ errorMessage }}
-      </div>
       <div v-if="successMessage" class="success-message">
         {{ successMessage }}
       </div>
@@ -51,52 +55,61 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 import { Notify } from 'quasar';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
+import { TheWorkflows } from 'src/workflows/the-workflows';
 
 // Reactive variables
 const password = ref('');
 const confirmPassword = ref('');
-const errorMessage = ref('');
 const successMessage = ref('');
 
 // Router instance
+const $route = useRoute();
 const router = useRouter();
 
 const handleResetPassword = async () => {
-  errorMessage.value = '';
   successMessage.value = '';
-
-  if (!password.value || !confirmPassword.value) {
-    errorMessage.value = 'Please fill in all fields.';
-    return;
-  }
-
-  if (password.value !== confirmPassword.value) {
-    errorMessage.value = 'Passwords do not match.';
-    return;
-  }
-
   try {
-    // Simulate an API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    // Replace with your API call logic to reset the password
-    console.log('Password reset successful:', password.value);
-
-    // Success notification
-    Notify.create({
-      type: 'positive',
-      message: 'Your password has been successfully reset.',
+    const oobCode = $route.query?.oobCode as string;
+    TheWorkflows.emit({
+      type: 'resetPassword',
+      arg: {
+        payload: {
+          newPassword: password.value,
+          oobCode: oobCode,
+        },
+        success: () => {
+          // Success notification
+          Notify.create({
+            type: 'positive',
+            icon: 'info',
+            message:
+              'Your password has been successfully reset. Redirecting to login...',
+            onDismiss() {
+              router.replace({
+                name: 'login',
+              });
+            },
+          });
+          // Redirect to login page
+          successMessage.value = 'Password reset successful. ';
+        },
+        error(err) {
+          Notify.create({
+            type: 'negative',
+            icon: 'error',
+            message: String(err),
+            onDismiss() {
+              router.replace({
+                name: 'login',
+              });
+            },
+          });
+        },
+      },
     });
-
-    // Redirect to login page
-    successMessage.value = 'Password reset successful. Redirecting to login...';
-    setTimeout(() => {
-      router.push('/auth/login');
-    }, 2000);
   } catch (error) {
     console.error(error);
-    errorMessage.value = 'Failed to reset password. Please try again.';
   }
 };
 </script>

@@ -15,6 +15,7 @@ import {
   UserCredential,
   signInAnonymously,
   sendPasswordResetEmail,
+  confirmPasswordReset,
 } from 'firebase/auth';
 
 import {
@@ -230,8 +231,12 @@ class FirebaseService {
     }
   }
 
-  async forgetPassword(email: string) {
+  async sendForgetPassword(email: string) {
     return sendPasswordResetEmail(auth, email);
+  }
+
+  async resetPassword(oobCode: string, newPassword: string) {
+    return confirmPasswordReset(auth, oobCode, newPassword);
   }
 
   async uploadImage(file: File, options?: { task?: UploadTask; path: string }) {

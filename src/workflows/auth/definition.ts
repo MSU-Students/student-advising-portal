@@ -42,6 +42,17 @@ export type Auth =
   | Struct<
     'resetPassword',
     {
+      payload: {
+        oobCode: string;
+        newPassword: string;
+      };
+      success?: VoidCallback;
+      error?: ErrorCallback;
+    }
+  >
+  | Struct<
+    'sendResetPassword',
+    {
       payload: string;
       success?: VoidCallback;
       error?: ErrorCallback;

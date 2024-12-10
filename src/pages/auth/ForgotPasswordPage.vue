@@ -55,7 +55,7 @@ const router = useRouter();
 
 const handlePasswordReset = () => {
   TheWorkflows.emit({
-    type: 'resetPassword',
+    type: 'sendResetPassword',
     arg: {
       payload: email.value,
       success: () => {

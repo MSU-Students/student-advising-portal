@@ -70,7 +70,7 @@
                 v-model="confirmPassword"
                 placeholder="Confirm Password"
                 :rules="[
-                  (val:string) => val == password || 'Passwod did not match',
+                  (val:string) => val == password || 'Password did not match',
                 ]"
               />
             </div>
