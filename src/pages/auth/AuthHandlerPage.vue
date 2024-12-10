@@ -4,16 +4,27 @@
   </q-page>
 </template>
 <script lang="ts" setup>
+import { Notify } from 'quasar';
 import { useRoute, useRouter } from 'vue-router';
 
 const $route = useRoute();
 const $router = useRouter();
-const mode = $route.params.mode as string;
+const mode = $route.query.mode as string;
 switch (mode) {
   case 'resetPassword':
     $router.replace({
       name: 'reset-password',
-      params: $route.params,
+      query: $route.query,
+    });
+    break;
+  default:
+    Notify.create({
+      message: 'Unknown auth mode:' + mode,
+      caption: 'Unable to redirect',
+      color: 'negative',
+      icon: 'error',
+      timeout: 0,
+      closeBtn: 'close',
     });
     break;
 }
