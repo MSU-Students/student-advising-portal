@@ -17,6 +17,13 @@ switch (mode) {
       query: $route.query,
     });
     break;
+  case 'verifyEmail':
+    $router.replace({
+      name: 'email-verify',
+      query: $route.query,
+    });
+    break;
+  case 'recoverEmail':
   default:
     Notify.create({
       message: 'Unknown auth mode:' + mode,
