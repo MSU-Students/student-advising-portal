@@ -19,6 +19,7 @@
           filled
           clearable
           dense
+          :rules="['email']"
           required
           aria-labelledby="forgot-password-title"
           aria-live="polite"
@@ -34,7 +35,7 @@
 
       <div class="forgot-password-footer">
         Already have an account?
-        <a @click.prevent="navigateToLogin">Sign In</a>
+        <q-btn dense flat :to="{ name: 'login' }">Sign In</q-btn>
       </div>
     </q-card>
   </q-page>
@@ -44,6 +45,7 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { Notify } from 'quasar';
+import { TheWorkflows } from 'src/workflows/the-workflows';
 
 // Reactive variables
 const email = ref('');
@@ -51,35 +53,32 @@ const email = ref('');
 // Router instance
 const router = useRouter();
 
-// Placeholder function for password reset
 const handlePasswordReset = () => {
-  const emailTrimmed = email.value.trim();
+  TheWorkflows.emit({
+    type: 'sendResetPassword',
+    arg: {
+      payload: email.value,
+      success: () => {
+        Notify.create({
+          type: 'positive',
+          message: 'Password reset link has been sent. Redirecting...',
+        });
 
-  if (!emailTrimmed) {
-    Notify.create({
-      type: 'negative',
-      message: 'Please enter a valid email address.',
-    });
-    return;
-  }
-
-  // Placeholder success message
-  Notify.create({
-    type: 'positive',
-    message: 'This is a placeholder for the password reset functionality.',
+        router.push({
+          name: 'login',
+        });
+      },
+      error: (err) => {
+        Notify.create({
+          type: 'negative',
+          message: String(err),
+        });
+      },
+    },
   });
-
-  console.log(`Attempted password reset for email: ${emailTrimmed}`);
-};
-
-// Navigate to login page
-const navigateToLogin = () => {
-  router.push('/auth/login'); // Adjust the route if necessary
 };
 </script>
-
 <style scoped>
-/* General */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
 
 * {

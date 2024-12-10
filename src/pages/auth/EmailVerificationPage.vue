@@ -31,12 +31,17 @@
 <script lang="ts" setup>
 import { useAuthStore } from 'src/stores/auth.store';
 import { onMounted } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { Notify } from 'quasar';
 
 const authStore = useAuthStore();
 const $router = useRouter();
+const $route = useRoute();
 onMounted(async () => {
+  const oobCode = $route.query?.oobCode as string;
+  if ($route.query?.mode == 'verifyEmail' && oobCode) {
+    await authStore.applyEmailActionCode(oobCode);
+  }
   const user = await authStore.getUser();
   if (user?.emailVerified) {
     $router.replace({
