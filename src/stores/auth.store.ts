@@ -60,5 +60,14 @@ export const useAuthStore = defineStore('auth', {
     async resendEmailVerification() {
       await firebaseService.resendEmailVerification();
     },
+    async applyEmailActionCode(oobCode: string) {
+      await firebaseService.applyEmailActionCode(oobCode);
+    },
+    async sendResetPassword(email: string) {
+      await firebaseService.sendForgetPassword(email);
+    },
+    async resetPassword(oobCode: string, newPassword: string) {
+      await firebaseService.resetPassword(oobCode, newPassword);
+    }
   },
 });
