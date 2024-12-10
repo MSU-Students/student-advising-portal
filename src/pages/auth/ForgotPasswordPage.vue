@@ -41,21 +41,25 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
+//import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { Notify } from 'quasar';
+import { useProfileStore } from 'src/stores/profile.store';
 
 // Reactive variables
 const email = ref('');
+const emailTrimmed = computed(() => {
+  return email.value.trim();
+});
 
 // Router instance
 const router = useRouter();
+const profileStore = useProfileStore();
 
-// Placeholder function for password reset
 const handlePasswordReset = () => {
-  const emailTrimmed = email.value.trim();
-
-  if (!emailTrimmed) {
+  // Trim email value
+  if (!emailTrimmed.value) {
     Notify.create({
       type: 'negative',
       message: 'Please enter a valid email address.',
@@ -63,23 +67,75 @@ const handlePasswordReset = () => {
     return;
   }
 
-  // Placeholder success message
+  // Simulate API validation or placeholder logic
+  const isValidEmail = validateEmail(emailTrimmed.value); // Replace with real validation
+  if (!isValidEmail) {
+    Notify.create({
+      type: 'negative',
+      message: 'Email address not found.',
+    });
+    return;
+  }
+
+  // Success logic
   Notify.create({
     type: 'positive',
-    message: 'This is a placeholder for the password reset functionality.',
+    message: 'Password reset link has been sent. Redirecting...',
   });
 
-  console.log(`Attempted password reset for email: ${emailTrimmed}`);
+  // Redirect to ResetPasswordPage.vue
+  setTimeout(() => {
+    router.push('/auth/reset-password');
+  }, 1000);
 };
 
-// Navigate to login page
-const navigateToLogin = () => {
-  router.push('/auth/login'); // Adjust the route if necessary
+// Example email validation function
+const validateEmail = (email) => {
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailPattern.test(email);
 };
+
+// // Placeholder function for password reset
+// const handlePasswordReset = () => {
+//   // const emailTrimmed = email.value.trim();
+
+//   if (!emailTrimmed.value) {
+//     Notify.create({
+//       type: 'negative',
+//       message: 'Please enter a valid email address.',
+//     });
+//     return;
+//   }
+
+//   // Placeholder success message
+//   Notify.create({
+//     type: 'positive',
+//     message: 'Password reset link has been sent. Redirecting...'
+//   });
+
+//   streamProfile();
+
+//   if (profileStore.profiles) {
+//     navigateToResetPassword()
+//   }
+
+//   console.log(`Attempted password reset for email: ${emailTrimmed.value}`);
+// };
+
+// // Navigate to login page
+// const navigateToLogin = () => {
+//   router.push('/auth/login');
+// };
+
+// const navigateToResetPassword = () => {
+//   router.push('auth/reset');
+// }
+
+// const streamProfile = () => {
+//   profileStore.streamProfiles({ email: emailTrimmed.value });
+// };
 </script>
-
 <style scoped>
-/* General */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
 
 * {

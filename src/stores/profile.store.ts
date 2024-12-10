@@ -18,15 +18,12 @@ export const useProfileStore = defineStore('profile', {
         return;
       }
     },
-    async findProfiles(keyword: string) {
-      return ((await firebaseService.findAll('profiles')) as IProfile[]).filter(
-        (profile) => {
-          return (
-            profile.type == 'adviser' &&
-            profile.fullName.toLowerCase().match(keyword.toLowerCase())
-          );
-        }
-      );
+    streamProfiles(filter?: Record<string, string>) {
+      return firebaseService.streamWith('profiles', filter).subscribe({
+        next: (records) => {
+          this.profiles = records as IProfile[];
+        },
+      });
     },
   },
 });
