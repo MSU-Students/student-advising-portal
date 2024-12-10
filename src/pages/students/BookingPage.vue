@@ -6,7 +6,7 @@
         <q-btn
           v-if="!isSearchExpanded"
           class="bg-primary search-btn"
-          @click="expandSearch"
+          @blur="expandSearch"
         >
           <q-icon name="search" color="white" />
         </q-btn>
@@ -16,7 +16,7 @@
             placeholder="Search Adviser"
             filled
             class="expanded-search-input"
-            @click="collapseSearch"
+            @blur="collapseSearch"
           >
             <template v-slot:prepend>
               <q-icon name="search" color="white" />
