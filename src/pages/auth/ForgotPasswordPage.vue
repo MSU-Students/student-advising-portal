@@ -93,47 +93,6 @@ const handlePasswordReset = () => {
 const validateEmail = (email) => {
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailPattern.test(email);
-};
-
-// // Placeholder function for password reset
-// const handlePasswordReset = () => {
-//   // const emailTrimmed = email.value.trim();
-
-//   if (!emailTrimmed.value) {
-//     Notify.create({
-//       type: 'negative',
-//       message: 'Please enter a valid email address.',
-//     });
-//     return;
-//   }
-
-//   // Placeholder success message
-//   Notify.create({
-//     type: 'positive',
-//     message: 'Password reset link has been sent. Redirecting...'
-//   });
-
-//   streamProfile();
-
-//   if (profileStore.profiles) {
-//     navigateToResetPassword()
-//   }
-
-//   console.log(`Attempted password reset for email: ${emailTrimmed.value}`);
-// };
-
-// // Navigate to login page
-// const navigateToLogin = () => {
-//   router.push('/auth/login');
-// };
-
-// const navigateToResetPassword = () => {
-//   router.push('auth/reset');
-// }
-
-// const streamProfile = () => {
-//   profileStore.streamProfiles({ email: emailTrimmed.value });
-// };
 </script>
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
