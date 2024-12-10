@@ -19,6 +19,7 @@
           filled
           clearable
           dense
+          :rules="['email']"
           required
           aria-labelledby="forgot-password-title"
           aria-live="polite"
@@ -34,65 +35,48 @@
 
       <div class="forgot-password-footer">
         Already have an account?
-        <a @click.prevent="navigateToLogin">Sign In</a>
+        <q-btn dense flat :to="{ name: 'login' }">Sign In</q-btn>
       </div>
     </q-card>
   </q-page>
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from 'vue';
-//import { ref } from 'vue';
+import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { Notify } from 'quasar';
-import { useProfileStore } from 'src/stores/profile.store';
+import { TheWorkflows } from 'src/workflows/the-workflows';
 
 // Reactive variables
 const email = ref('');
-const emailTrimmed = computed(() => {
-  return email.value.trim();
-});
 
 // Router instance
 const router = useRouter();
-const profileStore = useProfileStore();
 
 const handlePasswordReset = () => {
-  // Trim email value
-  if (!emailTrimmed.value) {
-    Notify.create({
-      type: 'negative',
-      message: 'Please enter a valid email address.',
-    });
-    return;
-  }
+  TheWorkflows.emit({
+    type: 'resetPassword',
+    arg: {
+      payload: email.value,
+      success: () => {
+        Notify.create({
+          type: 'positive',
+          message: 'Password reset link has been sent. Redirecting...',
+        });
 
-  // Simulate API validation or placeholder logic
-  const isValidEmail = validateEmail(emailTrimmed.value); // Replace with real validation
-  if (!isValidEmail) {
-    Notify.create({
-      type: 'negative',
-      message: 'Email address not found.',
-    });
-    return;
-  }
-
-  // Success logic
-  Notify.create({
-    type: 'positive',
-    message: 'Password reset link has been sent. Redirecting...',
+        router.push({
+          name: 'login',
+        });
+      },
+      error: (err) => {
+        Notify.create({
+          type: 'negative',
+          message: String(err),
+        });
+      },
+    },
   });
-
-  // Redirect to ResetPasswordPage.vue
-  setTimeout(() => {
-    router.push('/auth/reset-password');
-  }, 1000);
 };
-
-// Example email validation function
-const validateEmail = (email) => {
-  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailPattern.test(email);
 </script>
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
