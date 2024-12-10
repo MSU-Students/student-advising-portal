@@ -231,9 +231,7 @@ class FirebaseService {
   }
 
   async forgetPassword(email: string) {
-    return sendPasswordResetEmail(auth, email, {
-      url: location.origin + '/auth/reset-password',
-    });
+    return sendPasswordResetEmail(auth, email);
   }
 
   async uploadImage(file: File, options?: { task?: UploadTask; path: string }) {
