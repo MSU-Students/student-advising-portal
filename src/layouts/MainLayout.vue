@@ -67,6 +67,7 @@
       <router-view />
       <LogOutDialog />
       <ConfirmLockDialog />
+      <BookAppointmentDialog />
     </q-page-container>
   </q-layout>
 </template>
@@ -83,6 +84,7 @@ import { useAuthStore } from 'src/stores/auth.store';
 import { useRouter } from 'vue-router';
 import ConfirmLockDialog from 'src/dialogs/auth/ConfirmLockDialog.vue';
 import SearchbarComponent from 'src/components/search-bar/SearchbarComponent.vue';
+import BookAppointmentDialog from 'src/dialogs/booking/BookAppointmentDialog.vue';
 
 const { locale } = useI18n({ useScope: 'global' });
 
