@@ -8,11 +8,3 @@ export type Booking = Struct<
     error?: ErrorCallback;
   }
 >;
-
-export type Book = Struct<
-  'bookDialog',
-  {
-    success(booking: IBooking): void;
-    error?: ErrorCallback;
-  }
->
