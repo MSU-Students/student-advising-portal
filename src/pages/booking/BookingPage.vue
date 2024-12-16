@@ -58,7 +58,7 @@
               class="bg-red close-btn text-white"
               @click="disappearBookingDialog"
             >
-              <!-- <q-icon name="close" color="white" /> -->CANCEL
+              CANCEL
             </q-btn>
           </template>
         </q-table>
