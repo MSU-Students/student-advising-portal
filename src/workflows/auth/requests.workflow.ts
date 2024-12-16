@@ -3,6 +3,7 @@ import { TheWorkflows } from '../the-workflows';
 
 TheWorkflows.on({
   type: 'createRequest',
+  loggable: 'operation',
   cb(e) {
     try {
       const requestStore = useRequestStore();

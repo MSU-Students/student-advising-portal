@@ -3,8 +3,9 @@ import { ToEmit, ToType } from 'src/structs';
 import { Auth } from './auth/definition';
 import { AccountApplication } from './account-application/definition';
 import { Booking } from './booking/definition';
+import { ApplicationActions } from './admin/definition';
 
-export type DialogStructs = Auth | AccountApplication | Booking;
+export type DialogStructs = Auth | AccountApplication | ApplicationActions | Booking;
 
 type DialogEvents = ToEmit<DialogStructs, DialogStructs>;
 export type WorkflowTypes = ToType<DialogStructs, DialogStructs>;

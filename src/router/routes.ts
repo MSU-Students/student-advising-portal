@@ -19,7 +19,7 @@ const routes: RouteRecordRaw[] = [
         name: 'login',
         component: LoginPage,
         meta: {
-          anonygmous: true,
+          anonymous: true,
         },
       },
       {
@@ -31,18 +31,33 @@ const routes: RouteRecordRaw[] = [
         },
       },
       {
-        path: 'pending-application',
-        name: 'pending-application',
-        component: () => import('pages/auth/PendingApplicationPage.vue'),
-        meta: {
-          requiresLogin: true,
-        },
-      },
-      {
         path: 'sign-up',
         name: 'sign-up',
         component: () => import('pages/auth/SignupPage.vue'),
         meta: {},
+      },
+      {
+        path: 'forgot-password',
+        name: 'forgot-password',
+        component: () => import('pages/auth/ForgotPasswordPage.vue'),
+        meta: {
+          anonymous: true,
+        },
+      },
+      {
+        path: 'action',
+        component: () => import('pages/auth/AuthHandlerPage.vue'),
+        meta: {
+          anonymous: true
+        }
+      },
+      {
+        path: 'reset-password',
+        name: 'reset-password',
+        component: () => import('pages/auth/ResetPasswordPage.vue'),
+        meta: {
+          anonymous: true,
+        },
       },
       {
         path: 'email-verify',
@@ -74,14 +89,15 @@ const routes: RouteRecordRaw[] = [
         name: 'student',
         component: () => import('pages/students/StudentsPage.vue'),
         meta: {
+          requiresLogin: ['student'],
           menu: 'Student',
           title: 'Student Page',
           icon: 'person',
         },
       },
       {
-        path: 'booking',
         name: 'booking',
+        path: 'booking',
         component: () => import('pages/booking/BookingPage.vue'),
         meta: {
           menu: 'Booking',
@@ -90,14 +106,53 @@ const routes: RouteRecordRaw[] = [
         },
       },
       {
-        path: 'admin',
-        name: 'admin',
-        component: () => import('pages/admin/AdminPage.vue'),
+        path: 'application',
+        name: 'application',
+        component: () => import('pages/admin/ApplicationPage.vue'),
         meta: {
-          menu: 'Admin',
-          title: 'Admin Page',
-          icon: 'admin_panel_settings',
+          requiresLogin: ['admin'],
+          menu: 'Application',
+          title: 'Application Page',
+          icon: 'work_outline',
         },
+        children: [
+          {
+            path: 'admin',
+            name: 'admin-application',
+            component: () => import('pages/admin/AdminAppPage.vue'),
+            meta: {
+              requiresLogin: ['admin'],
+              menu: 'Admin Application',
+              title: 'Admin Page',
+              icon: 'admin_panel_settings',
+              parent: 'application',
+            },
+          },
+          {
+            path: 'adviser',
+            name: 'adviser-application',
+            component: () => import('pages/admin/AdviserAppPage.vue'),
+            meta: {
+              requiresLogin: ['admin'],
+              menu: 'Adviser Application',
+              title: 'Adviser Page',
+              icon: 'school',
+              parent: 'application',
+            },
+          },
+          {
+            path: 'student',
+            name: 'student-application',
+            component: () => import('pages/admin/StudentAppPage.vue'),
+            meta: {
+              requiresLogin: ['admin'],
+              menu: 'Student Application',
+              title: 'Student Page',
+              icon: 'person',
+              parent: 'application',
+            },
+          },
+        ],
       },
     ],
   },

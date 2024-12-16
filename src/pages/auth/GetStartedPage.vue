@@ -1,6 +1,6 @@
 <template>
   <q-page class="column justify-center items-center q-page">
-    <LogoutButtonComponent />
+    <LogoutButton class="absolute-top-left q-ma-lg" />
 
     <span
       class="text-center text-weight-bolder text-primary q-mb-xl"
@@ -20,13 +20,15 @@
         :key="role.name"
         @click="selectRole(role.name)"
         class="column items-center justify-center my-q-card cursor-pointer"
-        :class="{ 'bg-primary': selectedRole === role.name }"
+        :class="{
+          'bg-primary': shouldHighlight(role),
+        }"
         v-ripple
       >
         <q-card-section class="q-pb-none">
           <q-icon
             :name="role.icon"
-            :color="selectedRole !== role.name ? 'primary' : 'white'"
+            :color="!shouldHighlight(role) ? 'primary' : 'white'"
             :size="$q.screen.gt.sm ? '80px' : $q.screen.sm ? '60px' : '40px'"
           />
         </q-card-section>
@@ -34,11 +36,18 @@
         <q-card-section
           class="text-weight-bolder text-center q-pt-sm"
           :class="[
-            selectedRole === role.name ? 'text-white' : 'text-primary',
+            shouldHighlight(role) ? 'text-white' : 'text-primary',
             $q.screen.gt.sm ? 'text-h4' : $q.screen.sm ? 'text-h5' : 'text-h6',
           ]"
         >
           {{ role.label }}
+          <q-badge
+            v-if="pendingRequest(role.name)"
+            class="text-uppercase"
+            floating
+            color="positive"
+            >{{ pendingRequest(role.name)?.status }}</q-badge
+          >
         </q-card-section>
       </q-card>
     </div>
@@ -57,40 +66,121 @@
 </template>
 
 <script setup lang="ts">
-import LogoutButtonComponent from 'src/components/LogoutButtonComponent.vue';
+import { Notify } from 'quasar';
 import { TheDialogs } from 'src/dialogs/the-dialogs';
-import { computed, ref } from 'vue';
+import { IProfile } from 'src/entities';
+import { useAuthStore } from 'src/stores/auth.store';
+import { useRequestStore } from 'src/stores/request.store';
+import { computed, onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
+
+// COMPONENTS
+import LogoutButton from 'src/components/LogoutButton.vue';
 
 interface Role {
-  name: string;
+  name: IProfile['type'];
   label: string;
   icon: string;
 }
-
+const $router = useRouter();
 const role_options: Role[] = [
   { name: 'student', label: 'STUDENT', icon: 'school' },
   { name: 'adviser', label: 'FACULTY', icon: 'menu_book' },
   { name: 'admin', label: 'ADMIN', icon: 'construction' },
 ];
 
-const selectedRole = ref<string | null>(null);
+const selectedRole = ref<IProfile['type'] | null>(null);
 
 const buttonLabel = computed(() =>
   selectedRole.value ? `CONTINUE AS ${selectedRole.value}` : 'CONTINUE AS...'
 );
+const requestStore = useRequestStore();
+const authStore = useAuthStore();
 
-const selectRole = (roleName?: string) => {
+onMounted(async () => {
+  const user = authStore.currentUser;
+  if (user?.type && user.type != 'anonymous') {
+    $router.replace({ name: 'home' });
+  }
+  if (user?.key) {
+    requestStore.streamRequests({
+      'data.key': user.key,
+    });
+  }
+});
+
+function pendingRequest(role: IProfile['type']) {
+  return requestStore.requests.find((r) => r.data.type == role);
+}
+function shouldHighlight(role: Role) {
+  return (
+    role.name == selectedRole.value ||
+    typeof pendingRequest(role.name) != 'undefined'
+  );
+}
+const selectRole = (roleName?: IProfile['type']) => {
   if (!roleName) return;
   selectedRole.value = roleName || null;
 };
 
-const continueAs = () => {
+const continueAs = async () => {
+  if (selectedRole.value) {
+    const pending = pendingRequest(selectedRole.value);
+    if (pending?.status == 'approved') {
+      await authStore.getUser();
+      Notify.create({
+        message: 'Your request has been approved',
+        caption: 'reloading your profile',
+        timeout: 3000,
+        icon: 'warning',
+        color: 'warning',
+      });
+      $router.replace({ name: 'home' });
+      return;
+    } else if (pending?.status == 'pending') {
+      Notify.create({
+        message: 'Your request is pending',
+        icon: 'warning',
+        color: 'warning',
+      });
+      return;
+    } else if (pending?.status == 'rejected') {
+      Notify.create({
+        message: 'Your request has been rejected',
+        caption: pending.remarks,
+        icon: 'warning',
+        color: 'warning',
+      });
+      return;
+    }
+  }
   if (selectedRole.value === 'admin') {
-    TheDialogs.emit({ type: 'adminApplicationDialog', arg: {} });
+    TheDialogs.emit({
+      type: 'adminApplicationDialog',
+      arg: {
+        success() {
+          selectedRole.value = null;
+        },
+      },
+    });
   } else if (selectedRole.value === 'student') {
-    TheDialogs.emit({ type: 'studentApplicationDialog', arg: {} });
+    TheDialogs.emit({
+      type: 'studentApplicationDialog',
+      arg: {
+        success() {
+          selectedRole.value = null;
+        },
+      },
+    });
   } else if (selectedRole.value === 'adviser') {
-    TheDialogs.emit({ type: 'adviserApplicationDialog', arg: {} });
+    TheDialogs.emit({
+      type: 'adviserApplicationDialog',
+      arg: {
+        success() {
+          selectedRole.value = null;
+        },
+      },
+    });
   }
 };
 </script>

@@ -8,7 +8,6 @@ import {
 
 import routes from './routes';
 import { useAuthStore } from 'src/stores/auth.store';
-import { useRequestStore } from 'src/stores/request.store';
 
 /*
  * If not building with SSR mode, you can
@@ -26,7 +25,6 @@ export default route(function (/* { store, ssrContext } */) {
     ? createWebHistory
     : createWebHashHistory;
   const authStore = useAuthStore();
-  const requestStore = useRequestStore();
   const Router = createRouter({
     scrollBehavior: () => ({ left: 0, top: 0 }),
     routes,
@@ -37,51 +35,33 @@ export default route(function (/* { store, ssrContext } */) {
     history: createHistory(process.env.VUE_ROUTER_BASE),
   });
   Router.beforeEach(async (to, from, next) => {
-    const user = await authStore.getUser();
-    const userType = user?.type;
-    const userKey = user?.key || '';
-    const request = await requestStore.getRequest(userKey);
-
-    const requiresLogin = Array.isArray(to.meta?.requiresLogin)
-      ? to.meta.requiresLogin
-      : to.meta?.requiresLogin;
-
-    // redirect to login if route requires login and user is not logged in.
-    if (requiresLogin && !user) {
-      console.log('hi');
-      return next({ name: 'login' });
-    }
-
-    // redirect anonymous users with no pending request to the get started page.
-    if (userType === 'anonymous' && !request && to.name !== 'get-started') {
-      return next({ name: 'get-started' });
-    }
-
-    // redirect anonymous users with pending request to the pending application page.
-    if (
-      userType === 'anonymous' &&
-      request?.status === 'pending' &&
-      to.name !== 'pending-application'
+    const user = authStore.currentUser || (await authStore.getUser());
+    if (to.meta?.requiresLogin && !user) {
+      next({
+        name: 'login',
+      });
+    } else if (
+      Array.isArray(to.meta?.requiresLogin) &&
+      (!user?.type || user.type == 'anonymous')
     ) {
-      return next({ name: 'pending-application' });
-    }
-
-    // Redirect to the home page if the user's role does not match the required roles for the route.
-    if (
-      Array.isArray(requiresLogin) &&
-      userType &&
-      !requiresLogin.includes(userType)
+      next({
+        name: 'get-started',
+      });
+    } else if (
+      Array.isArray(to.meta?.requiresLogin) &&
+      user?.type &&
+      !to.meta?.requiresLogin.includes(user.type)
     ) {
-      return next({ name: 'home' });
+      next({
+        name: 'home',
+      });
+    } else if (to.meta.anonymous && !!user) {
+      next({
+        name: 'home',
+      });
+    } else {
+      next();
     }
-
-    // redirect authenticated users away from anonymous-focused routes.
-    if (to.meta.anonymous && !!user) {
-      return next({ name: 'home' });
-    }
-
-    // Allow navigation if none of the conditions are met.
-    return next();
   });
 
   return Router;

@@ -28,5 +28,12 @@ export const useProfileStore = defineStore('profile', {
         }
       );
     },
+    streamProfiles(filter?: Record<string, string>) {
+      return firebaseService.streamWith('profiles', filter).subscribe({
+        next: (records) => {
+          this.profiles = records as IProfile[];
+        },
+      });
+    },
   },
 });
