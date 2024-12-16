@@ -1,11 +1,16 @@
 import { theBus } from 'src/the-bus';
 import { ToEmit, ToType } from 'src/structs';
 import { Auth } from './auth/definition';
+import { Booking } from './booking/definition';
 import { Admin } from './admin/definition';
 import { Logs } from './logs/definition';
 import { useEmitStore } from 'src/stores/emit.store';
 
-export type WorkflowStructs = Auth | Admin | Logs;
+export type WorkflowStructs =
+  | Auth
+  | Admin
+  | Logs
+  | Booking;
 
 type WorkflowEvents = ToEmit<WorkflowStructs, WorkflowStructs>;
 export type WorkflowTypes = ToType<WorkflowStructs, WorkflowStructs>;

@@ -5,8 +5,9 @@ export interface IBookingBase extends IBaseEntity {
   status: 'pending' | 'accepted' | 'cancelled';
   time: string;
   date: string;
+  location?: string;
+  author?: IProfile | string;
 }
-
 
 export interface IAppointmentBooking extends IBookingBase {
   type: 'appointment';
@@ -21,6 +22,4 @@ export interface IConsultationBooking extends IBookingBase {
   advisee: IStudentProfile;
 }
 
-
 export type IBooking = IAppointmentBooking | IConsultationBooking;
-
