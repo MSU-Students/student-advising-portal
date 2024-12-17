@@ -94,7 +94,6 @@
       <BookAppointmentDialog />
       <RejectApplicationDialog />
       <StudentBookingDialog />
-      >
     </q-page-container>
   </q-layout>
 </template>
