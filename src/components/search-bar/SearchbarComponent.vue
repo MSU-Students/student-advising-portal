@@ -26,7 +26,7 @@
       >
         <q-item-section avatar>
           <q-avatar class="avatar">
-            <img :src="`${profile.avatar}`" />
+            <q-img :alt="profile.fullName" :src="`${profile.avatar}`" />
           </q-avatar>
         </q-item-section>
 
