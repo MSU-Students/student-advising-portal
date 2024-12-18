@@ -7,7 +7,7 @@
           <q-item>
             <q-item-section v-if="profile.avatar" avatar>
               <q-avatar>
-                <q-img :src="profile.avatar"></q-img>
+                <q-img :src="profile.avatar" alt="Avatar"></q-img>
               </q-avatar>
             </q-item-section>
             <q-item-section>
@@ -84,5 +84,3 @@ onMounted(async () => {
   profile.value = await profileStore.getProfile(String($route.params?.key));
 });
 </script>
-
-<style scoped></style>
