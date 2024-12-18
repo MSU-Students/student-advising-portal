@@ -1,11 +1,12 @@
 <template>
-  <q-page class="column justify-center items-center q-page" style="gap: 5px">
+  <q-page class="column justify-center items-center q-page q-gutter-md">
     <!-- Rectangle div -->
-    <div class="booking-page-container col-lg">
-      <div class="booking-search-cont bg-secondar column">
+    <div class="booking-page-container full-width q-px-lg q-py-md">
+      <!-- Search Section -->
+      <div class="booking-search-cont column full-width">
         <q-btn
           v-if="!isSearchExpanded"
-          class="bg-primary search-btn"
+          class="bg-primary search-btn q-mb-md"
           @blur="expandSearch"
         >
           <q-icon name="search" color="white" />
@@ -32,9 +33,35 @@
           </q-input>
         </div>
       </div>
-      <div class="adviser-lists-container bg-secondary col-lg">
-        <div class="adviser-list-text text-h3 text-bold text-primary">
+
+      <!-- Adviser List -->
+      <div
+        class="adviser-lists-container bg-secondary column q-pa-md q-gutter-sm"
+      >
+        <div class="adviser-list-text text-h3 text-bold text-primary q-mb-md">
           Adviser
+        </div>
+
+        <div class="adviser-lists row wrap q-gutter-md q-col-gutter-md">
+          <q-btn
+            v-for="(adviser, index) in 20"
+            :key="index"
+            @click="
+              TheDialogs.emit({
+                type: 'studentBookingDialog',
+                arg: {
+                  success() {
+                    console.log('IM STUDENT');
+                  },
+                },
+              })
+            "
+            class="bg-primary q-pa-md"
+            :class="['q-md:w-18', 'q-sm:w-45', 'q-xs:w-100']"
+          >
+            <q-icon name="person" color="white" />
+            <span class="text-bold text-white">Adviser {{ index + 1 }}</span>
+          </q-btn>
         </div>
       </div>
     </div>
@@ -42,9 +69,10 @@
 </template>
 
 <script setup lang="ts">
+import { TheDialogs } from 'src/dialogs/the-dialogs';
+
 import { ref } from 'vue';
 
-// Define reactive variables
 const isSearchExpanded = ref(false); // Tracks if the search button is expanded
 const searchQuery = ref<string>(''); // Stores the input value
 
@@ -60,7 +88,6 @@ const collapseSearch = () => {
 
 <style>
 .booking-page-container {
-  width: 100%;
   max-width: 1400px;
   align-items: flex-start;
   justify-content: center;
@@ -71,7 +98,7 @@ const collapseSearch = () => {
 .search-btn {
   position: absolute;
   right: 0px;
-  bottom: 5px;
+  bottom: 0px;
   width: 55px;
   height: 55px;
   border-radius: 8px;
@@ -81,7 +108,7 @@ const collapseSearch = () => {
 .search-input-wrapper {
   position: absolute;
   right: 0px;
-  bottom: 5px;
+  bottom: 0px;
   border-radius: 8px;
   width: 100%;
   max-width: 500px;
@@ -100,12 +127,6 @@ const collapseSearch = () => {
   height: 100px;
 }
 
-.adviser-list-text {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-}
-
 .adviser-lists-container {
   position: relative;
   width: 100%;
@@ -114,9 +135,25 @@ const collapseSearch = () => {
   border: 1px solid var(--q-color-primary);
   border-radius: 8px;
   display: flex;
-  align-items: flex-start;
-  justify-content: center;
+  flex-direction: column; /* Ensure column format */
+  align-items: center;
+  justify-content: flex-start; /* Adjust as needed */
   margin: 20px auto;
+  padding: 20px; /* Optional: Space within container */
+}
+
+.adviser-list-text {
+  align-self: flex-start; /* Ensure proper alignment */
+  margin-bottom: 20px; /* Space between title and list */
+}
+
+.adviser-lists {
+  display: flex;
+  flex-direction: row; /* Horizontal alignment */
+  align-items: center; /* Center align buttons vertically */
+  justify-content: flex-start; /* Align buttons to the left */
+  gap: 10px; /* Add space between buttons */
+  width: 100%;
 }
 
 /* Media Queries for Small Devices */
@@ -130,7 +167,7 @@ const collapseSearch = () => {
     width: 55px;
     height: 55px;
     bottom: 0px;
-    right: 10px;
+    right: 0px;
   }
 
   .adviser-lists-container {
@@ -141,9 +178,8 @@ const collapseSearch = () => {
 @media (max-width: 480px) {
   .search-input-wrapper {
     width: 70%;
-    right: 0;
+    right: 0px;
     bottom: 0px;
-    right: 10px;
   }
 }
 </style>

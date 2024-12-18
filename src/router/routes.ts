@@ -48,8 +48,8 @@ const routes: RouteRecordRaw[] = [
         path: 'action',
         component: () => import('pages/auth/AuthHandlerPage.vue'),
         meta: {
-          anonymous: true
-        }
+          anonymous: true,
+        },
       },
       {
         path: 'reset-password',
@@ -98,8 +98,9 @@ const routes: RouteRecordRaw[] = [
       {
         name: 'booking',
         path: 'booking',
-        component: () => import('pages/students/BookingPage.vue'),
+        component: () => import('pages/booking/BookingPage.vue'),
         meta: {
+          requiresLogin: ['student'],
           menu: 'Booking',
           title: 'Booking Page',
           icon: 'library_books',
