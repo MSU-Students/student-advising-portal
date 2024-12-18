@@ -107,6 +107,17 @@ const routes: RouteRecordRaw[] = [
         },
       },
       {
+        name: 'calendar',
+        path: 'calendar',
+        component: () => import('pages/booking/CalendarViewPage.vue'),
+        meta: {
+          requiresLogin: ['student', 'adviser'],
+          menu: 'Calendar',
+          title: 'Calendar',
+          icon: 'library_books',
+        },
+      },
+      {
         path: 'application',
         name: 'application',
         component: () => import('pages/admin/ApplicationPage.vue'),
