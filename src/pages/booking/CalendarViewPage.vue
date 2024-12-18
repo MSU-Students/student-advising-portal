@@ -22,13 +22,6 @@
             animated
             transition-next="slide-left"
             transition-prev="slide-right"
-            @change="onChange"
-            @moved="onMoved"
-            @click-date="onClickDate"
-            @click-time="onClickTime"
-            @click-interval="onClickInterval"
-            @click-head-intervals="onClickHeadIntervals"
-            @click-head-day="onClickHeadDay"
           >
             <template #day-interval="{ scope }">
               <div
@@ -153,36 +146,17 @@ function onNext() {
   calendar.value.next();
   loadBookings();
 }
-function onMoved(data) {
-  data;
-}
-function onChange(data) {
-  data;
-}
-function onClickDate(data) {
-  data;
-}
-function onClickTime(data) {
-  data;
-}
-function onClickInterval(data) {
-  data;
-}
-function onClickHeadIntervals(data) {
-  data;
-}
-function onClickHeadDay(data) {
-  data;
-}
 function clickBooking(booking) {
-  console.log('clickBooking', booking);
+  console.log('Display booking details here', booking);
 }
 function bookAppointment() {
   TheDialogs.emit({
     type: 'bookAppointmentDialog',
     arg: {
       success: (book) => {
-        book;
+        if (!book) {
+          console.error('Failed to book');
+        }
       },
     },
   });
