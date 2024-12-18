@@ -1,25 +1,44 @@
 <template>
   <q-dialog v-model="showDialog">
-    <q-card v-if="booking && isBookingAppear">
-      <q-form @submit="onSubmit">
-        <q-card-section>
-          <q-input v-model="booking.date" :rules="['date']">
-            <template #append>
-              <q-btn round dense icon="today">
-                <q-popup-proxy>
-                  <q-date v-model="booking.date" />
-                </q-popup-proxy>
-              </q-btn>
-            </template>
-          </q-input>
-        </q-card-section>
-        <q-card-actions>
-          <q-btn type="submit" class="bg-primary text-white">Submit</q-btn>
-        </q-card-actions>
-      </q-form>
+    <q-card style="min-width: 300px" class="rounded-borders">
+      <q-card-section class="text-center bg-primary text-white">
+        <span class="text-h6 q-ml-sm q-pa-xl text-bold">Booking Details</span>
+      </q-card-section>
+
+      <q-card v-if="booking && isBookingAppear">
+        <q-form @submit="onSubmit" class="q-px-md q-py-sm">
+          <q-card-section class="q-mt-md">
+            <div class="text-subtitle1 text-primary">Purpose</div>
+            <q-input
+              v-model="text"
+              type="textarea"
+              placeholder="Type here..."
+              dense
+              autogrow
+            />
+          </q-card-section>
+          <q-card-section>
+            <div class="text-subtitle1 text-primary">Date</div>
+            <q-input v-model="booking.date" :rules="['date']">
+              <template #append>
+                <q-btn round flat icon="today">
+                  <q-popup-proxy>
+                    <q-date v-model="booking.date" />
+                  </q-popup-proxy>
+                </q-btn>
+              </template>
+            </q-input>
+          </q-card-section>
+          <q-card-actions align="right">
+            <q-btn type="submit" color="primary">Submit</q-btn>
+            <q-btn flat round color="negative" icon="close" v-close-popup />
+          </q-card-actions>
+        </q-form>
+      </q-card>
     </q-card>
   </q-dialog>
 </template>
+
 <script lang="ts" setup>
 import { ref } from 'vue';
 import { TheDialogs } from '../the-dialogs';
@@ -31,6 +50,7 @@ const showDialog = ref(false);
 const booking = ref<IBooking>();
 type SuccessCb = (booking: IBooking) => void;
 const successCb = ref<SuccessCb>();
+const text = ref('');
 
 function onSubmit() {
   if (!booking.value) return;
@@ -42,6 +62,7 @@ function onSubmit() {
         if (successCb.value) {
           successCb.value(booking);
         }
+        text.value = '';
         showDialog.value = false;
       },
     },
@@ -63,7 +84,7 @@ TheDialogs.on({
       },
       accepted: [],
       attendees: [],
-      date: 'Date',
+      date: new Date().toISOString().split('T')[0].replaceAll('-', '/'),
       invited: [],
       status: 'pending',
       time: 'now',
