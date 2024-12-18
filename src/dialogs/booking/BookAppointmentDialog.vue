@@ -9,13 +9,19 @@
         <q-form @submit="onSubmit" class="q-px-md q-py-sm">
           <q-card-section class="q-mt-md">
             <div class="text-subtitle1 text-primary">Reason for Booking</div>
-            <q-input v-model="text" type="textarea" placeholder="Type here..." dense autogrow />
+            <q-input
+              v-model="text"
+              type="textarea"
+              placeholder="Type here..."
+              dense
+              autogrow
+            />
           </q-card-section>
           <q-card-section>
             <div class="text-subtitle1 text-primary">Date</div>
             <q-input v-model="booking.date" :rules="['date']">
               <template #append>
-                <q-btn round dense icon="today">
+                <q-btn round flat icon="today">
                   <q-popup-proxy>
                     <q-date v-model="booking.date" />
                   </q-popup-proxy>
@@ -77,7 +83,7 @@ TheDialogs.on({
       },
       accepted: [],
       attendees: [],
-      date: 'Date',
+      date: new Date().toISOString().split('T')[0].replaceAll('-', '/'),
       invited: [],
       status: 'pending',
       time: 'now',
