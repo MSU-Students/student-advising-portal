@@ -1,8 +1,8 @@
 <template>
   <q-dialog v-model="showDialog">
-    <q-card style="min-width: 300px; border-radius: 22px">
+    <q-card style="min-width: 300px" class="rounded-borders">
       <q-card-section class="text-center bg-primary text-white">
-        <span class="text-h6 q-ml-sm q-pa-xl text-bold">BOOKING DETAILS</span>
+        <span class="text-h6 q-ml-sm q-pa-xl text-bold">Booking Details</span>
       </q-card-section>
 
       <q-card v-if="booking && isBookingAppear">
@@ -31,6 +31,7 @@
           </q-card-section>
           <q-card-actions align="right">
             <q-btn type="submit" color="primary">Submit</q-btn>
+            <q-btn flat round color="negative" icon="close" v-close-popup />
           </q-card-actions>
         </q-form>
       </q-card>
