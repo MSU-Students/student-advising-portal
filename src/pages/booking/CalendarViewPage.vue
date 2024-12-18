@@ -147,9 +147,11 @@ function loadBookings() {
 }
 function onPrev() {
   calendar.value.prev();
+  loadBookings();
 }
 function onNext() {
   calendar.value.next();
+  loadBookings();
 }
 function onMoved(data) {
   data;
