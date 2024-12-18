@@ -8,7 +8,7 @@
       <q-card v-if="booking && isBookingAppear">
         <q-form @submit="onSubmit" class="q-px-md q-py-sm">
           <q-card-section class="q-mt-md">
-            <div class="text-subtitle1 text-primary">Reason for Booking</div>
+            <div class="text-subtitle1 text-primary">Purpose</div>
             <q-input
               v-model="text"
               type="textarea"
