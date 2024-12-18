@@ -14,7 +14,7 @@
           </q-input>
         </q-card-section>
         <q-card-actions>
-          <q-btn type="submit">Submit</q-btn>
+          <q-btn type="submit" class="bg-primary text-white">Submit</q-btn>
         </q-card-actions>
       </q-form>
     </q-card>
@@ -63,7 +63,7 @@ TheDialogs.on({
       },
       accepted: [],
       attendees: [],
-      date: 'today',
+      date: 'Date',
       invited: [],
       status: 'pending',
       time: 'now',
