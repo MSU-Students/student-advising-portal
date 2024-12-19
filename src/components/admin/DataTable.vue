@@ -1,5 +1,10 @@
 <template>
-  <q-table :rows="applications" :columns="columns" row-key="id" hide-bottom>
+  <q-table
+    :rows="applications"
+    :columns="columns"
+    row-key="id"
+    :pagination="{ rowsPerPage: 50 }"
+  >
     <template #top-right>
       <q-select
         v-model="filter"
