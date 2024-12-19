@@ -120,6 +120,15 @@ function shouldHighlight(role: Role) {
 }
 const selectRole = (roleName?: IProfile['type']) => {
   if (!roleName) return;
+  if (requestStore.requests.length && !pendingRequest(roleName)) {
+    Notify.create({
+      message: 'You already have existing application request',
+      caption: 'Only one application is allowed at time',
+      icon: 'error',
+      color: 'negative',
+    });
+    return;
+  }
   selectedRole.value = roleName || null;
 };
 
@@ -139,7 +148,7 @@ const continueAs = async () => {
       return;
     } else if (pending?.status == 'pending') {
       Notify.create({
-        message: 'Your request is pending',
+        message: 'Your request is pending still',
         icon: 'warning',
         color: 'warning',
       });

@@ -2,24 +2,95 @@
   <q-dialog v-model="showDialog">
     <q-card style="min-width: 300px" class="rounded-borders">
       <q-card-section class="text-center bg-primary text-white">
-        <span class="text-h6 q-ml-sm q-pa-xl text-bold">Booking Details</span>
+        <span class="text-h6 q-ml-sm q-pa-xl text-bold"
+          >Booking
+          <span class="text-capitalize">{{ booking?.type }}</span>
+        </span>
       </q-card-section>
 
       <q-card v-if="booking && isBookingAppear">
         <q-form @submit="onSubmit" class="q-px-md q-py-sm">
+          <q-card-section>
+            <q-option-group
+              @update:model-value="onChangeBookingType"
+              v-model="booking.type"
+              inline
+              :options="[
+                {
+                  value: 'consultation',
+                  label: 'Consultation',
+                },
+                {
+                  value: 'appointment',
+                  label: 'Appointment',
+                },
+              ]"
+            >
+            </q-option-group>
+          </q-card-section>
+          <q-card-section v-if="booking.type == 'consultation'" class="row">
+            <q-select
+              class="col"
+              v-model="booking.advisee"
+              use-input
+              label="Advisee"
+              option-label="fullName"
+              @input-value="(v) => searchStudents(v)"
+              :options="profileOptions"
+              :loading="loading"
+              :rules="[(v) => v || 'Select Advisee']"
+            >
+            </q-select>
+            <q-select
+              class="col"
+              v-model="booking.adviser"
+              use-input
+              label="Adviser"
+              option-label="fullName"
+              @input-value="(v) => searchAdvisers(v)"
+              :options="profileOptions"
+              :loading="loading"
+              :rules="[(v) => v || 'Select Adviser']"
+            >
+            </q-select>
+          </q-card-section>
+          <q-card-section v-if="booking.type == 'appointment'">
+            <q-select
+              v-model="booking.invited"
+              use-input
+              label="Invited"
+              use-chips
+              multiple
+              option-label="fullName"
+              @input-value="(v) => searchAttendees(v)"
+              :options="profileOptions"
+              :loading="loading"
+              :rules="[(v) => v?.length || 'Invite Attendees']"
+            >
+            </q-select>
+          </q-card-section>
           <q-card-section class="q-mt-md">
             <div class="text-subtitle1 text-primary">Purpose</div>
             <q-input
-              v-model="text"
+              v-model="booking.description"
               type="textarea"
               placeholder="Type here..."
               dense
               autogrow
+              :rules="[
+                (v) =>
+                  v.length || 'State purpose or description of ' + booking.type,
+              ]"
             />
           </q-card-section>
           <q-card-section>
             <div class="text-subtitle1 text-primary">Date</div>
-            <q-input v-model="booking.date" :rules="['date']">
+            <q-input
+              dense
+              label="Date"
+              v-model="booking.date"
+              :rules="['date']"
+            >
               <template #append>
                 <q-btn round flat icon="today">
                   <q-popup-proxy>
@@ -27,10 +98,22 @@
                   </q-popup-proxy>
                 </q-btn>
               </template>
+              <template #after>
+                <q-chip clickable>
+                  <q-icon name="watch" />
+                  {{ booking.time || 'time' }}
+                  <q-popup-proxy>
+                    <q-time v-model="booking.time">
+                      <q-btn v-close-popup>Set</q-btn>
+                    </q-time>
+                  </q-popup-proxy>
+                </q-chip>
+              </template>
             </q-input>
+            <q-input label="Location" v-model="booking.location" />
           </q-card-section>
           <q-card-actions align="right">
-            <q-btn type="submit" color="primary">Submit</q-btn>
+            <q-btn type="submit" color="primary">Book</q-btn>
             <q-btn flat round color="negative" icon="close" v-close-popup />
           </q-card-actions>
         </q-form>
@@ -42,15 +125,46 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 import { TheDialogs } from '../the-dialogs';
-import { IBooking } from 'src/entities';
+import {
+  IAdviserProfile,
+  IBooking,
+  IProfile,
+  IStudentProfile,
+} from 'src/entities';
 import { TheWorkflows } from 'src/workflows/the-workflows';
 import isBookingAppear from 'src/pages/booking/BookingPage.vue';
+import { useAuthStore } from 'src/stores/auth.store';
+import { date } from 'quasar';
+import { useProfileStore } from 'src/stores/profile.store';
 
+const authStore = useAuthStore();
+const profileStore = useProfileStore();
 const showDialog = ref(false);
 const booking = ref<IBooking>();
 type SuccessCb = (booking: IBooking) => void;
 const successCb = ref<SuccessCb>();
-const text = ref('');
+const profileOptions = ref<IProfile[]>([]);
+const loading = ref(false);
+async function searchAttendees(keyword: string) {
+  profileOptions.value = [];
+  loading.value = true;
+  profileOptions.value = await profileStore.findProfiles(keyword);
+  loading.value = false;
+}
+
+async function searchStudents(keyword: string) {
+  profileOptions.value = [];
+  loading.value = true;
+  profileOptions.value = await profileStore.findProfiles(keyword, 'student');
+  loading.value = false;
+}
+
+async function searchAdvisers(keyword: string) {
+  profileOptions.value = [];
+  loading.value = true;
+  profileOptions.value = await profileStore.findProfiles(keyword, 'adviser');
+  loading.value = false;
+}
 
 function onSubmit() {
   if (!booking.value) return;
@@ -62,7 +176,6 @@ function onSubmit() {
         if (successCb.value) {
           successCb.value(booking);
         }
-        text.value = '';
         showDialog.value = false;
       },
     },
@@ -70,26 +183,41 @@ function onSubmit() {
 }
 TheDialogs.on({
   type: 'bookAppointmentDialog',
-  cb(e) {
+  async cb(e) {
     successCb.value = e.success;
     showDialog.value = true;
+    const user = await authStore.getUser();
     booking.value = {
-      type: 'appointment',
-      author: {
-        type: 'student',
-        avatar: '',
-        fullName: 'Test',
-        idNumber: '123',
-        program: 'BSCS',
-      },
-      accepted: [],
-      attendees: [],
-      date: new Date().toISOString().split('T')[0].replaceAll('-', '/'),
-      invited: [],
+      type: 'consultation',
+      bookedBy: { ...user } as IProfile,
+      date: date.formatDate(new Date(), 'YYYY/MM/DD'),
+      time: '08:00',
       status: 'pending',
-      time: 'now',
-      location: 'here',
+      location: '',
+      description: '',
+      advisee: undefined as unknown as IStudentProfile,
+      adviser: undefined as unknown as IAdviserProfile,
     };
+    onChangeBookingType();
   },
 });
+function onChangeBookingType() {
+  if (
+    booking.value.type == 'consultation' &&
+    typeof booking.value.bookedBy == 'object'
+  ) {
+    if (booking.value.bookedBy.type == 'student') {
+      booking.value.advisee = booking.value.bookedBy;
+    }
+    if (booking.value.bookedBy.type == 'adviser') {
+      booking.value.adviser = booking.value.bookedBy;
+    }
+  } else if (
+    booking.value.type == 'appointment' &&
+    typeof booking.value.bookedBy == 'object'
+  ) {
+    booking.value.invited = [];
+    booking.value.invited.push(booking.value.bookedBy);
+  }
+}
 </script>

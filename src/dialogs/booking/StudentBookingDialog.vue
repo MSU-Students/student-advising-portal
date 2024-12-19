@@ -53,7 +53,7 @@ const columns = [
     author: 'author',
     label: 'Author',
     field: (row: IBooking) =>
-      `${typeof row.author == 'object' ? row.author.fullName : ''}`,
+      `${typeof row.bookedBy == 'object' ? row.bookedBy.fullName : ''}`,
   },
 ] as QTableColumn[];
 
