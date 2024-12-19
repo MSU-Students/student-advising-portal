@@ -32,7 +32,7 @@
         v-else
         expand-icon-toggle
         expand-icon-class="text-white"
-        clickable
+        default-opened
         @click="setActiveOption(option.name)"
         :active="activeOption === option.name"
         active-class="rounded-borders bg-white"
