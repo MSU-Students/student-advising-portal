@@ -38,7 +38,7 @@
           @click="toggleLeftDrawer"
         />
         <q-toolbar-title>
-          {{ 'Student Advising Portal' }}
+          {{ $route.meta.title || 'Student Advising Portal' }}
         </q-toolbar-title>
         <q-space />
 
