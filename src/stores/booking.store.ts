@@ -10,7 +10,9 @@ export const useBookingStore = defineStore('booking', {
   actions: {
     async bookAppointment(payload: IBooking) {
       const result = await firebaseService.create('bookings', payload);
-      this.bookings.push(result as IBooking);
+      if (!this.bookings.find((b) => b.key == result.key)) {
+        this.bookings.push(result as IBooking);
+      }
       return result as IBooking;
     },
     async findAll(filter?: Partial<IBooking>) {
