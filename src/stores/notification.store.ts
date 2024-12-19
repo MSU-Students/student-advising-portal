@@ -18,6 +18,7 @@ export const useNotificationStore = defineStore('notification', {
     } as INotificationState),
   actions: {
     async load() {
+      if (!navigator.serviceWorker) return;
       const registration = await navigator.serviceWorker.getRegistration();
       if (registration) {
         const list = await registration.getNotifications();

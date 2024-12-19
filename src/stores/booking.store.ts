@@ -21,7 +21,7 @@ export const useBookingStore = defineStore('booking', {
       this.bookings = result as IBooking[];
     },
     streamWith(filter?: Partial<IBooking>) {
-      firebaseService
+      return firebaseService
         .streamWith('bookings', filter as Record<string, string>)
         .subscribe({
           next: (value) => {
