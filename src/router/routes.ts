@@ -1,6 +1,7 @@
 import { RouteRecordRaw } from 'vue-router';
 import { IRouteMeta } from './route.meta';
 import LoginPage from 'src/pages/auth/LoginPage.vue';
+import ProfilePage from 'src/pages/ProfilePage.vue';
 
 declare module 'vue-router' {
   interface RouteMeta extends IRouteMeta {
@@ -82,6 +83,14 @@ const routes: RouteRecordRaw[] = [
           menu: 'Home',
           title: 'Home Page',
           icon: 'home',
+        },
+      },
+      {
+        path: 'profile/:key',
+        name: 'profile',
+        component: ProfilePage,
+        meta: {
+          requiresLogin: true,
         },
       },
       {

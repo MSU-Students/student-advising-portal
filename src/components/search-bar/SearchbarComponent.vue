@@ -1,37 +1,35 @@
 <template>
   <div class="q-mr-md search-container">
-    <q-input 
-      rounded 
-      dense 
-      outlined 
-      v-model="searchText" 
+    <q-input
+      rounded
+      dense
+      outlined
+      v-model="searchText"
       placeholder="Search"
       bg-color="grey-2"
       clearable
       @update:model-value="search"
-      >
+    >
       <template v-slot:append>
         <q-icon name="search" />
       </template>
     </q-input>
 
-    <q-list 
-      v-if="showSuggestions && searchText"  
-      class="suggestions-list"
-    >
-      <q-item 
-        v-for="profile in filteredProfiles" 
-        :key="profile.key" 
-        clickable 
+    <q-list v-if="showSuggestions && searchText" class="suggestions-list">
+      <q-item
+        v-for="profile in filteredProfiles"
+        :key="profile.key"
+        clickable
+        :to="{ name: 'profile', params: { key: profile.key } }"
         @click="selectProfile(profile)"
         rounded
       >
         <q-item-section avatar>
           <q-avatar class="avatar">
-            <img :src="`${profile.avatar}`">
+            <q-img :alt="profile.fullName" :src="`${profile.avatar}`" />
           </q-avatar>
         </q-item-section>
-        
+
         <q-item-section>
           <q-item-label class="name-label">
             <span v-html="highlightMatch(profile.fullName)"></span>
@@ -43,7 +41,10 @@
       </q-item>
     </q-list>
 
-    <div v-if="!showSuggestions && !isContactSelected && searchText" class="no-results">
+    <div
+      v-if="!showSuggestions && !isContactSelected && searchText"
+      class="no-results"
+    >
       No results found.
     </div>
   </div>
@@ -66,7 +67,7 @@ const showSuggestions = computed(() => {
 const selectProfile = (profile: IProfile) => {
   searchText.value = profile.fullName;
   profiles.value = [];
-  isContactSelected.value = true; 
+  isContactSelected.value = true;
 };
 
 const highlightMatch = (text: string) => {
@@ -78,7 +79,7 @@ const highlightMatch = (text: string) => {
 
 // Prevents flickering of the suggestion list by filtering profiles as you type.
 const filteredProfiles = computed(() =>
-  profiles.value.filter(profile =>
+  profiles.value.filter((profile) =>
     profile.fullName.toLowerCase().includes(searchText.value.toLowerCase())
   )
 );
@@ -86,29 +87,29 @@ const filteredProfiles = computed(() =>
 const search = async () => {
   isContactSelected.value = false;
   profiles.value = await profileStore.findProfiles(searchText.value);
-}
+};
 </script>
 
 <style lang="sass">
-.search-container 
+.search-container
   position: relative
   flex: 1
   min-width: 150px
 
-.suggestions-list 
+.suggestions-list
   position: absolute
   top: 100%
   left: 0
-  width: 100% 
+  width: 100%
   border: 1px solid #ccc
   background: #fff
-  z-index: 10 
-  max-height: 270px 
+  z-index: 10
+  max-height: 270px
   overflow-y: auto
 
-.no-results 
+.no-results
   position: absolute
-  top: 100% 
+  top: 100%
   left: 0
   width: 100%
   padding: 10px
@@ -136,6 +137,6 @@ const search = async () => {
   .name-label
     font-size: 0.775rem
 
-  .email-label  
+  .email-label
     font-size: 0.65rem
 </style>
