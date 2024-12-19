@@ -1,4 +1,4 @@
-import { IBooking } from 'src/entities';
+import { IBooking, IConsultationBooking } from 'src/entities';
 import { Struct } from 'src/structs';
 
 export type Booking =
@@ -12,6 +12,14 @@ export type Booking =
   | Struct<
       'studentBookingDialog',
       {
+        success: VoidCallback;
+        error?: ErrorCallback;
+      }
+    >
+  | Struct<
+      'rejectConsulationDialog',
+      {
+        payload: IConsultationBooking;
         success: VoidCallback;
         error?: ErrorCallback;
       }
