@@ -26,7 +26,11 @@
       </template>
       <template v-slot:body-cell-status="props">
         <q-td :props="props" class="text-center">
-          <q-chip class="text-uppercase">{{ props.row.status }}</q-chip>
+          <q-chip
+            class="text-uppercase"
+            :class="'bg-' + statusColor(props.value)"
+            >{{ props.row.status }}</q-chip
+          >
         </q-td>
       </template>
       <template v-slot:body-cell-actions="props">
@@ -56,7 +60,7 @@ import { computed, onMounted, onUnmounted } from 'vue';
 import { QTableColumn } from 'quasar';
 import { useBookingStore } from 'src/stores/booking.store';
 import { useAuthStore } from 'src/stores/auth.store';
-import { IConsultationBooking } from 'src/entities';
+import { IBooking, IConsultationBooking } from 'src/entities';
 
 const bookingStore = useBookingStore();
 const authStore = useAuthStore();
@@ -64,6 +68,17 @@ const consultations = computed(() => {
   return bookingStore.consulations;
 });
 
+function statusColor(status: IBooking['status']) {
+  switch (status) {
+    case 'accepted':
+      return 'positive';
+    case 'pending':
+      return 'warning';
+    case 'rejected':
+    default:
+      return 'negative';
+  }
+}
 const columns = [
   {
     name: 'student',
