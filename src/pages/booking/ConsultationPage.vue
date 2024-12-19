@@ -83,6 +83,7 @@ import { useBookingStore } from 'src/stores/booking.store';
 import { useAuthStore } from 'src/stores/auth.store';
 import { IConsultationBooking } from 'src/entities';
 import { statusColor } from './helper';
+import { TheDialogs } from 'src/dialogs/the-dialogs';
 
 const bookingStore = useBookingStore();
 const authStore = useAuthStore();
@@ -150,6 +151,14 @@ function approveConsulation(booking: IConsultationBooking) {
   console.log(booking);
 }
 function rejectConsulation(booking: IConsultationBooking) {
-  console.log(booking);
+  TheDialogs.emit({
+    type: 'rejectConsultationDialog',
+    arg: {
+      payload: booking,
+      success: () => {
+        //
+      },
+    },
+  });
 }
 </script>

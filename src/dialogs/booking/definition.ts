@@ -17,7 +17,7 @@ export type Booking =
       }
     >
   | Struct<
-      'rejectConsulationDialog',
+      'rejectConsultationDialog',
       {
         payload: IConsultationBooking;
         success: VoidCallback;
