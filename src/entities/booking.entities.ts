@@ -2,9 +2,11 @@ import { IBaseEntity } from './base.entity';
 import { IAdviserProfile, IProfile, IStudentProfile } from './profile.entities';
 
 export interface IBookingBase extends IBaseEntity {
-  status: 'pending' | 'accepted' | 'cancelled';
+  status: 'pending' | 'accepted' | 'rejected' | 'cancelled';
   time: string;
   date: string;
+  description: string;
+  duration?: string;
   location?: string;
   author?: IProfile | string;
 }
