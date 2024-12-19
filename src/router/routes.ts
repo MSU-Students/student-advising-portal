@@ -2,6 +2,8 @@ import { RouteRecordRaw } from 'vue-router';
 import { IRouteMeta } from './route.meta';
 import LoginPage from 'src/pages/auth/LoginPage.vue';
 import ProfilePage from 'src/pages/ProfilePage.vue';
+import ConsultationPage from 'src/pages/booking/ConsultationPage.vue';
+import AppointmentsPage from 'src/pages/booking/AppointmentsPage.vue';
 
 declare module 'vue-router' {
   interface RouteMeta extends IRouteMeta {
@@ -124,6 +126,28 @@ const routes: RouteRecordRaw[] = [
           menu: 'Calendar',
           title: 'Calendar',
           icon: 'library_books',
+        },
+      },
+      {
+        name: 'consultations',
+        path: 'consultations',
+        component: ConsultationPage,
+        meta: {
+          requiresLogin: ['adviser'],
+          menu: 'Consulations',
+          title: 'Consulations',
+          icon: 'group',
+        },
+      },
+      {
+        name: 'appointments',
+        path: 'appointments',
+        component: AppointmentsPage,
+        meta: {
+          requiresLogin: ['adviser', 'student', 'admin'],
+          menu: 'Appointments',
+          title: 'Appointments',
+          icon: 'groups',
         },
       },
       {
