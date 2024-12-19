@@ -81,7 +81,8 @@ import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { date, QTableColumn } from 'quasar';
 import { useBookingStore } from 'src/stores/booking.store';
 import { useAuthStore } from 'src/stores/auth.store';
-import { IBooking, IConsultationBooking } from 'src/entities';
+import { IConsultationBooking } from 'src/entities';
+import { statusColor } from './helper';
 
 const bookingStore = useBookingStore();
 const authStore = useAuthStore();
@@ -93,17 +94,6 @@ const dateRange = ref({
   to: date.formatDate(new Date(), 'YYYY-MM-DD'),
 });
 
-function statusColor(status: IBooking['status']) {
-  switch (status) {
-    case 'accepted':
-      return 'positive';
-    case 'pending':
-      return 'warning';
-    case 'rejected':
-    default:
-      return 'negative';
-  }
-}
 const columns = [
   {
     name: 'student',
