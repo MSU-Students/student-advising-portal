@@ -37,7 +37,7 @@ export const useBookingStore = defineStore('booking', {
         .streamWith('bookings', filter as Record<string, string>)
         .subscribe({
           next: (value) => {
-            this.bookings = value as IBooking[];
+            this.bookings = (value || []) as IBooking[];
           },
         });
     },
@@ -50,7 +50,7 @@ export const useBookingStore = defineStore('booking', {
         .subscribe({
           next: async (value) => {
             this.appointments = await Promise.all(
-              (value as IAppointmentBooking[]).map(async (booking) => {
+              ((value || []) as IAppointmentBooking[]).map(async (booking) => {
                 if (typeof booking.bookedBy == 'string') {
                   booking.bookedBy = (await profileStore.getProfile(
                     booking.bookedBy
@@ -62,7 +62,7 @@ export const useBookingStore = defineStore('booking', {
           },
         });
     },
-    streamConsulationsWith(filter?: Partial<IConsultationBooking>) {
+    streamConsulationsWith(filter?: Record<string, string | undefined>) {
       const profileStore = useProfileStore();
       filter = filter || {};
       filter.type = 'consultation';
@@ -71,7 +71,7 @@ export const useBookingStore = defineStore('booking', {
         .subscribe({
           next: async (value) => {
             this.consulations = await Promise.all(
-              (value as IConsultationBooking[]).map(async (booking) => {
+              ((value || []) as IConsultationBooking[]).map(async (booking) => {
                 if (typeof booking.advisee == 'string') {
                   booking.advisee = (await profileStore.getProfile(
                     booking.advisee

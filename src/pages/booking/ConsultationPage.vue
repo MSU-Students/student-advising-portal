@@ -6,6 +6,27 @@
       row-key="id"
       :pagination="{ rowsPerPage: 50 }"
     >
+      <template #top-right>
+        <q-chip>
+          {{ dateRange.from }}
+        </q-chip>
+        -
+        <q-chip>
+          {{ dateRange.to }}
+        </q-chip>
+        <q-btn dense rounded icon="filter_alt">
+          <q-popup-proxy>
+            <q-date v-model="dateRange" range>
+              <q-btn
+                class="float-right"
+                v-close-popup
+                icon="check"
+                @click="loadConsulations"
+              ></q-btn>
+            </q-date>
+          </q-popup-proxy>
+        </q-btn>
+      </template>
       <template v-slot:header="props">
         <q-tr :props="props">
           <q-th
@@ -56,8 +77,8 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onMounted, onUnmounted } from 'vue';
-import { QTableColumn } from 'quasar';
+import { computed, onMounted, onUnmounted, ref } from 'vue';
+import { date, QTableColumn } from 'quasar';
 import { useBookingStore } from 'src/stores/booking.store';
 import { useAuthStore } from 'src/stores/auth.store';
 import { IBooking, IConsultationBooking } from 'src/entities';
@@ -66,6 +87,10 @@ const bookingStore = useBookingStore();
 const authStore = useAuthStore();
 const consultations = computed(() => {
   return bookingStore.consulations;
+});
+const dateRange = ref({
+  from: date.formatDate(new Date(), 'YYYY-MM-DD'),
+  to: date.formatDate(new Date(), 'YYYY-MM-DD'),
 });
 
 function statusColor(status: IBooking['status']) {
@@ -123,6 +148,8 @@ function loadConsulations() {
   sub?.unsubscribe();
   sub = bookingStore.streamConsulationsWith({
     adviser: authStore.currentUser?.key,
+    // 'date <=': date.formatDate(dateRange.value.from, 'YYYY-MM-DD'),
+    // 'date <=': date.formatDate(dateRange.value.to, 'YYYY-MM-DD'),
   });
 }
 onUnmounted(() => {
