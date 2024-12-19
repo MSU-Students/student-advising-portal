@@ -29,8 +29,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import { defineExpose } from 'vue';
+import { ref, defineExpose } from 'vue';
 
 interface Payload {
   id: string;
