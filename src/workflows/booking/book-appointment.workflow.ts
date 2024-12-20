@@ -1,6 +1,6 @@
 import { useBookingStore } from 'src/stores/booking.store';
 import { TheWorkflows } from '../the-workflows';
-import { date } from 'quasar';
+import { date, uid } from 'quasar';
 import { IBooking, IProfile } from 'src/entities';
 
 TheWorkflows.on({
@@ -33,14 +33,14 @@ TheWorkflows.on({
         status: 'pending',
         description: e.payload.description || '1h',
         duration: e.payload.duration,
-        invited: [...invited.map(i => i.key)],
+        invited: [...invited.map((i) => i.key || '')],
         accepted: [],
         attendees: [],
       };
     }
     booking.dateBooked = date.formatDate(new Date(), 'YYYY-MM-DD HH:mm:ss');
     booking.bookedBy = author.key;
-    booking.key = `${booking.type}:${date.formatDate(new Date(), 'YYYY-MM-DD:HH:mm:ss')}:${author.key}`
+    booking.key = uid();
     const result = await bookingStore.bookAppointment(booking);
     e.success(result);
   },

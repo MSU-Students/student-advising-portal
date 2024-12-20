@@ -70,7 +70,12 @@
             </q-select>
           </q-card-section>
           <q-card-section class="q-mt-md">
-            <div class="text-subtitle1 text-primary">Purpose</div>
+            <q-input
+              label="Title"
+              v-model="booking.title"
+              :rules="[(v) => v.length || 'Title is required']"
+            />
+            <div class="text-subtitle1 text-primary">Description</div>
             <q-input
               v-model="booking.description"
               type="textarea"
@@ -79,7 +84,8 @@
               autogrow
               :rules="[
                 (v) =>
-                  v.length || 'State purpose or description of ' + booking.type,
+                  v.length ||
+                  'State purpose or description of ' + booking?.type,
               ]"
             />
           </q-card-section>
@@ -135,36 +141,19 @@ import { TheWorkflows } from 'src/workflows/the-workflows';
 import isBookingAppear from 'src/pages/booking/BookingPage.vue';
 import { useAuthStore } from 'src/stores/auth.store';
 import { date } from 'quasar';
-import { useProfileStore } from 'src/stores/profile.store';
+import {
+  loading,
+  profileOptions,
+  searchAdvisers,
+  searchAttendees,
+  searchStudents,
+} from 'src/pages/booking/helper';
 
 const authStore = useAuthStore();
-const profileStore = useProfileStore();
 const showDialog = ref(false);
 const booking = ref<IBooking>();
 type SuccessCb = (booking: IBooking) => void;
 const successCb = ref<SuccessCb>();
-const profileOptions = ref<IProfile[]>([]);
-const loading = ref(false);
-async function searchAttendees(keyword: string) {
-  profileOptions.value = [];
-  loading.value = true;
-  profileOptions.value = await profileStore.findProfiles(keyword);
-  loading.value = false;
-}
-
-async function searchStudents(keyword: string) {
-  profileOptions.value = [];
-  loading.value = true;
-  profileOptions.value = await profileStore.findProfiles(keyword, 'student');
-  loading.value = false;
-}
-
-async function searchAdvisers(keyword: string) {
-  profileOptions.value = [];
-  loading.value = true;
-  profileOptions.value = await profileStore.findProfiles(keyword, 'adviser');
-  loading.value = false;
-}
 
 function onSubmit() {
   if (!booking.value) return;

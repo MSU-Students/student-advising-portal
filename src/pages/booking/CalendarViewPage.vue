@@ -18,6 +18,7 @@
             :view="dayView ? 'day' : 'week'"
             :interval-start="6"
             :interval-count="16"
+            :internal-height="200"
             :weekdays="[1, 2, 3, 4, 5, 6, 0]"
             animated
             transition-next="slide-left"
@@ -25,7 +26,7 @@
           >
             <template #day-interval="{ scope }">
               <div
-                class="q-mx-xs"
+                class="q-mx-xs row"
                 v-if="hasEvents(scope.timestamp)"
                 style="
                   display: flex;
@@ -39,7 +40,7 @@
                   :key="event.time"
                 >
                   <q-card
-                    class="full-width text-white cursor-pointer"
+                    class="col text-white cursor-pointer ellipsis"
                     :class="
                       'booking-' + event.status + ' booking-' + event.type
                     "
@@ -98,19 +99,20 @@ import {
 import '@quasar/quasar-ui-qcalendar/src/QCalendarVariables.sass';
 import '@quasar/quasar-ui-qcalendar/src/QCalendarTransitions.sass';
 import '@quasar/quasar-ui-qcalendar/src/QCalendarDay.sass';
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, onUnmounted, ref } from 'vue';
 
 import { useBookingStore } from 'src/stores/booking.store';
 import { date, useQuasar } from 'quasar';
 import { TheDialogs } from 'src/dialogs/the-dialogs';
+import { useRouter } from 'vue-router';
+
 const selectedDate = ref(today());
 const calendar = ref();
 const nowDate = ref(addToDate(parseTimestamp(today()), { day: 1 }).date);
 const bookingStore = useBookingStore();
+const $router = useRouter();
 const $q = useQuasar();
-const bookings = computed(() => {
-  return [...bookingStore.bookings];
-});
+const bookings = ref([]);
 function onToday() {
   calendar.value.moveToToday();
 }
@@ -120,7 +122,13 @@ const dayView = computed(() => {
 onMounted(() => {
   loadBookings();
 });
+onUnmounted(() => {
+  if (subscription) {
+    subscription.unsubscribe();
+  }
+});
 let subscription;
+
 function loadBookings() {
   const refDate = new Date(selectedDate.value);
   const startDate = new Date(refDate);
@@ -132,10 +140,16 @@ function loadBookings() {
   if (subscription) {
     subscription.unsubscribe();
   }
-  const sub = bookingStore.streamWith({
-    'date >=': date.formatDate(startDate, 'YYYY-MM-DD'),
-    'date <=': date.formatDate(endDate, 'YYYY-MM-DD'),
-  });
+  const sub = bookingStore
+    .streamWith({
+      'date >=': date.formatDate(startDate, 'YYYY-MM-DD'),
+      'date <=': date.formatDate(endDate, 'YYYY-MM-DD'),
+    })
+    .subscribe({
+      next: (value) => {
+        bookings.value = value || [];
+      },
+    });
   subscription = sub;
 }
 function onPrev() {
@@ -147,7 +161,12 @@ function onNext() {
   loadBookings();
 }
 function clickBooking(booking) {
-  console.log('Display booking details here', booking);
+  $router.push({
+    name: 'edit-booking',
+    params: {
+      key: booking.key,
+    },
+  });
 }
 function bookAppointment() {
   TheDialogs.emit({
