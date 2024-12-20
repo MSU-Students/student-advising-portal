@@ -118,6 +118,14 @@ const routes: RouteRecordRaw[] = [
         },
       },
       {
+        name: 'edit-booking',
+        path: 'booking/:key',
+        component: () => import('pages/booking/EditBookingPage.vue'),
+        meta: {
+          requiresLogin: ['student', 'adviser'],
+        },
+      },
+      {
         name: 'calendar',
         path: 'calendar',
         component: () => import('pages/booking/CalendarViewPage.vue'),

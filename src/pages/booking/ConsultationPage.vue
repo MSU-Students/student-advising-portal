@@ -81,9 +81,7 @@ import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { date, QTableColumn } from 'quasar';
 import { useBookingStore } from 'src/stores/booking.store';
 import { useAuthStore } from 'src/stores/auth.store';
-import { IConsultationBooking } from 'src/entities';
-import { statusColor } from './helper';
-import { TheDialogs } from 'src/dialogs/the-dialogs';
+import { approveConsulation, rejectConsulation, statusColor } from './helper';
 
 const bookingStore = useBookingStore();
 const authStore = useAuthStore();
@@ -146,19 +144,4 @@ function loadConsulations() {
 onUnmounted(() => {
   sub?.unsubscribe();
 });
-
-function approveConsulation(booking: IConsultationBooking) {
-  console.log(booking);
-}
-function rejectConsulation(booking: IConsultationBooking) {
-  TheDialogs.emit({
-    type: 'rejectConsultationDialog',
-    arg: {
-      payload: booking,
-      success: () => {
-        //
-      },
-    },
-  });
-}
 </script>

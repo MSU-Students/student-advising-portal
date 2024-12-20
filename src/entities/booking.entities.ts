@@ -5,7 +5,8 @@ export interface IBookingBase extends IBaseEntity {
   status: 'pending' | 'accepted' | 'rejected' | 'cancelled';
   time: string;
   date: string;
-  description: string;
+  title: string;
+  description?: string;
   duration?: string;
   location?: string;
   dateBooked?: string;

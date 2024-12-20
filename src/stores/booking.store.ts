@@ -25,6 +25,11 @@ export const useBookingStore = defineStore('booking', {
       }
       return result as IBooking;
     },
+    async getBooking(key: string) {
+      return this.fillBooking(
+        (await firebaseService.get('bookings', key)) as IBooking
+      );
+    },
     async findAll(filter?: Partial<IBooking>) {
       const result = await firebaseService.findAll(
         'bookings',
@@ -33,16 +38,12 @@ export const useBookingStore = defineStore('booking', {
       this.bookings = result as IBooking[];
     },
     streamWith(filter?: Partial<IBooking>) {
-      return firebaseService
-        .streamWith('bookings', filter as Record<string, string>)
-        .subscribe({
-          next: (value) => {
-            this.bookings = (value || []) as IBooking[];
-          },
-        });
+      return firebaseService.streamWith(
+        'bookings',
+        filter as Record<string, string>
+      );
     },
     streamAppointmentsWith(filter?: Record<string, string | undefined>) {
-      const profileStore = useProfileStore();
       filter = filter || {};
       filter.type = 'appointment';
       return firebaseService
@@ -51,19 +52,43 @@ export const useBookingStore = defineStore('booking', {
           next: async (value) => {
             this.appointments = await Promise.all(
               ((value || []) as IAppointmentBooking[]).map(async (booking) => {
-                if (typeof booking.bookedBy == 'string') {
-                  booking.bookedBy = (await profileStore.getProfile(
-                    booking.bookedBy
-                  )) as IProfile;
-                }
-                return booking;
+                return this.fillBooking(booking);
               })
             );
           },
         });
     },
-    streamConsulationsWith(filter?: Record<string, string | undefined>) {
+    async fillBooking<B extends IBooking>(booking: B) {
       const profileStore = useProfileStore();
+      if (booking.type == 'consultation') {
+        if (typeof booking.advisee == 'string') {
+          booking.advisee = (await profileStore.getProfile(
+            booking.advisee
+          )) as IStudentProfile;
+        }
+        if (typeof booking.adviser == 'string') {
+          booking.adviser = (await profileStore.getProfile(
+            booking.adviser
+          )) as IAdviserProfile;
+        }
+      } else if (booking.type == 'appointment') {
+        booking.invited = await Promise.all(
+          (booking.invited || []).map(async (p) => {
+            if (typeof p == 'string') {
+              return (await profileStore.getProfile(p)) || p;
+            }
+            return p;
+          })
+        );
+      }
+      if (typeof booking.bookedBy == 'string') {
+        booking.bookedBy = (await profileStore.getProfile(
+          booking.bookedBy
+        )) as IProfile;
+      }
+      return booking;
+    },
+    streamConsulationsWith(filter?: Record<string, string | undefined>) {
       filter = filter || {};
       filter.type = 'consultation';
       return firebaseService
@@ -72,22 +97,7 @@ export const useBookingStore = defineStore('booking', {
           next: async (value) => {
             this.consulations = await Promise.all(
               ((value || []) as IConsultationBooking[]).map(async (booking) => {
-                if (typeof booking.advisee == 'string') {
-                  booking.advisee = (await profileStore.getProfile(
-                    booking.advisee
-                  )) as IStudentProfile;
-                }
-                if (typeof booking.adviser == 'string') {
-                  booking.adviser = (await profileStore.getProfile(
-                    booking.adviser
-                  )) as IAdviserProfile;
-                }
-                if (typeof booking.bookedBy == 'string') {
-                  booking.bookedBy = (await profileStore.getProfile(
-                    booking.bookedBy
-                  )) as IProfile;
-                }
-                return booking;
+                return this.fillBooking(booking);
               })
             );
           },

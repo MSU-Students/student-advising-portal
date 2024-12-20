@@ -19,7 +19,7 @@
 <script setup lang="ts">
 import { TheDialogs } from '../the-dialogs';
 import { QTableColumn } from 'quasar';
-import { computed, onMounted, ref } from 'vue';
+import { computed, ref } from 'vue';
 import { IBooking } from 'src/entities';
 import { useBookingStore } from 'src/stores/booking.store';
 const bookingStore = useBookingStore();
@@ -67,7 +67,4 @@ function bookAppointment() {
     },
   });
 }
-onMounted(() => {
-  bookingStore.streamWith();
-});
 </script>
