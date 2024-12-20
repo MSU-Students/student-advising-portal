@@ -10,7 +10,12 @@
       <q-card>
         <q-form @submit="onSubmit" class="q-px-md q-py-sm" v-if="booking">
           <q-card-actions align="right">
-            <q-btn rounded type="submit" color="primary">Save</q-btn>
+            <q-btn rounded type="submit" :loading="busy" color="primary"
+              >Save</q-btn
+            >
+            <q-btn rounded :to="{ name: 'calendar' }" color="primary"
+              >Back</q-btn
+            >
             <q-btn-dropdown rounded color="primary" label="More Action">
               <q-list>
                 <q-item clickable v-close-popup v-if="ownBooking">
@@ -39,7 +44,7 @@
                 class="col-12"
                 label="Date"
                 v-model="booking.date"
-                :rules="['date']"
+                :rules="[(v) => date.isValid(v) || 'Enter Valid Date']"
               >
                 <template #append>
                   <q-btn round flat icon="today">
@@ -124,8 +129,9 @@
                 </div>
               </div>
             </q-card-section>
-            <q-card-section v-if="booking.type == 'appointment'">
+            <q-card-section v-if="booking.type == 'appointment'" class="column">
               <q-select
+                class="col-auto"
                 v-model="booking.invited"
                 use-input
                 label="Invited"
@@ -140,13 +146,25 @@
               </q-select>
               <div
                 v-if="!ownBooking && isPartOfIt"
-                class="q-gutter-sm items-center row"
+                class="q-gutter-sm items-center col-auto row"
               >
                 <q-btn icon="check" rounded>Joining</q-btn>
                 <q-btn icon="close" rounded>Not Available</q-btn>
               </div>
             </q-card-section>
           </q-card-section>
+          <div
+            class="col column justify-end"
+            v-if="typeof booking.bookedBy == 'object'"
+          >
+            <div class="text-subtitle2">Booked By:</div>
+            <div>
+              <q-avatar size="sm"
+                ><q-img :src="booking.bookedBy.avatar"
+              /></q-avatar>
+              {{ booking.bookedBy.fullName }}
+            </div>
+          </div>
         </q-form>
       </q-card>
     </q-card>
@@ -167,11 +185,14 @@ import {
   statusColor,
 } from './helper';
 import { useBookingStore } from 'src/stores/booking.store';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { useAuthStore } from 'src/stores/auth.store';
+import { TheWorkflows } from 'src/workflows/the-workflows';
+import { date, Notify } from 'quasar';
 const authStore = useAuthStore();
 const bookingStore = useBookingStore();
 const $route = useRoute();
+const $router = useRouter();
 const booking = ref<IBooking>();
 onMounted(async () => {
   const bookingKey = $route.params.key as string;
@@ -198,19 +219,54 @@ const isPartOfIt = computed(() => {
   }
   return false;
 });
+const busy = ref(false);
 function onSubmit() {
   if (!booking.value) return;
-  // TheWorkflows.emit({
-  //   type: 'bookAppointment',
-  //   arg: {
-  //     payload: booking.value,
-  //     success(booking) {
-  //       if (successCb.value) {
-  //         successCb.value(booking);
-  //       }
-  //       showDialog.value = false;
-  //     },
-  //   },
-  // });
+  busy.value = true;
+  TheWorkflows.emit({
+    type: 'updateBooking',
+    arg: {
+      payload: {
+        booking: booking.value,
+        fields:
+          booking.value.type == 'appointment'
+            ? [
+                'date',
+                'time',
+                'title',
+                'description',
+                'duration',
+                'location',
+                'invited',
+              ]
+            : [
+                'date',
+                'time',
+                'title',
+                'description',
+                'duration',
+                'location',
+                'advisee',
+                'adviser',
+              ],
+      },
+      success() {
+        busy.value = false;
+        Notify.create({
+          message: 'Booking updated',
+        });
+        $router.push({
+          name: 'calendar',
+        });
+      },
+      error(err) {
+        Notify.create({
+          message: String(err),
+          color: 'negative',
+          icon: 'error',
+        });
+      },
+    },
+  });
 }
 </script>

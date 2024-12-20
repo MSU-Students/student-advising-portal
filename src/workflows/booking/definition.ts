@@ -20,4 +20,15 @@ export type Booking =
         success(booking: IBooking): void;
         error?: ErrorCallback;
       }
+    >
+  | Struct<
+      'updateBooking',
+      {
+        payload: {
+          booking: IBooking;
+          fields: (keyof IBooking | string)[];
+        };
+        success(booking: IBooking): void;
+        error?: ErrorCallback;
+      }
     >;

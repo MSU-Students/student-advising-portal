@@ -18,7 +18,7 @@
             :view="dayView ? 'day' : 'week'"
             :interval-start="6"
             :interval-count="16"
-            :internal-height="200"
+            :internal-height="300"
             :weekdays="[1, 2, 3, 4, 5, 6, 0]"
             animated
             transition-next="slide-left"
@@ -49,12 +49,9 @@
                     <q-list>
                       <q-item>
                         <q-item-section>
-                          <q-item-label
-                            overline
-                            class="text-grey text-uppercase"
-                            >{{ event.type }}</q-item-label
-                          >
-                          <q-item-label>{{ event.description }}</q-item-label>
+                          <q-item-label>{{
+                            event.title || event.description
+                          }}</q-item-label>
                           <q-item-label caption class="text-grey">{{
                             event.location
                           }}</q-item-label>
@@ -133,7 +130,7 @@ function loadBookings() {
   const refDate = new Date(selectedDate.value);
   const startDate = new Date(refDate);
   const endDate = new Date(refDate);
-  if (dayView.value) {
+  if (!dayView.value) {
     startDate.setDate(startDate.getDate() - startDate.getDay() + 1);
     endDate.setDate(endDate.getDate() + (7 - endDate.getDay()) + 1);
   }
@@ -194,11 +191,11 @@ function hasEvents(timestamp) {
 </script>
 <style scoped>
 .booking-appointment {
-  background: radial-gradient(circle, #35a2ff 0%, #014a88 100%);
+  background: radial-gradient(circle, #35a2ff 0%, #15181b 100%);
 }
 
 .booking-consultation {
-  background: radial-gradient(circle, #36b86e 0%, #014a88 100%);
+  background: radial-gradient(circle, #36b86e 0%, #737c6f 100%);
 }
 .booking-pending {
   border: 3px solid black;
