@@ -162,10 +162,10 @@ function onNext() {
 }
 function getBookingHeight(booking) {
   const duration = booking.duration || '';
-  const [hrString] = duration.match(/\d+\s*h/) || ['0'];
-  const [minString] = duration.match(/\d+\s*m/) || ['0'];
-  const hr = Number(hrString.replace(/\s*h/, ''));
-  const min = Number(minString.replace(/\s*m/, ''));
+  const [hrString] = duration.match(/\d+\s?h/) || ['0'];
+  const [minString] = duration.match(/\d+\s?m/) || ['0'];
+  const hr = Number(hrString.replace(/\s?h/, ''));
+  const min = Number(minString.replace(/\s?m/, ''));
   return Math.round((hr + min / 60) * intervalHeight);
 }
 function clickBooking(booking) {
