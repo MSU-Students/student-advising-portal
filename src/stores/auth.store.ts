@@ -19,7 +19,6 @@ export const useAuthStore = defineStore('auth', {
       const profile = await profileStore.getProfile(credential.user.uid);
       if (profile) {
         this.currentUser = profile;
-      } else {
       }
     },
     async loginWithEmail(email: string, password: string) {
@@ -31,7 +30,6 @@ export const useAuthStore = defineStore('auth', {
       const profile = await profileStore.getProfile(credential.user.uid);
       if (profile) {
         this.currentUser = profile;
-      } else {
       }
     },
     async registerCurrentUser(user: User) {
