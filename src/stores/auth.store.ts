@@ -22,6 +22,18 @@ export const useAuthStore = defineStore('auth', {
       } else {
       }
     },
+    async loginWithEmail(email: string, password: string) {
+      const credential = await firebaseService.signInWithEmailAndPass(
+        email,
+        password
+      );
+      const profileStore = useProfileStore();
+      const profile = await profileStore.getProfile(credential.user.uid);
+      if (profile) {
+        this.currentUser = profile;
+      } else {
+      }
+    },
     async registerCurrentUser(user: User) {
       const profileStore = useProfileStore();
       this.currentUser = {
@@ -68,6 +80,6 @@ export const useAuthStore = defineStore('auth', {
     },
     async resetPassword(oobCode: string, newPassword: string) {
       await firebaseService.resetPassword(oobCode, newPassword);
-    }
+    },
   },
 });

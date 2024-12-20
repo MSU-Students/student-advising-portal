@@ -63,6 +63,15 @@
                       </q-time>
                     </q-popup-proxy>
                   </q-chip>
+                  <q-chip clickable>
+                    <q-icon name="schedule" />
+                    {{ booking.duration || 'duration' }}
+                    <q-popup-proxy>
+                      <q-time v-model="booking.duration" format24h>
+                        <q-btn v-close-popup @click="setDuration()">Set</q-btn>
+                      </q-time>
+                    </q-popup-proxy>
+                  </q-chip>
                 </template>
               </q-input>
               <q-input
@@ -268,5 +277,13 @@ function onSubmit() {
       },
     },
   });
+}
+function setDuration() {
+  if (booking.value) {
+    const [hrStr, minStr] = (booking.value.duration || '1:00').split(':');
+    const hr = Number(hrStr);
+    const min = Number(minStr);
+    booking.value.duration = `${hr}h` + (min ? ` ${min}m` : '');
+  }
 }
 </script>
