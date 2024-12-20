@@ -20,12 +20,12 @@
               <q-list>
                 <q-item clickable v-close-popup v-if="ownBooking">
                   <q-item-section>
-                    <q-item-label>Delete</q-item-label>
+                    <q-item-label> Delete</q-item-label>
                   </q-item-section>
                 </q-item>
-                <q-item clickable v-close-popup>
+                <q-item clickable @click="cancelBooking">
                   <q-item-section>
-                    <q-item-label>Cancel</q-item-label>
+                    <q-item-label> Cancel</q-item-label>
                   </q-item-section>
                 </q-item>
               </q-list>
@@ -189,6 +189,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { useAuthStore } from 'src/stores/auth.store';
 import { TheWorkflows } from 'src/workflows/the-workflows';
 import { date, Notify } from 'quasar';
+import { error } from 'console';
 const authStore = useAuthStore();
 const bookingStore = useBookingStore();
 const $route = useRoute();
@@ -219,7 +220,7 @@ const isPartOfIt = computed(() => {
   }
   return false;
 });
-const busy = ref(false);
+const busy = ref(false); // what is this for?
 function onSubmit() {
   if (!booking.value) return;
   busy.value = true;
@@ -254,6 +255,35 @@ function onSubmit() {
         busy.value = false;
         Notify.create({
           message: 'Booking updated',
+        });
+        $router.push({
+          name: 'calendar',
+        });
+      },
+      error(err) {
+        Notify.create({
+          message: String(err),
+          color: 'negative',
+          icon: 'error',
+        });
+      },
+    },
+  });
+}
+
+function cancelBooking() {
+  TheWorkflows.emit({
+    type: 'cancelBooking',
+    arg: {
+      payload: {
+        booking: booking.value,
+      },
+      success() {
+        busy.value = false;
+        Notify.create({
+          message: 'Booking canceled',
+          color: 'positive',
+          icon: 'check',
         });
         $router.push({
           name: 'calendar',
