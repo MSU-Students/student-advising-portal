@@ -189,7 +189,6 @@ import { useRoute, useRouter } from 'vue-router';
 import { useAuthStore } from 'src/stores/auth.store';
 import { TheWorkflows } from 'src/workflows/the-workflows';
 import { date, Notify } from 'quasar';
-import { error } from 'console';
 const authStore = useAuthStore();
 const bookingStore = useBookingStore();
 const $route = useRoute();
