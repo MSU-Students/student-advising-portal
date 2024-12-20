@@ -22,6 +22,7 @@ TheWorkflows.on({
         duration: e.payload.duration || '1h',
         description: e.payload.description,
         advisee: advisee?.key,
+        title: e.payload.title,
         adviser: adviser?.key,
       };
     } else {
@@ -30,6 +31,7 @@ TheWorkflows.on({
         type: 'appointment',
         date: date.formatDate(e.payload.date, 'YYYY-MM-DD'),
         time: e.payload.time || '08:00',
+        title: e.payload.title,
         status: 'pending',
         description: e.payload.description || '1h',
         duration: e.payload.duration,

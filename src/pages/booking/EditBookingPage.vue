@@ -109,8 +109,18 @@
                   v-if="!ownBooking && isPartOfIt"
                   class="q-gutter-sm items-center row"
                 >
-                  <q-btn icon="check" rounded>Approve</q-btn>
-                  <q-btn icon="close" rounded>Reject</q-btn>
+                  <q-btn
+                    icon="check"
+                    rounded
+                    @click="approveConsulation(booking)"
+                    >Approve</q-btn
+                  >
+                  <q-btn
+                    icon="close"
+                    rounded
+                    @click="rejectConsulation(booking)"
+                    >Reject</q-btn
+                  >
                 </div>
               </div>
             </q-card-section>
@@ -147,8 +157,10 @@
 import { computed, onMounted, ref } from 'vue';
 import { IBooking } from 'src/entities';
 import {
+  approveConsulation,
   loading,
   profileOptions,
+  rejectConsulation,
   searchAdvisers,
   searchAttendees,
   searchStudents,
