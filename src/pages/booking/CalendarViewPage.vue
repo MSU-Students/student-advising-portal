@@ -18,7 +18,8 @@
             :view="dayView ? 'day' : 'week'"
             :interval-start="6"
             :interval-count="16"
-            :internal-height="300"
+            @change="changeView"
+            :interval-height="intervalHeight"
             :weekdays="[1, 2, 3, 4, 5, 6, 0]"
             animated
             transition-next="slide-left"
@@ -45,6 +46,7 @@
                       'booking-' + event.status + ' booking-' + event.type
                     "
                     @click="clickBooking(event)"
+                    :style="'height:' + getBookingHeight(event) + 'px'"
                   >
                     <q-list>
                       <q-item>
@@ -102,7 +104,7 @@ import { useBookingStore } from 'src/stores/booking.store';
 import { date, useQuasar } from 'quasar';
 import { TheDialogs } from 'src/dialogs/the-dialogs';
 import { useRouter } from 'vue-router';
-
+const intervalHeight = 50;
 const selectedDate = ref(today());
 const calendar = ref();
 const nowDate = ref(addToDate(parseTimestamp(today()), { day: 1 }).date);
@@ -116,6 +118,9 @@ function onToday() {
 const dayView = computed(() => {
   return $q.screen.lt.md;
 });
+function changeView(dates) {
+  loadBookings(dates.start, dates.end);
+}
 onMounted(() => {
   loadBookings();
 });
@@ -126,11 +131,11 @@ onUnmounted(() => {
 });
 let subscription;
 
-function loadBookings() {
+function loadBookings(start, end) {
   const refDate = new Date(selectedDate.value);
-  const startDate = new Date(refDate);
-  const endDate = new Date(refDate);
-  if (!dayView.value) {
+  const startDate = new Date(start || refDate);
+  const endDate = new Date(end || refDate);
+  if (!dayView.value && !start && !end) {
     startDate.setDate(startDate.getDate() - startDate.getDay() + 1);
     endDate.setDate(endDate.getDate() + (7 - endDate.getDay()) + 1);
   }
@@ -151,11 +156,17 @@ function loadBookings() {
 }
 function onPrev() {
   calendar.value.prev();
-  loadBookings();
 }
 function onNext() {
   calendar.value.next();
-  loadBookings();
+}
+function getBookingHeight(booking) {
+  const duration = booking.duration || '';
+  const [hrString] = duration.match(/\d{1,3}\s?h/) || ['0'];
+  const [minString] = duration.match(/\d{1,3}\s?m/) || ['0'];
+  const hr = Number(hrString.replace(/\s?h/, ''));
+  const min = Number(minString.replace(/\s?m/, ''));
+  return Math.round((hr + min / 60) * intervalHeight);
 }
 function clickBooking(booking) {
   $router.push({

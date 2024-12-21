@@ -137,8 +137,8 @@ function loadConsulations() {
   sub?.unsubscribe();
   sub = bookingStore.streamConsulationsWith({
     adviser: authStore.currentUser?.key,
-    // 'date <=': date.formatDate(dateRange.value.from, 'YYYY-MM-DD'),
-    // 'date <=': date.formatDate(dateRange.value.to, 'YYYY-MM-DD'),
+    'date >=': date.formatDate(dateRange.value.from, 'YYYY-MM-DD'),
+    'date <=': date.formatDate(dateRange.value.to, 'YYYY-MM-DD'),
   });
 }
 onUnmounted(() => {
