@@ -4,3 +4,4 @@ import './requests.workflow';
 import './sign-up-with-email.workflow';
 import './send-reset-password.workflow';
 import './reset-password.workflow';
+import './login-with-email.workflow';

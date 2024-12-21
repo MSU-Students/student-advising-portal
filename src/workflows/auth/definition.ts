@@ -10,51 +10,59 @@ export type SignUpPayload = {
 };
 export type Auth =
   | Struct<
-    'loginWithGoogle',
-    {
-      success: (profile: IProfile) => void;
-      error?: ErrorCallback;
-    }
-  >
+      'loginWithGoogle',
+      {
+        success: (profile: IProfile) => void;
+        error?: ErrorCallback;
+      }
+    >
   | Struct<
-    'logOut',
-    {
-      success: VoidCallback;
-      error: ErrorCallback;
-    }
-  >
+      'loginWithEmail',
+      {
+        payload: { email: string; password: string };
+        success: (profile: IProfile) => void;
+        error?: ErrorCallback;
+      }
+    >
   | Struct<
-    'createRequest',
-    {
-      applicant: IRequest;
-      success: VoidCallback;
-      error: ErrorCallback;
-    }
-  >
+      'logOut',
+      {
+        success: VoidCallback;
+        error: ErrorCallback;
+      }
+    >
   | Struct<
-    'signUpWithEmail',
-    {
-      payload: SignUpPayload;
-      success?: VoidCallback;
-      error?: ErrorCallback;
-    }
-  >
+      'createRequest',
+      {
+        applicant: IRequest;
+        success: VoidCallback;
+        error: ErrorCallback;
+      }
+    >
   | Struct<
-    'resetPassword',
-    {
-      payload: {
-        oobCode: string;
-        newPassword: string;
-      };
-      success?: VoidCallback;
-      error?: ErrorCallback;
-    }
-  >
+      'signUpWithEmail',
+      {
+        payload: SignUpPayload;
+        success?: VoidCallback;
+        error?: ErrorCallback;
+      }
+    >
   | Struct<
-    'sendResetPassword',
-    {
-      payload: string;
-      success?: VoidCallback;
-      error?: ErrorCallback;
-    }
-  >;
+      'resetPassword',
+      {
+        payload: {
+          oobCode: string;
+          newPassword: string;
+        };
+        success?: VoidCallback;
+        error?: ErrorCallback;
+      }
+    >
+  | Struct<
+      'sendResetPassword',
+      {
+        payload: string;
+        success?: VoidCallback;
+        error?: ErrorCallback;
+      }
+    >;
