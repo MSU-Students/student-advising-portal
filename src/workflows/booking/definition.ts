@@ -31,4 +31,14 @@ export type Booking =
         success(booking: IBooking): void;
         error?: ErrorCallback;
       }
+    >
+  | Struct<
+      'cancelBooking',
+      {
+        payload: {
+          booking: IBooking;
+        };
+        success(booking: IBooking): void;
+        error?: ErrorCallback;
+      }
     >;

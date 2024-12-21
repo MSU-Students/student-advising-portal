@@ -19,6 +19,7 @@
             :interval-start="6"
             :interval-count="16"
             @change="changeView"
+            @click-time="clickTime"
             :interval-height="intervalHeight"
             :weekdays="[1, 2, 3, 4, 5, 6, 0]"
             animated
@@ -167,6 +168,20 @@ function getBookingHeight(booking) {
   const hr = Number(hrString.replace(/\s?h/, ''));
   const min = Number(minString.replace(/\s?m/, ''));
   return Math.round((hr + min / 60) * intervalHeight);
+}
+function clickTime(data) {
+  TheDialogs.emit({
+    type: 'bookAppointmentDialog',
+    arg: {
+      payload: {
+        date: data.scope.timestamp.date,
+        time: data.scope.timestamp.time,
+      },
+      success: () => {
+        loadBookings();
+      },
+    },
+  });
 }
 function clickBooking(booking) {
   $router.push({
