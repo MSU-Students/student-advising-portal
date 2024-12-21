@@ -1,5 +1,5 @@
 <template>
-  <q-page class="column justify-center items-center q-page q-gutter-md">
+  <q-page>
     <!-- Rectangle div -->
     <div class="booking-page-container full-width q-px-lg q-py-md">
       <!-- Search Section -->
@@ -35,34 +35,31 @@
       </div>
 
       <!-- Adviser List -->
-      <div
-        class="adviser-lists-container bg-secondary column q-pa-md q-gutter-sm"
-      >
-        <div class="adviser-list-text text-h3 text-bold text-primary q-mb-md">
-          Adviser
-        </div>
-
-        <div class="adviser-lists row wrap q-gutter-md q-col-gutter-md">
-          <q-btn
-            v-for="(adviser, index) in 20"
-            :key="index"
-            @click="
-              TheDialogs.emit({
-                type: 'studentBookingDialog',
-                arg: {
-                  success() {
-                    console.log('IM STUDENT');
-                  },
-                },
-              })
-            "
-            class="bg-primary q-pa-md"
-            :class="['q-md:w-18', 'q-sm:w-45', 'q-xs:w-100']"
-          >
-            <q-icon name="person" color="white" />
-            <span class="text-bold text-white">Adviser {{ index + 1 }}</span>
-          </q-btn>
-        </div>
+      <!-- <q-table flat bordered grid :rows="advisers" :columns="columns" /> -->
+      <div class="flex-wrap row items-start q-gutter-md">
+        <q-card
+          class="adviser-card col-auto"
+          v-for="adviser in advisers"
+          :key="adviser.key"
+        >
+          <q-card-section class="text-h6">{{
+            adviser.fullName
+          }}</q-card-section>
+          <q-separator />
+          <q-card-section>
+            <span v-for="column in columns" :key="column.name">
+              {{ column.label }}: {{ adviser[column.name] }} <br
+            /></span>
+          </q-card-section>
+          <q-card-actions align="right">
+            <q-btn
+              flat
+              icon="insert_invitation"
+              label="SET APPOINTMENT"
+              @click="openBookingDialog"
+            />
+          </q-card-actions>
+        </q-card>
       </div>
     </div>
   </q-page>
@@ -70,11 +67,56 @@
 
 <script setup lang="ts">
 import { TheDialogs } from 'src/dialogs/the-dialogs';
-
-import { ref } from 'vue';
+import { QTableColumn } from 'quasar';
+import { IAdviserProfile } from 'src/entities';
+import { useProfileStore } from 'src/stores/profile.store';
+import { computed, onMounted, onUnmounted, ref } from 'vue';
 
 const isSearchExpanded = ref(false); // Tracks if the search button is expanded
 const searchQuery = ref<string>(''); // Stores the input value
+const profileStore = useProfileStore();
+let sub: ReturnType<typeof profileStore.streamProfiles> | undefined;
+
+const advisers = computed(() => {
+  return profileStore.profiles;
+});
+
+const columns = [
+  // {
+  //   name: 'fullName',
+  //   label: 'Name',
+  //   align: 'left',
+  //   field: (row: IAdviserProfile) => row.fullName,
+  // },
+  {
+    name: 'college',
+    label: 'College',
+    align: 'left',
+    field: (row: IAdviserProfile) => row.college,
+  },
+  {
+    name: 'department',
+    label: 'Department',
+    align: 'left',
+    field: (row: IAdviserProfile) => row.department,
+  },
+  {
+    name: 'position',
+    label: 'Position',
+    align: 'left',
+    field: (row: IAdviserProfile) => row.position,
+  },
+] as QTableColumn[];
+
+onMounted(() => {
+  sub?.unsubscribe();
+  sub = profileStore.streamProfiles({ type: 'adviser' });
+  // console.log('advisers', advisers.value);
+});
+
+onUnmounted(() => {
+  sub?.unsubscribe();
+});
 
 // Methods
 const expandSearch = () => {
@@ -84,16 +126,22 @@ const expandSearch = () => {
 const collapseSearch = () => {
   isSearchExpanded.value = false;
 };
+
+const openBookingDialog = () => {
+  TheDialogs.emit({
+    type: 'studentBookingDialog',
+    arg: {
+      success() {},
+    },
+  });
+};
 </script>
 
 <style>
-.booking-page-container {
-  max-width: 1400px;
-  align-items: flex-start;
-  justify-content: center;
-  display: inline-block;
-  margin: 0 auto;
-}
+/* .adviser-card {
+  width: 100%;
+  max-width: 250px;
+} */
 
 .search-btn {
   position: absolute;
