@@ -112,5 +112,14 @@ export const useBookingStore = defineStore('booking', {
         'rejected'
       );
     },
+    async cancelBooking(booking: IBooking) {
+      if (!booking.key) return;
+      return await firebaseService.patch(
+        'bookings',
+        booking.key,
+        'status',
+        'cancelled'
+      );
+    },
   },
 });
