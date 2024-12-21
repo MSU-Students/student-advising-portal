@@ -3,6 +3,7 @@ import { TheWorkflows } from '../the-workflows';
 
 TheWorkflows.on({
   type: 'cancelBooking',
+  loggable: 'operation',
   async cb(e) {
     try {
       if (!e.payload.booking.key) return;

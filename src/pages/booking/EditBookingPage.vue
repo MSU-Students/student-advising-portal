@@ -219,7 +219,7 @@ const isPartOfIt = computed(() => {
   }
   return false;
 });
-const busy = ref(false); // what is this for?
+const busy = ref(false);
 function onSubmit() {
   if (!booking.value) return;
   busy.value = true;
