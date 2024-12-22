@@ -21,6 +21,15 @@ const studentDetails = [
   { field: 'program', label: 'Program' },
 ];
 
+const adviserDetails = [
+  { field: 'college', label: 'College' },
+  { field: 'department', label: 'Department' },
+  { field: 'position', label: 'Position' },
+  { field: 'employeeID', label: 'ID Number' },
+];
+
+const details = ref(personalDetails);
+
 // Methods
 TheDialogs.on({
   type: 'viewStudentApplicationDialog',
@@ -28,8 +37,18 @@ TheDialogs.on({
     viewDialog.value = true;
     request.value = e.payload as IRequest;
     data.value = e.payload.data || <IProfile>{};
+
     successCb.value = e.success;
     errorCb.value = e.error;
+
+    switch (data.value.type) {
+      case 'adviser':
+        details.value.push(...adviserDetails);
+        break;
+      case 'student':
+        details.value.push(...studentDetails);
+        break;
+    }
   },
 });
 
@@ -56,23 +75,15 @@ function rejectApplication() {
 
 <template>
   <q-dialog v-model="viewDialog">
-    <q-card class="view-dialog q-pa-md rounded-borders">
-      <q-card-section class="text-h5"> Application Details </q-card-section>
-      <q-card-section>
-        <span class="text-bold">Personal Details</span>
-        <q-input
-          readonly
-          v-for="property of personalDetails"
-          v-model="data[property.field]"
-          :key="property"
-          :label="property.label"
-        />
+    <q-card class="view-dialog rounded-borders">
+      <q-card-section class="q-pa-md text-h5">
+        Application Details
       </q-card-section>
-      <q-card-section>
-        <span class="text-bold">Student Details</span>
+      <q-separator />
+      <q-card-section class="q-pa-md">
         <q-input
           readonly
-          v-for="property of studentDetails"
+          v-for="property of details"
           v-model="data[property.field]"
           :key="property"
           :label="property.label"
