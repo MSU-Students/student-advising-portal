@@ -17,6 +17,8 @@ export function statusColor(status: IBooking['status']) {
 }
 
 export const profileOptions = ref<IProfile[]>([]);
+export const advisersOptions = ref<IProfile[]>([]);
+export const adviseesOptions = ref<IProfile[]>([]);
 export const loading = ref(false);
 export async function searchAttendees(keyword: string) {
   const profileStore = useProfileStore();
@@ -30,7 +32,7 @@ export async function searchStudents(keyword: string) {
   const profileStore = useProfileStore();
   profileOptions.value = [];
   loading.value = true;
-  profileOptions.value = await profileStore.findProfiles(keyword, 'student');
+  adviseesOptions.value = await profileStore.findProfiles(keyword, 'student');
   loading.value = false;
 }
 
@@ -38,7 +40,7 @@ export async function searchAdvisers(keyword: string) {
   const profileStore = useProfileStore();
   profileOptions.value = [];
   loading.value = true;
-  profileOptions.value = await profileStore.findProfiles(keyword, 'adviser');
+  advisersOptions.value = await profileStore.findProfiles(keyword, 'adviser');
   loading.value = false;
 }
 
