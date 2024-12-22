@@ -8,12 +8,9 @@
           <q-route-tab to="adviser" label="Adviser" />
           <q-route-tab to="admin" label="Admin" />
         </q-tabs>
-        <q-card class="q-pa-md" bordered flat>
-          <router-view />
-        </q-card>
+        <router-view />
       </q-card-section>
     </q-card>
-    <!-- <router-view /> -->
   </q-page>
 </template>
 

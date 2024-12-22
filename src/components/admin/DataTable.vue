@@ -1,60 +1,48 @@
 <template>
   <q-table
+    flat
+    bordered
+    separator="vertical"
     :rows="applications"
     :columns="columns"
-    row-key="id"
-    :pagination="{ rowsPerPage: 50 }"
   >
-    <template #top-right>
-      <q-select
-        v-model="filter"
-        :options="filterOptions"
-        option-value="value"
-        option-label="label"
-        emit-value
-        label="Filter"
-        color="primary"
-        @update:model-value="updateFilter"
-        class="q-ml-sm text-capitalize"
-      />
-    </template>
-    <template v-slot:header="props">
-      <q-tr :props="props">
-        <q-th
-          v-for="col in props.cols"
-          :key="col.name"
-          :props="props"
-          class="bg-primary text-white"
-        >
-          {{ col.label }}
-        </q-th>
+    <template #header>
+      <q-tr class="bg-primary text-white">
+        <q-th v-for="col in columns" :key="col.name">{{ col.label }}</q-th>
       </q-tr>
     </template>
-
-    <template v-slot:body-cell-actions="props">
-      <q-td :props="props" class="text-right">
-        <q-btn
-          color="green"
-          class="q-mx-sm"
-          :disable="props.row.status !== 'pending'"
-          @click="approveApplication(props.row)"
-          >Approve</q-btn
-        >
-        <q-btn
-          color="red"
-          class="q-mx-sm"
-          :disable="props.row.status !== 'pending'"
-          @click="
-            TheDialogs.emit({
-              type: 'applicationRejectDialog',
-              arg: {
-                payload: props.row,
-              },
-            })
-          "
-          >Reject</q-btn
-        >
-      </q-td>
+    <template #body="prop">
+      <q-tr>
+        <!-- application status -->
+        <q-td>
+          <div class="flex justify-center items-center">
+            <q-icon
+              :name="prop.row.status == 'pending' ? 'autorenew' : ''"
+              color="orange"
+              size="md"
+            />
+            <span class="text-weight-bolder text-orange">{{
+              prop.row.status == 'pending' ? 'PENDING' : ''
+            }}</span>
+          </div>
+        </q-td>
+        <!-- applicant name -->
+        <q-td>
+          {{ prop.row.data.fullName }}
+        </q-td>
+        <!-- applicant role -->
+        <q-td>
+          {{ prop.row.data.type }}
+        </q-td>
+        <!-- application creation time -->
+        <q-td>
+          {{ date.formatDate(prop.row.createdAt, 'MMM DD YYYY hh:mm A') }}
+        </q-td>
+        <!-- application actions -->
+        <q-td>
+          <ActionButtons :props="prop.row" />
+        </q-td>
+      </q-tr>
     </template>
   </q-table>
 </template>
@@ -63,32 +51,22 @@
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { useRequestStore } from 'src/stores/request.store';
 import { IRequest, IProfile } from 'src/entities';
-import { date, Notify, QTableColumn } from 'quasar';
-import { TheDialogs } from 'src/dialogs/the-dialogs';
-import { TheWorkflows } from 'src/workflows/the-workflows';
+import { date, QTableColumn } from 'quasar';
+
+import ActionButtons from './ActionButtons.vue';
+
 const props = defineProps<{
   type: IProfile['type'];
 }>();
+
 const requestStore = useRequestStore();
+
 const applications = computed(() => {
   return requestStore.requests;
 });
 
 const filter = ref<IRequest['status']>('pending');
-const filterOptions = [
-  {
-    label: 'Pending',
-    value: 'pending',
-  },
-  {
-    label: 'Approved',
-    value: 'approved',
-  },
-  {
-    label: 'Rejected',
-    value: 'rejected',
-  },
-] as { label: string; value: IRequest['status'] }[];
+
 const columns = [
   {
     name: 'application',
@@ -128,6 +106,7 @@ const columns = [
     style: 'width: 1px;',
   },
 ] as QTableColumn[];
+
 let sub: ReturnType<typeof requestStore.streamRequests> | undefined;
 onMounted(() => {
   updateFilter();
@@ -140,31 +119,8 @@ function updateFilter() {
     'data.type': props.type,
   });
 }
+
 onUnmounted(() => {
   sub?.unsubscribe();
 });
-
-function approveApplication(request: IRequest) {
-  Notify.create({
-    message: 'Are you sure?',
-    position: 'center',
-    actions: [
-      {
-        name: 'yes',
-        label: 'yes',
-        handler() {
-          TheWorkflows.emit({
-            type: 'approveApplication',
-            arg: {
-              payload: { ...request, data: { ...request.data } },
-            },
-          });
-        },
-      },
-      {
-        label: 'No',
-      },
-    ],
-  });
-}
 </script>

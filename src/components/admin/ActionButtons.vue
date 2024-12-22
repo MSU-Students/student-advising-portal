@@ -1,19 +1,52 @@
 <template>
-  <q-td :props="props" class="text-right">
-    <q-btn color="green" class="q-mx-sm">Approve</q-btn>
+  <div class="flex justify-center">
     <q-btn
-      color="red"
+      round
+      flat
+      color="green"
       class="q-mx-sm"
-      @click="TheDialogs.emit({ type: 'applicationRejectDialog', arg: {} })"
-      >Reject</q-btn
+      icon="check"
+      @click="viewApplication"
     >
-  </q-td>
+      <q-tooltip>Approve</q-tooltip>
+    </q-btn>
+    <q-btn
+      round
+      flat
+      color="red"
+      icon="close"
+      class="q-mx-sm"
+      @click="rejectApplication"
+    >
+      <q-tooltip>Reject</q-tooltip>
+    </q-btn>
+  </div>
 </template>
 
 <script setup>
 import { TheDialogs } from 'src/dialogs/the-dialogs';
+import { TheWorkflows } from 'src/workflows/the-workflows';
+import { Notify } from 'quasar';
 
-defineProps({
+const props = defineProps({
   props: Object,
 });
+
+function viewApplication() {
+  TheDialogs.emit({
+    type: 'viewStudentApplicationDialog',
+    arg: {
+      payload: props.props,
+    },
+  });
+}
+
+function rejectApplication() {
+  TheDialogs.emit({
+    type: 'applicationRejectDialog',
+    arg: {
+      payload: props.props,
+    },
+  });
+}
 </script>

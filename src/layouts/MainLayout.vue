@@ -91,10 +91,13 @@
       <router-view />
       <LogOutDialog />
       <ConfirmLockDialog />
-      <BookAppointmentDialog />
-      <RejectApplicationDialog />
       <StudentBookingDialog />
       <RejectConsulationDialog />
+
+      <!-- Admin Dialogs -->
+      <BookAppointmentDialog />
+      <RejectApplicationDialog />
+      <ViewStudentApplication />
     </q-page-container>
   </q-layout>
 </template>
@@ -123,6 +126,7 @@ import {
 import { theBus } from 'src/the-bus';
 import { date } from 'quasar';
 import LogOutDialog from 'src/dialogs/auth/LogOutDialog.vue';
+import ViewStudentApplication from 'src/dialogs/admin/ViewStudentApplication.vue';
 import StudentBookingDialog from 'src/dialogs/booking/StudentBookingDialog.vue';
 import RejectConsulationDialog from 'src/dialogs/booking/RejectConsulationDialog.vue';
 
