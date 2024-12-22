@@ -1,5 +1,5 @@
 <template>
-  <DataTable type="student" />
+  <DataTable />
 </template>
 
 <script setup lang="ts">

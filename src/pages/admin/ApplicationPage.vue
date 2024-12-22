@@ -3,11 +3,11 @@
     <q-card class="q-ma-md" bordered flat>
       <q-card-section>
         <Toolbar />
-        <q-tabs v-model="tab" dense active-color="primary">
+        <!-- <q-tabs v-model="tab" dense active-color="primary">
           <q-route-tab to="student" label="Student" />
           <q-route-tab to="adviser" label="Adviser" />
           <q-route-tab to="admin" label="Admin" />
-        </q-tabs>
+        </q-tabs> -->
         <router-view />
       </q-card-section>
     </q-card>
