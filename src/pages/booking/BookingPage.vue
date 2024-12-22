@@ -68,7 +68,7 @@
 <script setup lang="ts">
 import { TheDialogs } from 'src/dialogs/the-dialogs';
 import { QTableColumn } from 'quasar';
-import { IAdviserProfile, IProfile } from 'src/entities';
+import { IAdviserProfile } from 'src/entities';
 import { useProfileStore } from 'src/stores/profile.store';
 import { onMounted, ref } from 'vue';
 
@@ -76,7 +76,7 @@ const isSearchExpanded = ref(false); // Tracks if the search button is expanded
 const searchQuery = ref<string>(''); // Stores the input value
 const profileStore = useProfileStore();
 
-const advisers = ref<IProfile[]>();
+const advisers = ref<IAdviserProfile[]>();
 
 const columns = [
   // {
@@ -106,10 +106,10 @@ const columns = [
 ] as QTableColumn[];
 
 onMounted(async () => {
-  advisers.value = await profileStore.findProfiles(
+  advisers.value = (await profileStore.findProfiles(
     searchQuery.value,
     'adviser'
-  );
+  )) as IAdviserProfile[];
 });
 
 // Methods
