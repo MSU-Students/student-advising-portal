@@ -97,7 +97,7 @@
       <!-- Admin Dialogs -->
       <BookAppointmentDialog />
       <RejectApplicationDialog />
-      <ViewStudentApplication />
+      <ViewApplicationDialog />
     </q-page-container>
   </q-layout>
 </template>
@@ -126,9 +126,9 @@ import {
 import { theBus } from 'src/the-bus';
 import { date } from 'quasar';
 import LogOutDialog from 'src/dialogs/auth/LogOutDialog.vue';
-import ViewStudentApplication from 'src/dialogs/admin/ViewStudentApplication.vue';
 import StudentBookingDialog from 'src/dialogs/booking/StudentBookingDialog.vue';
 import RejectConsulationDialog from 'src/dialogs/booking/RejectConsulationDialog.vue';
+import ViewApplicationDialog from 'src/dialogs/admin/ViewApplicationDialog.vue';
 
 const { locale } = useI18n({ useScope: 'global' });
 const authStore = useAuthStore();
