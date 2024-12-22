@@ -1,6 +1,9 @@
 import { RouteRecordRaw } from 'vue-router';
 import { IRouteMeta } from './route.meta';
 import LoginPage from 'src/pages/auth/LoginPage.vue';
+import ProfilePage from 'src/pages/ProfilePage.vue';
+import ConsultationPage from 'src/pages/booking/ConsultationPage.vue';
+import AppointmentsPage from 'src/pages/booking/AppointmentsPage.vue';
 
 declare module 'vue-router' {
   interface RouteMeta extends IRouteMeta {
@@ -45,6 +48,21 @@ const routes: RouteRecordRaw[] = [
         },
       },
       {
+        path: 'action',
+        component: () => import('pages/auth/AuthHandlerPage.vue'),
+        meta: {
+          anonymous: true,
+        },
+      },
+      {
+        path: 'reset-password',
+        name: 'reset-password',
+        component: () => import('pages/auth/ResetPasswordPage.vue'),
+        meta: {
+          anonymous: true,
+        },
+      },
+      {
         path: 'email-verify',
         name: 'email-verify',
         component: () => import('pages/auth/EmailVerificationPage.vue'),
@@ -70,6 +88,14 @@ const routes: RouteRecordRaw[] = [
         },
       },
       {
+        path: 'profile/:key',
+        name: 'profile',
+        component: ProfilePage,
+        meta: {
+          requiresLogin: true,
+        },
+      },
+      {
         path: 'student',
         name: 'student',
         component: () => import('pages/students/StudentsPage.vue'),
@@ -83,11 +109,53 @@ const routes: RouteRecordRaw[] = [
       {
         name: 'booking',
         path: 'booking',
-        component: () => import('pages/students/BookingPage.vue'),
+        component: () => import('pages/booking/BookingPage.vue'),
         meta: {
+          requiresLogin: ['student'],
           menu: 'Booking',
           title: 'Booking Page',
           icon: 'library_books',
+        },
+      },
+      {
+        name: 'edit-booking',
+        path: 'booking/:key',
+        component: () => import('pages/booking/EditBookingPage.vue'),
+        meta: {
+          requiresLogin: ['student', 'adviser'],
+        },
+      },
+      {
+        name: 'calendar',
+        path: 'calendar',
+        component: () => import('pages/booking/CalendarViewPage.vue'),
+        meta: {
+          requiresLogin: ['student', 'adviser'],
+          menu: 'Calendar',
+          title: 'Calendar',
+          icon: 'library_books',
+        },
+      },
+      {
+        name: 'consultations',
+        path: 'consultations',
+        component: ConsultationPage,
+        meta: {
+          requiresLogin: ['adviser'],
+          menu: 'Consulations',
+          title: 'Consulations',
+          icon: 'group',
+        },
+      },
+      {
+        name: 'appointments',
+        path: 'appointments',
+        component: AppointmentsPage,
+        meta: {
+          requiresLogin: ['adviser', 'student', 'admin'],
+          menu: 'Appointments',
+          title: 'Appointments',
+          icon: 'groups',
         },
       },
       {

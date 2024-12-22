@@ -32,7 +32,7 @@
         v-else
         expand-icon-toggle
         expand-icon-class="text-white"
-        clickable
+        default-opened
         @click="setActiveOption(option.name)"
         :active="activeOption === option.name"
         active-class="rounded-borders bg-white"
@@ -47,7 +47,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, defineProps } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { MenuOptionItem } from './types';
 

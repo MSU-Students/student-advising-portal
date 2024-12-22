@@ -17,6 +17,14 @@ export type Auth =
       }
     >
   | Struct<
+      'loginWithEmail',
+      {
+        payload: { email: string; password: string };
+        success: (profile: IProfile) => void;
+        error?: ErrorCallback;
+      }
+    >
+  | Struct<
       'logOut',
       {
         success: VoidCallback;
@@ -35,6 +43,25 @@ export type Auth =
       'signUpWithEmail',
       {
         payload: SignUpPayload;
+        success?: VoidCallback;
+        error?: ErrorCallback;
+      }
+    >
+  | Struct<
+      'resetPassword',
+      {
+        payload: {
+          oobCode: string;
+          newPassword: string;
+        };
+        success?: VoidCallback;
+        error?: ErrorCallback;
+      }
+    >
+  | Struct<
+      'sendResetPassword',
+      {
+        payload: string;
         success?: VoidCallback;
         error?: ErrorCallback;
       }
