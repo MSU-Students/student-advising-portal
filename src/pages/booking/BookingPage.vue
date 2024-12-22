@@ -70,12 +70,11 @@ import { TheDialogs } from 'src/dialogs/the-dialogs';
 import { QTableColumn } from 'quasar';
 import { IAdviserProfile, IProfile } from 'src/entities';
 import { useProfileStore } from 'src/stores/profile.store';
-import { onMounted, onUnmounted, ref } from 'vue';
+import { onMounted, ref } from 'vue';
 
 const isSearchExpanded = ref(false); // Tracks if the search button is expanded
 const searchQuery = ref<string>(''); // Stores the input value
 const profileStore = useProfileStore();
-let sub: ReturnType<typeof profileStore.streamProfiles> | undefined;
 
 const advisers = ref<IProfile[]>();
 
@@ -107,15 +106,10 @@ const columns = [
 ] as QTableColumn[];
 
 onMounted(async () => {
-  sub?.unsubscribe();
   advisers.value = await profileStore.findProfiles(
     searchQuery.value,
     'adviser'
   );
-});
-
-onUnmounted(() => {
-  sub?.unsubscribe();
 });
 
 // Methods
