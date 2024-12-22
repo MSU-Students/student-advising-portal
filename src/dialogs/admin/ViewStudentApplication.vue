@@ -44,8 +44,8 @@ function approveApplication() {
 }
 
 function rejectApplication() {
-  TheWorkflows.emit({
-    type: 'rejectApplication',
+  TheDialogs.emit({
+    type: 'applicationRejectDialog',
     arg: {
       payload: request.value as IRequest,
     },

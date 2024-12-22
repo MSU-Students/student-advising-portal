@@ -1,6 +1,5 @@
 <template>
   <q-table
-    hide-bottom
     flat
     bordered
     separator="vertical"
