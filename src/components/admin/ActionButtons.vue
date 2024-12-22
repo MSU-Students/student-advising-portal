@@ -20,7 +20,7 @@
     >
       <q-tooltip>Reject</q-tooltip>
     </q-btn>
-    <q-btn round flat icon="more_horiz">
+    <q-btn round flat icon="more_horiz" @click="viewApplication">
       <q-tooltip>View Application</q-tooltip>
     </q-btn>
   </div>
@@ -34,6 +34,15 @@ import { Notify } from 'quasar';
 const props = defineProps({
   props: Object,
 });
+
+function viewApplication() {
+  TheDialogs.emit({
+    type: 'viewStudentApplicationDialog',
+    arg: {
+      payload: props.props,
+    },
+  });
+}
 
 function approveApplication() {
   Notify.create({
