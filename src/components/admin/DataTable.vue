@@ -1,6 +1,5 @@
 <template>
   <q-table
-    hide-bottom
     flat
     bordered
     separator="vertical"
@@ -67,21 +66,6 @@ const applications = computed(() => {
 });
 
 const filter = ref<IRequest['status']>('pending');
-
-// const filterOptions = [
-//   {
-//     label: 'Pending',
-//     value: 'pending',
-//   },
-//   {
-//     label: 'Approved',
-//     value: 'approved',
-//   },
-//   {
-//     label: 'Rejected',
-//     value: 'rejected',
-//   },
-// ] as { label: string; value: IRequest['status'] }[];
 
 const columns = [
   {

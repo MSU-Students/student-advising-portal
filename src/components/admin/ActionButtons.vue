@@ -6,7 +6,7 @@
       color="green"
       class="q-mx-sm"
       icon="check"
-      @click="approveApplication"
+      @click="viewApplication"
     >
       <q-tooltip>Approve</q-tooltip>
     </q-btn>
@@ -20,9 +20,6 @@
     >
       <q-tooltip>Reject</q-tooltip>
     </q-btn>
-    <q-btn round flat icon="more_horiz">
-      <q-tooltip>View Application</q-tooltip>
-    </q-btn>
   </div>
 </template>
 
@@ -35,27 +32,12 @@ const props = defineProps({
   props: Object,
 });
 
-function approveApplication() {
-  Notify.create({
-    message: 'Are you sure?',
-    position: 'center',
-    actions: [
-      {
-        name: 'yes',
-        label: 'yes',
-        handler() {
-          TheWorkflows.emit({
-            type: 'approveApplication',
-            arg: {
-              payload: { ...props.props, data: { ...props.props.data } },
-            },
-          });
-        },
-      },
-      {
-        label: 'No',
-      },
-    ],
+function viewApplication() {
+  TheDialogs.emit({
+    type: 'viewStudentApplicationDialog',
+    arg: {
+      payload: props.props,
+    },
   });
 }
 

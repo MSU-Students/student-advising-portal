@@ -29,7 +29,7 @@
             <p class="form-subtitle q-mb-lg">Sign in to continue</p>
 
             <!-- Login Form -->
-            <q-form>
+            <q-form @submit="loginWithEmailPassword">
               <div class="input-wrapper">
                 <!-- Username Input -->
                 <q-input
@@ -143,6 +143,28 @@ function googleLogin() {
       },
       error: (err) => {
         console.log(err);
+      },
+    },
+  });
+}
+function loginWithEmailPassword() {
+  TheWorkflows.emit({
+    type: 'loginWithEmail',
+    arg: {
+      payload: {
+        email: username.value,
+        password: password.value,
+      },
+      async success(profile) {
+        if (profile.type == 'anonymous' || !profile.type) {
+          await $router.replace({
+            name: 'get-started',
+          });
+        } else {
+          await $router.replace({
+            name: 'home',
+          });
+        }
       },
     },
   });
