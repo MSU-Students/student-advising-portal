@@ -19,6 +19,7 @@
             :interval-start="6"
             :interval-count="16"
             @change="changeView"
+            @click-time="clickTime"
             :interval-height="intervalHeight"
             :weekdays="[1, 2, 3, 4, 5, 6, 0]"
             animated
@@ -130,22 +131,26 @@ onUnmounted(() => {
   }
 });
 let subscription;
-
+const startDate = ref(new Date(new Date()));
+const endDate = ref(new Date(new Date()));
 function loadBookings(start, end) {
-  const refDate = new Date(selectedDate.value);
-  const startDate = new Date(start || refDate);
-  const endDate = new Date(end || refDate);
-  if (!dayView.value && !start && !end) {
-    startDate.setDate(startDate.getDate() - startDate.getDay() + 1);
-    endDate.setDate(endDate.getDate() + (7 - endDate.getDay()) + 1);
+  if (start && end) {
+    if (
+      date.getDateDiff(start, startDate.value, 'days') == 0 &&
+      date.getDateDiff(end, endDate.value, 'days') == 0
+    ) {
+      return;
+    }
+    startDate.value = new Date(start);
+    endDate.value = new Date(end);
   }
   if (subscription) {
     subscription.unsubscribe();
   }
   const sub = bookingStore
     .streamWith({
-      'date >=': date.formatDate(startDate, 'YYYY-MM-DD'),
-      'date <=': date.formatDate(endDate, 'YYYY-MM-DD'),
+      'date >=': date.formatDate(startDate.value, 'YYYY-MM-DD'),
+      'date <=': date.formatDate(endDate.value, 'YYYY-MM-DD'),
     })
     .subscribe({
       next: (value) => {
@@ -167,6 +172,20 @@ function getBookingHeight(booking) {
   const hr = Number(hrString.replace(/\s?h/, ''));
   const min = Number(minString.replace(/\s?m/, ''));
   return Math.round((hr + min / 60) * intervalHeight);
+}
+function clickTime(data) {
+  TheDialogs.emit({
+    type: 'bookAppointmentDialog',
+    arg: {
+      payload: {
+        date: data.scope.timestamp.date,
+        time: data.scope.timestamp.time,
+      },
+      success: () => {
+        loadBookings();
+      },
+    },
+  });
 }
 function clickBooking(booking) {
   $router.push({

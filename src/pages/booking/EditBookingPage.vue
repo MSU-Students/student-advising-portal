@@ -66,7 +66,7 @@
                   <q-chip clickable>
                     <q-icon name="schedule" />
                     {{ booking.duration || 'duration' }}
-                    <q-popup-proxy>
+                    <q-popup-proxy @before-hide="setDuration()">
                       <q-time v-model="booking.duration" format24h>
                         <q-btn v-close-popup @click="setDuration()">Set</q-btn>
                       </q-time>
@@ -279,13 +279,12 @@ function onSubmit() {
   });
 }
 
-
 function cancelBooking() {
   TheWorkflows.emit({
     type: 'cancelBooking',
     arg: {
       payload: {
-        booking: booking.value,
+        booking: booking.value!,
       },
       success() {
         busy.value = false;

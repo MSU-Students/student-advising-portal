@@ -5,6 +5,10 @@ export type Booking =
   | Struct<
       'bookAppointmentDialog',
       {
+        payload?: {
+          date: string;
+          time: string;
+        };
         success(booking: IBooking): void;
         error?: ErrorCallback;
       }

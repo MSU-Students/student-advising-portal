@@ -4,16 +4,16 @@
       <q-card-section class="text-center bg-primary text-white">
         <span class="text-h6 q-ml-sm q-pa-xl text-bold"
           >Booking
-          <span class="text-capitalize">{{ booking?.type }}</span>
+          <span class="text-capitalize">{{ newBooking?.type }}</span>
         </span>
       </q-card-section>
 
-      <q-card v-if="booking && isBookingAppear">
+      <q-card v-if="newBooking && isBookingAppear">
         <q-form @submit="onSubmit" class="q-px-md q-py-sm">
           <q-card-section>
             <q-option-group
               @update:model-value="onChangeBookingType"
-              v-model="booking.type"
+              v-model="newBooking.type"
               inline
               :options="[
                 {
@@ -28,10 +28,10 @@
             >
             </q-option-group>
           </q-card-section>
-          <q-card-section v-if="booking.type == 'consultation'" class="row">
+          <q-card-section v-if="newBooking.type == 'consultation'" class="row">
             <q-select
               class="col"
-              v-model="booking.advisee"
+              v-model="newBooking.advisee"
               use-input
               label="Advisee"
               option-label="fullName"
@@ -43,7 +43,7 @@
             </q-select>
             <q-select
               class="col"
-              v-model="booking.adviser"
+              v-model="newBooking.adviser"
               use-input
               label="Adviser"
               option-label="fullName"
@@ -54,9 +54,9 @@
             >
             </q-select>
           </q-card-section>
-          <q-card-section v-if="booking.type == 'appointment'">
+          <q-card-section v-if="newBooking.type == 'appointment'">
             <q-select
-              v-model="booking.invited"
+              v-model="newBooking.invited"
               use-input
               label="Invited"
               use-chips
@@ -72,12 +72,12 @@
           <q-card-section class="q-mt-md">
             <q-input
               label="Title"
-              v-model="booking.title"
+              v-model="newBooking.title"
               :rules="[(v) => v.length || 'Title is required']"
             />
             <div class="text-subtitle1 text-primary">Description</div>
             <q-input
-              v-model="booking.description"
+              v-model="newBooking.description"
               type="textarea"
               placeholder="Type here..."
               dense
@@ -85,7 +85,7 @@
               :rules="[
                 (v) =>
                   v.length ||
-                  'State purpose or description of ' + booking?.type,
+                  'State purpose or description of ' + newBooking?.type,
               ]"
             />
           </q-card-section>
@@ -94,29 +94,38 @@
             <q-input
               dense
               label="Date"
-              v-model="booking.date"
+              v-model="newBooking.date"
               :rules="['date']"
             >
               <template #append>
                 <q-btn round flat icon="today">
                   <q-popup-proxy>
-                    <q-date v-model="booking.date" />
+                    <q-date v-model="newBooking.date" />
                   </q-popup-proxy>
                 </q-btn>
               </template>
               <template #after>
                 <q-chip clickable>
                   <q-icon name="watch" />
-                  {{ booking.time || 'time' }}
+                  {{ newBooking.time || 'time' }}
                   <q-popup-proxy>
-                    <q-time v-model="booking.time">
+                    <q-time v-model="newBooking.time">
                       <q-btn v-close-popup>Set</q-btn>
+                    </q-time>
+                  </q-popup-proxy>
+                </q-chip>
+                <q-chip clickable>
+                  <q-icon name="schedule" />
+                  {{ newBooking.duration || 'duration' }}
+                  <q-popup-proxy @before-hide="setDuration()">
+                    <q-time v-model="newBooking.duration" format24h>
+                      <q-btn v-close-popup @click="setDuration()">Set</q-btn>
                     </q-time>
                   </q-popup-proxy>
                 </q-chip>
               </template>
             </q-input>
-            <q-input label="Location" v-model="booking.location" />
+            <q-input label="Location" v-model="newBooking.location" />
           </q-card-section>
           <q-card-actions align="right">
             <q-btn type="submit" color="primary">Book</q-btn>
@@ -151,16 +160,16 @@ import {
 
 const authStore = useAuthStore();
 const showDialog = ref(false);
-const booking = ref<IBooking>();
+const newBooking = ref<IBooking>();
 type SuccessCb = (booking: IBooking) => void;
 const successCb = ref<SuccessCb>();
 
 function onSubmit() {
-  if (!booking.value) return;
+  if (!newBooking.value) return;
   TheWorkflows.emit({
     type: 'bookAppointment',
     arg: {
-      payload: booking.value,
+      payload: newBooking.value,
       success(booking) {
         if (successCb.value) {
           successCb.value(booking);
@@ -170,43 +179,52 @@ function onSubmit() {
     },
   });
 }
+function setDuration() {
+  if (newBooking.value) {
+    const [hrStr, minStr] = (newBooking.value.duration || '1:00').split(':');
+    const hr = Number(hrStr);
+    const min = Number(minStr);
+    newBooking.value.duration = `${hr}h` + (min ? ` ${min}m` : '');
+  }
+}
 TheDialogs.on({
   type: 'bookAppointmentDialog',
   async cb(e) {
     successCb.value = e.success;
     showDialog.value = true;
     const user = await authStore.getUser();
-    booking.value = {
+    newBooking.value = {
       type: 'consultation',
       bookedBy: { ...user } as IProfile,
-      date: date.formatDate(new Date(), 'YYYY/MM/DD'),
-      time: '08:00',
+      date: date.formatDate(e.payload?.date || new Date(), 'YYYY/MM/DD'),
+      time: e.payload?.time || '08:00',
       status: 'pending',
       location: '',
       description: '',
       advisee: undefined as unknown as IStudentProfile,
       adviser: undefined as unknown as IAdviserProfile,
+      title: '',
     };
     onChangeBookingType();
   },
 });
 function onChangeBookingType() {
   if (
-    booking.value.type == 'consultation' &&
-    typeof booking.value.bookedBy == 'object'
+    newBooking.value?.type == 'consultation' &&
+    typeof newBooking.value.bookedBy == 'object'
   ) {
-    if (booking.value.bookedBy.type == 'student') {
-      booking.value.advisee = booking.value.bookedBy;
+    if (newBooking.value.bookedBy.type == 'student') {
+      newBooking.value.advisee = newBooking.value.bookedBy;
     }
-    if (booking.value.bookedBy.type == 'adviser') {
-      booking.value.adviser = booking.value.bookedBy;
+    if (newBooking.value.bookedBy.type == 'adviser') {
+      newBooking.value.adviser = newBooking.value.bookedBy;
     }
   } else if (
-    booking.value.type == 'appointment' &&
-    typeof booking.value.bookedBy == 'object'
+    newBooking.value?.type == 'appointment' &&
+    typeof newBooking.value.bookedBy == 'object'
   ) {
-    booking.value.invited = [];
-    booking.value.invited.push(booking.value.bookedBy);
+    newBooking.value.invited = [];
+    newBooking.value.invited.push(newBooking.value.bookedBy);
   }
 }
 </script>
