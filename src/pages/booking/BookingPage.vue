@@ -35,7 +35,6 @@
       </div>
 
       <!-- Adviser List -->
-      <!-- <q-table flat bordered grid :rows="advisers" :columns="columns" /> -->
       <div class="flex-wrap row items-start q-gutter-md">
         <q-card
           class="adviser-card col-auto"
@@ -132,11 +131,6 @@ const openBookingDialog = () => {
 </script>
 
 <style>
-/* .adviser-card {
-  width: 100%;
-  max-width: 250px;
-} */
-
 .search-btn {
   position: absolute;
   right: 0px;
@@ -168,36 +162,6 @@ const openBookingDialog = () => {
   position: relative;
   height: 100px;
 }
-
-.adviser-lists-container {
-  position: relative;
-  width: 100%;
-  max-width: 1400px;
-  height: 700px;
-  border: 1px solid var(--q-color-primary);
-  border-radius: 8px;
-  display: flex;
-  flex-direction: column; /* Ensure column format */
-  align-items: center;
-  justify-content: flex-start; /* Adjust as needed */
-  margin: 20px auto;
-  padding: 20px; /* Optional: Space within container */
-}
-
-.adviser-list-text {
-  align-self: flex-start; /* Ensure proper alignment */
-  margin-bottom: 20px; /* Space between title and list */
-}
-
-.adviser-lists {
-  display: flex;
-  flex-direction: row; /* Horizontal alignment */
-  align-items: center; /* Center align buttons vertically */
-  justify-content: flex-start; /* Align buttons to the left */
-  gap: 10px; /* Add space between buttons */
-  width: 100%;
-}
-
 /* Media Queries for Small Devices */
 @media (max-width: 768px) {
   .booking-search-cont {
@@ -210,10 +174,6 @@ const openBookingDialog = () => {
     height: 55px;
     bottom: 0px;
     right: 0px;
-  }
-
-  .adviser-lists-container {
-    height: 500px;
   }
 }
 
