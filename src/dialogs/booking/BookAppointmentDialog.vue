@@ -36,7 +36,7 @@
               label="Advisee"
               option-label="fullName"
               @input-value="(v) => searchStudents(v)"
-              :options="profileOptions"
+              :options="adviseesOptions"
               :loading="loading"
               :rules="[(v) => v || 'Select Advisee']"
             >
@@ -48,7 +48,7 @@
               label="Adviser"
               option-label="fullName"
               @input-value="(v) => searchAdvisers(v)"
-              :options="profileOptions"
+              :options="advisersOptions"
               :loading="loading"
               :rules="[(v) => v || 'Select Adviser']"
             >
@@ -95,12 +95,15 @@
               dense
               label="Date"
               v-model="newBooking.date"
-              :rules="['date']"
+              :rules="['date', (d) => futureDateOnly(d) || 'Future Date Only']"
             >
               <template #append>
                 <q-btn round flat icon="today">
                   <q-popup-proxy>
-                    <q-date v-model="newBooking.date" />
+                    <q-date
+                      v-model="newBooking.date"
+                      :options="futureDateOnly"
+                    />
                   </q-popup-proxy>
                 </q-btn>
               </template>
@@ -151,6 +154,8 @@ import isBookingAppear from 'src/pages/booking/BookingPage.vue';
 import { useAuthStore } from 'src/stores/auth.store';
 import { date } from 'quasar';
 import {
+  adviseesOptions,
+  advisersOptions,
   loading,
   profileOptions,
   searchAdvisers,
@@ -163,7 +168,9 @@ const showDialog = ref(false);
 const newBooking = ref<IBooking>();
 type SuccessCb = (booking: IBooking) => void;
 const successCb = ref<SuccessCb>();
-
+function futureDateOnly(targetDate: string) {
+  return date.getDateDiff(targetDate, new Date(), 'days') >= 0;
+}
 function onSubmit() {
   if (!newBooking.value) return;
   TheWorkflows.emit({
@@ -181,10 +188,12 @@ function onSubmit() {
 }
 function setDuration() {
   if (newBooking.value) {
-    const [hrStr, minStr] = (newBooking.value.duration || '1:00').split(':');
+    const [hrStr, minStr] = (newBooking.value.duration || '01:00').split(':');
     const hr = Number(hrStr);
     const min = Number(minStr);
-    newBooking.value.duration = `${hr}h` + (min ? ` ${min}m` : '');
+    if (!Number.isNaN(hr) && !Number.isNaN(min)) {
+      newBooking.value.duration = `${hr}h` + (min ? ` ${min}m` : '');
+    }
   }
 }
 TheDialogs.on({
@@ -198,6 +207,7 @@ TheDialogs.on({
       bookedBy: { ...user } as IProfile,
       date: date.formatDate(e.payload?.date || new Date(), 'YYYY/MM/DD'),
       time: e.payload?.time || '08:00',
+      duration: '1h',
       status: 'pending',
       location: '',
       description: '',
@@ -206,6 +216,8 @@ TheDialogs.on({
       title: '',
     };
     onChangeBookingType();
+    await searchAdvisers('');
+    await searchStudents('');
   },
 });
 function onChangeBookingType() {
