@@ -59,7 +59,10 @@
       <router-view />
       <LogOutDialog />
       <ConfirmLockDialog />
+
+      <!-- Admin Dialogs -->
       <RejectApplicationDialog />
+      <ViewStudentApplication />
     </q-page-container>
   </q-layout>
 </template>
@@ -81,6 +84,7 @@ import SearchbarComponent from 'src/components/search-bar/SearchbarComponent.vue
 import ConfirmLockDialog from 'src/dialogs/auth/ConfirmLockDialog.vue';
 import RejectApplicationDialog from 'src/dialogs/admin/RejectApplicationDialog.vue';
 import LogOutDialog from 'src/dialogs/auth/LogOutDialog.vue';
+import ViewStudentApplication from 'src/dialogs/admin/ViewStudentApplication.vue';
 
 const { locale } = useI18n({ useScope: 'global' });
 const authStore = useAuthStore();
