@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { TheDialogs } from '../the-dialogs';
 import { IProfile, IRequest } from 'src/entities';
 import { TheWorkflows } from 'src/workflows/the-workflows';
@@ -28,7 +28,15 @@ const adviserDetails = [
   { field: 'employeeID', label: 'ID Number' },
 ];
 
-const details = ref(personalDetails);
+const details = computed(() => {
+  return personalDetails.concat(
+    data.value?.type == 'adviser'
+      ? adviserDetails
+      : data.value?.type == 'student'
+      ? studentDetails
+      : []
+  );
+});
 
 // Methods
 TheDialogs.on({
@@ -40,15 +48,6 @@ TheDialogs.on({
 
     successCb.value = e.success;
     errorCb.value = e.error;
-
-    switch (data.value.type) {
-      case 'adviser':
-        details.value.push(...adviserDetails);
-        break;
-      case 'student':
-        details.value.push(...studentDetails);
-        break;
-    }
   },
 });
 
@@ -76,8 +75,11 @@ function rejectApplication() {
 <template>
   <q-dialog v-model="viewDialog">
     <q-card class="view-dialog rounded-borders">
-      <q-card-section class="q-pa-md text-h5">
-        Application Details
+      <q-card-section
+        class="row items-center q-gutter-sm bg-primary text-white"
+      >
+        <q-icon name="info" color="white" size="md" />
+        <span class="text-h6"> Application Details </span>
       </q-card-section>
       <q-separator />
       <q-card-section class="q-pa-md">
