@@ -26,21 +26,46 @@
             }}</span>
           </div>
         </q-td>
+
         <!-- applicant name -->
         <q-td>
           {{ prop.row.data.fullName }}
         </q-td>
+
         <!-- applicant role -->
         <q-td>
           {{ prop.row.data.type }}
         </q-td>
+
         <!-- application creation time -->
         <q-td>
           {{ date.formatDate(prop.row.createdAt, 'MMM DD YYYY hh:mm A') }}
         </q-td>
+
         <!-- application actions -->
         <q-td>
-          <ActionButtons :props="prop.row" />
+          <div class="flex justify-center">
+            <q-btn
+              round
+              flat
+              color="positive"
+              icon="check"
+              class="q-mx-sm"
+              @click="viewApplication(prop.row)"
+            >
+              <q-tooltip>Approve</q-tooltip>
+            </q-btn>
+            <q-btn
+              round
+              flat
+              color="negative"
+              icon="close"
+              class="q-mx-sm"
+              @click="rejectApplication(prop.row)"
+            >
+              <q-tooltip>Reject</q-tooltip>
+            </q-btn>
+          </div>
         </q-td>
       </q-tr>
     </template>
@@ -53,7 +78,7 @@ import { useRequestStore } from 'src/stores/request.store';
 import { IRequest, IProfile } from 'src/entities';
 import { date, QTableColumn } from 'quasar';
 
-import ActionButtons from './ActionButtons.vue';
+import { TheDialogs } from 'src/dialogs/the-dialogs';
 
 const props = defineProps<{
   type: IProfile['type'];
@@ -111,6 +136,24 @@ let sub: ReturnType<typeof requestStore.streamRequests> | undefined;
 onMounted(() => {
   updateFilter();
 });
+
+function viewApplication(request: IRequest) {
+  TheDialogs.emit({
+    type: 'viewStudentApplicationDialog',
+    arg: {
+      payload: request,
+    },
+  });
+}
+
+function rejectApplication(request: IRequest) {
+  TheDialogs.emit({
+    type: 'applicationRejectDialog',
+    arg: {
+      payload: request,
+    },
+  });
+}
 
 function updateFilter() {
   sub?.unsubscribe();
