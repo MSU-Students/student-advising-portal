@@ -1,23 +1,11 @@
 <template>
-  <q-page>
-    <q-card class="q-ma-md" bordered flat>
-      <q-card-section>
-        <Toolbar />
-        <!-- <q-tabs v-model="tab" dense active-color="primary">
-          <q-route-tab to="student" label="Student" />
-          <q-route-tab to="adviser" label="Adviser" />
-          <q-route-tab to="admin" label="Admin" />
-        </q-tabs> -->
-        <router-view />
-      </q-card-section>
-    </q-card>
+  <q-page class="q-ma-md">
+    <DataTable />
   </q-page>
 </template>
 
 <script setup>
-import Toolbar from 'src/components/admin/Toolbar.vue';
-import { ref } from 'vue';
-const tab = ref('student');
+import DataTable from 'src/components/admin/DataTable.vue';
 </script>
 
 <style scoped>

@@ -112,31 +112,34 @@
 <script lang="ts" setup>
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { useRequestStore } from 'src/stores/request.store';
-import { IRequest } from 'src/entities';
+import { IProfile, IRequest } from 'src/entities';
 import { date, QTableColumn } from 'quasar';
 
 import { TheDialogs } from 'src/dialogs/the-dialogs';
 import { RouteLocationRaw, useRoute, useRouter } from 'vue-router';
-import { update } from 'firebase/database';
 
 const $router = useRouter();
 const $route = useRoute();
-// const props = defineProps<{ type: IProfile['type'] }>();
 const requestStore = useRequestStore();
 const applications = computed(() => {
   return requestStore.requests;
 });
 
-interface filterOption {
+interface FilterOption {
   label: string;
-  value: string;
+  value: string | undefined;
   to?: string;
   icon?: string;
   color?: string;
 }
 
-const routePath = $route.path.split('/')[2];
-const typeOptions: filterOption[] = [
+const routeApplicationType = $route.params.type as IProfile['type'];
+const typeOptions: FilterOption[] = [
+  {
+    label: 'All',
+    value: undefined,
+    to: 'all',
+  },
   {
     label: 'Admin',
     value: 'admin',
@@ -154,10 +157,10 @@ const typeOptions: filterOption[] = [
   },
 ];
 const typeFilter = ref(
-  typeOptions.find((typeOption) => typeOption.value == routePath)
+  typeOptions.find((typeOption) => typeOption.value == routeApplicationType)
 );
 
-const statusOptions: filterOption[] = [
+const statusOptions: FilterOption[] = [
   {
     label: 'Pending',
     value: 'pending',
@@ -221,8 +224,9 @@ const columns = [
   },
 ] as QTableColumn[];
 
-const handleTypeSelect = (value: filterOption) => {
+const handleTypeSelect = (value: FilterOption) => {
   $router.push(value.to as RouteLocationRaw);
+  updateFilter();
 };
 
 let sub: ReturnType<typeof requestStore.streamRequests> | undefined;
@@ -255,6 +259,7 @@ function updateFilter() {
 
 onMounted(() => {
   updateFilter();
+  console.log(typeFilter.value);
 });
 
 onUnmounted(() => {
