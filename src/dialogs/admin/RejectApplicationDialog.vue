@@ -1,19 +1,24 @@
 <template>
-  <q-dialog v-model="rejectDialog" persistent>
-    <q-card class="q-pa-md bg-white rounded-borders">
-      <q-card-section class="text-center">
-        <div class="text-h6">
-          Are you sure you want to reject {{ selectedApplicant }}?
-        </div>
-        <q-input v-model="reason" label="reason" />
+  <q-dialog v-model="rejectDialog">
+    <q-card class="rounded-borders">
+      <q-card-section
+        class="row items-center q-gutter-sm bg-negative text-white"
+      >
+        <q-icon name="close" color="white" size="md" />
+        <span class="text-h6">Reject Application</span>
       </q-card-section>
-      <q-card-actions>
-        <q-btn
-          flat
-          label="Cancel"
-          color="blue-9"
-          @click="rejectDialog = false"
+      <q-card-section class="q-pa-md">
+        <div>Are you sure you want to reject {{ selectedApplicant }}?</div>
+        <q-input
+          autogrow
+          counter
+          v-model="reason"
+          label="Reason"
+          :rules="[(val) => !!val || 'Reason is required!']"
         />
+      </q-card-section>
+      <q-card-actions align="right">
+        <q-btn flat label="Cancel" @click="rejectDialog = false" />
         <q-btn
           flat
           label="Reject"
