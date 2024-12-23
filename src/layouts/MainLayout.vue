@@ -151,11 +151,20 @@ function hasAccess(routeMeta?: RouteMeta) {
 const menuOptions: MenuOptionItem[] = allRoutes
   .filter((r) => r.meta?.menu && !r.meta.parent && hasAccess(r.meta))
   .map((r) => {
+    /* Checks if the route path has parameters and has default parameters.
+       If so, sets the path to the path with the default params as the parameter. */
+    const path =
+      r.path.includes(':') && r.meta.defaultParam
+        ? r.path.substring(0, r.path.indexOf(':')) + r.meta.defaultParam
+        : r;
+    const icon = r.meta.icon;
+    const label = r.meta.menu;
+    const name = r.name;
     return {
-      icon: r.meta.icon,
-      label: r.meta.menu,
-      name: r.name,
-      link: r,
+      icon: icon,
+      label: label,
+      name: name,
+      link: path,
       submenu: allRoutes
         .filter(
           (r2) =>

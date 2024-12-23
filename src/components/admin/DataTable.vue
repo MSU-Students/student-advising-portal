@@ -1,4 +1,28 @@
 <template>
+  <div class="row justify-end q-gutter-sm q-pa-sm">
+    <q-select
+      outlined
+      rounded
+      dense
+      stack-label
+      label="Application Type"
+      v-model="typeFilter"
+      :options="typeOptions"
+      @update:model-value="handleTypeSelect"
+      class="col"
+    />
+    <q-select
+      outlined
+      rounded
+      dense
+      stack-label
+      label="Application Status"
+      v-model="statusFilter"
+      :options="statusOptions"
+      @update:model-value="updateFilter"
+      class="col"
+    />
+  </div>
   <q-table
     flat
     bordered
@@ -17,13 +41,26 @@
         <q-td>
           <div class="flex justify-center items-center">
             <q-icon
-              :name="prop.row.status == 'pending' ? 'autorenew' : ''"
-              color="orange"
+              :name="
+                statusOptions.find((s) => s.value == prop.row.status)?.icon
+              "
+              :color="
+                statusOptions.find((s) => s.value == prop.row.status)?.color
+              "
               size="md"
             />
-            <span class="text-weight-bolder text-orange">{{
-              prop.row.status == 'pending' ? 'PENDING' : ''
-            }}</span>
+            <span
+              :class="[
+                'text-weight-bolder',
+                'text-' +
+                  statusOptions.find((s) => s.value == prop.row.status)?.color,
+              ]"
+              >{{
+                statusOptions
+                  .find((s) => s.value == prop.row.status)
+                  ?.label.toUpperCase()
+              }}</span
+            >
           </div>
         </q-td>
 
@@ -75,22 +112,77 @@
 <script lang="ts" setup>
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { useRequestStore } from 'src/stores/request.store';
-import { IRequest, IProfile } from 'src/entities';
+import { IProfile, IRequest } from 'src/entities';
 import { date, QTableColumn } from 'quasar';
 
 import { TheDialogs } from 'src/dialogs/the-dialogs';
+import { RouteLocationRaw, useRoute, useRouter } from 'vue-router';
 
-const props = defineProps<{
-  type: IProfile['type'];
-}>();
-
+const $router = useRouter();
+const $route = useRoute();
 const requestStore = useRequestStore();
-
 const applications = computed(() => {
   return requestStore.requests;
 });
 
-const filter = ref<IRequest['status']>('pending');
+interface FilterOption {
+  label: string;
+  value: string | undefined;
+  to?: string;
+  icon?: string;
+  color?: string;
+}
+
+const routeApplicationType = $route.params.type as IProfile['type'];
+const typeOptions: FilterOption[] = [
+  {
+    label: 'All',
+    value: undefined,
+    to: 'all',
+  },
+  {
+    label: 'Admin',
+    value: 'admin',
+    to: 'admin',
+  },
+  {
+    label: 'Adviser',
+    value: 'adviser',
+    to: 'adviser',
+  },
+  {
+    label: 'Student',
+    value: 'student',
+    to: 'student',
+  },
+];
+const typeFilter = ref(
+  typeOptions.find((typeOption) => typeOption.value == routeApplicationType)
+);
+
+const statusOptions: FilterOption[] = [
+  {
+    label: 'Pending',
+    value: 'pending',
+    icon: 'autorenew',
+    color: 'orange',
+  },
+  {
+    label: 'Approved',
+    value: 'approved',
+    icon: 'check',
+    color: 'green',
+  },
+  {
+    label: 'Rejected',
+    value: 'rejected',
+    icon: 'close',
+    color: 'red',
+  },
+];
+const statusFilter = ref(
+  statusOptions.find((statusOption) => statusOption.value == 'pending')
+);
 
 const columns = [
   {
@@ -132,10 +224,12 @@ const columns = [
   },
 ] as QTableColumn[];
 
-let sub: ReturnType<typeof requestStore.streamRequests> | undefined;
-onMounted(() => {
+const handleTypeSelect = (value: FilterOption) => {
+  $router.push(value.to as RouteLocationRaw);
   updateFilter();
-});
+};
+
+let sub: ReturnType<typeof requestStore.streamRequests> | undefined;
 
 function viewApplication(request: IRequest) {
   TheDialogs.emit({
@@ -158,10 +252,15 @@ function rejectApplication(request: IRequest) {
 function updateFilter() {
   sub?.unsubscribe();
   sub = requestStore.streamRequests({
-    'status ==': filter.value,
-    'data.type': props.type,
+    'status ==': statusFilter.value?.value as string,
+    'data.type': typeFilter.value?.value as string,
   });
 }
+
+onMounted(() => {
+  updateFilter();
+  console.log(typeFilter.value);
+});
 
 onUnmounted(() => {
   sub?.unsubscribe();

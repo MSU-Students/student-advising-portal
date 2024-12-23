@@ -159,7 +159,7 @@ const routes: RouteRecordRaw[] = [
         },
       },
       {
-        path: 'application',
+        path: 'application/:type',
         name: 'application',
         component: () => import('pages/admin/ApplicationPage.vue'),
         meta: {
@@ -167,45 +167,8 @@ const routes: RouteRecordRaw[] = [
           menu: 'Application',
           title: 'Application Page',
           icon: 'work_outline',
+          defaultParam: 'all',
         },
-        children: [
-          {
-            path: 'admin',
-            name: 'admin-application',
-            component: () => import('pages/admin/AdminAppPage.vue'),
-            meta: {
-              requiresLogin: ['admin'],
-              menu: 'Admin Application',
-              title: 'Admin Page',
-              icon: 'admin_panel_settings',
-              parent: 'application',
-            },
-          },
-          {
-            path: 'adviser',
-            name: 'adviser-application',
-            component: () => import('pages/admin/AdviserAppPage.vue'),
-            meta: {
-              requiresLogin: ['admin'],
-              menu: 'Adviser Application',
-              title: 'Adviser Page',
-              icon: 'school',
-              parent: 'application',
-            },
-          },
-          {
-            path: 'student',
-            name: 'student-application',
-            component: () => import('pages/admin/StudentAppPage.vue'),
-            meta: {
-              requiresLogin: ['admin'],
-              menu: 'Student Application',
-              title: 'Student Page',
-              icon: 'person',
-              parent: 'application',
-            },
-          },
-        ],
       },
     ],
   },

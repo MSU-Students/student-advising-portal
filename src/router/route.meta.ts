@@ -5,4 +5,5 @@ export interface IRouteMeta {
   anonymous?: true;
   parent?: string;
   requiresLogin?: string[] | true;
+  defaultParam?: string;
 }
